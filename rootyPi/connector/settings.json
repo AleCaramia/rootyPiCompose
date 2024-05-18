@@ -1,0 +1,8 @@
+{
+    "ip": "localhost",
+    "port": "1883",
+    "base_topic": "rootyPi/#",
+    "broker": "mqtt.eclipseprojects.io",
+    "url_db": "http://localhost:8086",
+    "influx_token": "56a2fc64e4b1ef0ee725f0e900a43eb511942d859dbbfa864e28adf029227938"
+}
