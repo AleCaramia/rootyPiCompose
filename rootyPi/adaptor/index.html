@@ -49,6 +49,7 @@
         <div class="column">
             <h2>Add user</h2>
             <input type="text" id="input1_col1" placeholder="UserId">
+            <input type="text" id="input2_col1" placeholder="Password">
             <button onclick="postAddUser(1)">Submit</button>
         </div>
         <div class="column">
@@ -75,6 +76,8 @@
     <script>
         function postAddUser(columnNumber) {
             const input1 = document.getElementById(`input1_col${columnNumber}`).value;
+            const input2 = document.getElementById(`input2_col${columnNumber}`).value;
+
 
             // Example POST request using Fetch API
             //fetch('https://mako-keen-rarely.ngrok-free.app/addUser', {
@@ -83,7 +86,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ input1 })
+                body: JSON.stringify({ input1, input2 })
             })
             .then(response => {
                 if (response.ok) {
@@ -111,12 +114,12 @@
 
             // Example POST request using Fetch API
             //fetch('https://mako-keen-rarely.ngrok-free.app/deleteUser', {
-            fetch('http://localhost:8080/deleteUser', {
-                method: 'POST',
+            fetch('http://localhost:8080/deleteUser/'+ input1, {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ input1 })
+                //body: JSON.stringify({ input1 })
             })
             .then(response => {
                 if (response.ok) {
@@ -177,12 +180,12 @@
 
             // Example POST request using Fetch API
             //fetch('https://mako-keen-rarely.ngrok-free.app/deletePlant', {
-            fetch('http://localhost:8080/deletePlant', {
-                method: 'POST',
+            fetch('http://localhost:8080/deletePlant/'+ input1 + '/'+ input2, {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ input1, input2 })
+                //body: JSON.stringify({ input1, input2 })
             })
             .then(response => {
                 if (response.ok) {

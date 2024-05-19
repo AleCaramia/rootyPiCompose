@@ -142,7 +142,7 @@ class Adaptor(object):
         if uri[0] == "addUser":
             body = json.loads(cherrypy.request.body.read())
             url = self.connectorBaseUrl + "/addu/" + body["input1"]
-            data = { 'userId': body["input1"]}
+            data = { 'userId': body["input1"], 'password': body["input2"]}
             headers = {'content-type': 'application/json; charset=UTF-8'}
             response = requests.post(url, data=json.dumps(data), headers=headers)
             print(response.text)
@@ -151,24 +151,7 @@ class Adaptor(object):
                 newUser = data = { 'userId': body["input1"], "plants": []}
                 self.users.append(newUser)
                 self.addUserBuckets(body["input1"])
-            return response.text
-        elif uri[0] == "deleteUser":
-            body = json.loads(cherrypy.request.body.read())
-            url = self.connectorBaseUrl + "/rmu/" + body["input1"]
-            data = { 'userId': body["input1"]}
-            headers = {'content-type': 'application/json; charset=UTF-8'}
-            response = requests.delete(url)
-            print(response.text)
-            r = json.loads(response.text)
-            if r["status"] == "OK":
-                index = 0
-                for user in self.users:
-                    if user["userId"] == body["input1"]:
-                        del self.users[index]
-                    index += 1
-                self.deleteUserBuckets(body["input1"])
-                print(f"Deleted {body['input1']}'s buckets")
-            return response.text   
+            return response.text  
         elif uri[0] == "addPlant":
             body = json.loads(cherrypy.request.body.read())
             url = self.connectorBaseUrl + "/addp/" + body["input1"]
@@ -187,9 +170,11 @@ class Adaptor(object):
                 print(self.users)
                 print(f"Added plant {body['input2']}to user: {body['input1']}")
             return response.text 
-        elif uri[0] == "deletePlant":
-            body = json.loads(cherrypy.request.body.read())
-            url = self.connectorBaseUrl + "/rmp/" + body["input1"] + "/" + body["input2"]
+    def DELETE(self,*uri,**params):
+        if uri[0] == "deleteUser":
+            #body = json.loads(cherrypy.request.body.read())
+            url = self.connectorBaseUrl + "/rmu/" + uri[1]
+            #data = { 'userId': body["input1"]}
             headers = {'content-type': 'application/json; charset=UTF-8'}
             response = requests.delete(url)
             print(response.text)
@@ -197,13 +182,29 @@ class Adaptor(object):
             if r["status"] == "OK":
                 index = 0
                 for user in self.users:
-                    if user["userId"] == body["input1"]:
+                    if user["userId"] == uri[1]:
+                        del self.users[index]
+                    index += 1
+                self.deleteUserBuckets(uri[1])
+                print(f"Deleted {uri[1]}'s buckets")
+            return response.text  
+        elif uri[0] == "deletePlant":
+            #body = json.loads(cherrypy.request.body.read())
+            url = self.connectorBaseUrl + "/rmp/" + uri[1] + "/" + uri[2]
+            headers = {'content-type': 'application/json; charset=UTF-8'}
+            response = requests.delete(url)
+            print(response.text)
+            r = json.loads(response.text)
+            if r["status"] == "OK":
+                index = 0
+                for user in self.users:
+                    if user["userId"] == uri[1]:
                         for plant in user["plants"]:
-                            if plant["plantId"] == body["input2"]:
+                            if plant["plantId"] == uri[2]:
                                 user["plants"].remove(plant)
                     index += 1
                 print(self.users)
-                print(f"Deleted plant:{body['input2']} from {body['input1']}")
+                print(f"Deleted plant:{uri[2]} from {uri[1]}")
             return response.text  
             
         
