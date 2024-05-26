@@ -28,10 +28,10 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.23
-  connector:
-    build: connector
+  registry:
+    build: registry
     volumes:
-      - connector-storage:/var/lib/connector:rw
+      - registry-storage:/var/lib/registry:rw
     ports:
       - 8081:8081
     networks:
@@ -44,7 +44,7 @@ services:
     links:
       - influxdb
     depends_on:
-      - connector
+      - registry
       - influxdb
     ports:
       - 8080:8080
@@ -56,7 +56,7 @@ volumes:
   grafana-storage:
   influxdb-storage:
   adaptor-storage:
-  connector-storage:
+  registry-storage:
 networks:
   net:
     ipam: 
