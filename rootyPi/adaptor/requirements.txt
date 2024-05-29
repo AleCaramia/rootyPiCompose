@@ -1,4 +1,0 @@
-CherryPy==18.8.0
-influxdb_client==1.41.0
-paho_mqtt==1.6.1
-Requests==2.31.0
