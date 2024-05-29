@@ -157,8 +157,15 @@ class MySubscriber:
                 data = json.load(file)
             self.services2register = data["services4db"]
             self.org = data["influx_org"]
+            self.registry_url = data["registry_url"]
+            url = self.registry_url + "/users"
+            response = requests.get(url)
+            self.users = json.loads(response.text)
 
-
+        def update_users(self):
+            url = self.registry_url + "/users"
+            response = requests.get(url)
+            self.users = json.loads(response.text)
 
         def start (self):
             #manage connection to broker
@@ -174,17 +181,27 @@ class MySubscriber:
 
         def myOnConnect (self, paho_mqtt, userdata, flags, rc):
             print ("Connected to %s with result code: %d" % (self.messageBroker, rc))
-
+        def checkUserPlantPresence(self, userId, plantCode):
+            self.update_users()
+            print(self.users)
+            for user in self.users:
+                if user["userId"] == userId:
+                    for plant in user["plants"]:
+                        if plant == plantCode:
+                            return True
+            return False
+            
         def myOnMessageReceived (self, paho_mqtt , userdata, msg):
             if len(msg.topic.split("/")) > 3:
                 userId = msg.topic.split("/")[1]
-                plantId = msg.topic.split("/")[2]
-                service = msg.topic.split("/")[3]
-                if service in self.services2register:
-                    converted = senmlToInflux(json.loads(msg.payload), plantId)
+                plantCode = msg.topic.split("/")[2]
+                service = msg.topic.split("/")[3]                
+                if service in self.services2register and self.checkUserPlantPresence(userId, plantCode):
+                    converted = senmlToInflux(json.loads(msg.payload), plantCode)
                     for c in converted:
                         print(c)                
                         self.write_api.write(bucket=userId, org=self.org, record= c)
+
 
 # Threads
 class MQTTreciver(threading.Thread):

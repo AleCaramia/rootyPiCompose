@@ -108,10 +108,16 @@ class Catalog(object):
             if user["userId"] == plant_json["userId"]:
                 found = 1
                 for plant in user["plants"]:
-                    if plant["plantId"] == plant_json["plantId"]:
+                    if plant == plant_json["plantCode"]:
                         foundP = 1
                         return "Plant already registered"
                 if foundP == 0:
+                    plant_res ={
+                        "userId": plant_json["userId"],
+                        "plantId": plant_json["plantId"],
+                        "plantCode": plant_json["plantCode"],
+                        "type": plant_json["type"]
+                    }
                     user["plants"].append(plant_json["plantCode"])
                     self.catalog["plants"].append(plant_json)
                     self.write_catalog()
@@ -223,6 +229,8 @@ class Webserver(object):
                 return json.dumps(cat.catalog["users"])
             if uri[0] == 'models':
                 return json.dumps(cat.catalog["models"])
+            if uri[0] == 'plants':
+                return json.dumps(cat.catalog["plants"])
         
 
     def POST(self, *uri, **params):

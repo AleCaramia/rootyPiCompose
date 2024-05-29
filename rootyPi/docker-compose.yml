@@ -51,6 +51,24 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.25
+  moisture:
+    build: moisture
+    links:
+      - registry
+    depends_on:
+      - registry
+    networks:
+      net:
+        ipv4_address: 192.68.0.26
+  sunlight:
+    build: sunlight
+    links:
+      - registry
+    depends_on:
+      - registry
+    networks:
+      net:
+        ipv4_address: 192.68.0.27
 
 volumes:
   grafana-storage:

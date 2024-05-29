@@ -57,6 +57,7 @@
             <input type="text" id="input1_col2" placeholder="UserId">
             <input type="text" id="input2_col2" placeholder="PlantId">
             <input type="text" id="input3_col2" placeholder="Code">
+            <input type="text" id="input4_col2" placeholder="Type of plant">
             <button onclick="postAddPlant(2)">Submit</button>
         </div>
         <div class="column">
@@ -146,6 +147,7 @@
             const userId = document.getElementById(`input1_col${columnNumber}`).value;
             const plantId = document.getElementById(`input2_col${columnNumber}`).value;
             const plantCode = document.getElementById(`input3_col${columnNumber}`).value;
+            const type = document.getElementById(`input4_col${columnNumber}`).value;
 
             // Example POST request using Fetch API
             //fetch('https://mako-keen-rarely.ngrok-free.app/addPlant', {
@@ -154,7 +156,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ userId, plantId, plantCode })
+                body: JSON.stringify({ userId, plantId, plantCode, type })
             })
             .then(response => {
                 if (response.ok) {
