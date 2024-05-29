@@ -8,78 +8,37 @@ from pathlib import Path
 
 
 P = Path(__file__).parent.absolute()
-SETTINGS = P / "settings.json"
-SERVICE_CATALOG = P / 'services.json'
-DEVICE_CATALOG = P / 'devices.json'
-USER_CATALOG = P / 'users.json'
-MODEL_CATALOG = P / 'models.json'
+CATALOG = P / 'catalog.json'
+SETTINGS = P / 'settings.json'
+INDEX = P / 'index.html'
 MAXDELAY = 30
 
 
 class Catalog(object):
     def __init__(self):
-        self.filename_service = SERVICE_CATALOG
-        self.filename_device = DEVICE_CATALOG
-        self.filename_user = USER_CATALOG
-        self.filename_model = MODEL_CATALOG
+        self.filename_catalog = CATALOG
         self.load_file()
     
     def load_file(self):
-        """Load service and resource parts of catalog.
-        Load data (service, resource) from json files and get MQTT broker IP
-        and MQTT broker port saved on service file.
-        """
-
         try:
-            with open(self.filename_service, "r") as fs:
-                self.services = json.loads(fs.read())
+            with open(self.filename_catalog, "r") as fs:                
+                self.catalog = json.loads(fs.read())            
         except Exception:
-            print("Problem in loading service catalog")
-        try:
-            with open(self.filename_device, "r") as fd:
-                self.devices = json.loads(fd.read())  
-        except Exception:
-            print("Problem in loading device catalog")
-        try:
-            with open(self.filename_user, "r") as fd:
-                self.users = json.loads(fd.read())  
-        except Exception:
-            print("Problem in loading user catalog")
-        try:
-            with open(self.filename_model, "r") as fd:
-                self.models = json.loads(fd.read())  
-        except Exception:
-            print("Problem in loading model catalog")
+            print("Problem in loading catalog")
 
         #self.broker_ip = self.service["broker"]["IP"]
         #self.mqtt_port = self.service["broker"]["mqtt_port"]
 
-    def write_services(self):
+    def write_catalog(self):
         """Write data on service json file."""
-        with open(self.filename_service, "w") as fs:
-            json.dump(self.service, fs, ensure_ascii=False, indent=2)
+        with open(self.filename_catalog, "w") as fs:
+            json.dump(self.catalog, fs, ensure_ascii=False, indent=2)
             fs.write("\n")
-
-    def write_devices(self):
-        """Write data on resource json file."""
-        with open(self.filename_device, "w") as fd:
-            json.dump(self.devices, fd, ensure_ascii=False, indent=2)
-            fd.write("\n")
-    def write_users(self):
-        """Write data on resource json file."""
-        with open(self.filename_user, "w") as fd:
-            json.dump(self.users, fd, ensure_ascii=False, indent=2)
-            fd.write("\n")
-    def write_models(self):
-        """Write data on resource json file."""
-        with open(self.filename_model, "w") as fd:
-            json.dump(self.models, fd, ensure_ascii=False, indent=2)
-            fd.write("\n")
 
     def add_device(self, device_json, user):
         self.load_file()
         flag = 0
-        for dev in self.devices["device_list"]:
+        for dev in self.catalog["devices"]:
             if dev["deviceID"] == device_json["deviceID"]:
                 flag = 1
         if flag == 0:
@@ -88,16 +47,27 @@ class Catalog(object):
                 "Services": device_json["Services"],
                 "lastUpdate": time.time()
             }
-            self.devices["device_list"].append(device_res_json)
-        self.write_devices()
+            self.catalog["devices"].append(device_res_json)
+        self.write_catalog()
 
     def add_service(self, service_json , user):
         self.load_file()
+        flag = 0
+        for service in self.catalog["services"]:
+            if service["serviceID"] == service_json["serviceID"]:
+                flag = 1
+        if flag == 0:
+            service_res_json = {
+                "serviceID": service_json["serviceID"],
+                "lastUpdate": time.time()
+            }
+            self.catalog["services"].append(service_res_json)
+        self.write_catalog()
     #todo 
     def add_user(self, user_json):
         self.load_file()
         found = 0
-        for user in self.users["users"]:
+        for user in self.catalog["users"]:
             if user["userId"] == user_json["userId"]:
                 found = 1
         if found == 0:
@@ -106,8 +76,8 @@ class Catalog(object):
                 "password": user_json["password"],
                 "plants": []
             }
-            self.users["users"].append(user_json)
-            self.write_users()
+            self.catalog["users"].append(user_json)
+            self.write_catalog()
             return "Added user"
         else:
             return "User already registered"
@@ -115,59 +85,63 @@ class Catalog(object):
         self.load_file()
         found = 0
         index = 0
-        for user in self.users["users"]:
+        for user in self.catalog["users"]:
             if user["userId"] == userId:
                 found = 1
-                del self.users["users"][index]
-                self.write_users()
+                del self.catalog["users"][index]
+                self.write_catalog()
             index += 1
         if found == 0:
             return "User not found"
             
-    def add_plant(self, plant_json, userId):
+    def add_plant(self, plant_json):
         self.load_file()
         found = 0
         foundP = 0
         valideCode = False
-        for mod in self.models.keys():
-            if plant_json["code"].startswith(mod):
+        for mod in self.catalog["models"]:
+            if plant_json["plantCode"].startswith(mod["model_code"]):
                 validCode = True
         if not validCode:
             return "Invalid plant code"
-        for user in self.users["users"]:
-            if user["userId"] == userId:
+        for user in self.catalog["users"]:
+            if user["userId"] == plant_json["userId"]:
                 found = 1
                 for plant in user["plants"]:
                     if plant["plantId"] == plant_json["plantId"]:
                         foundP = 1
                         return "Plant already registered"
                 if foundP == 0:
-                    user["plants"].append(plant_json)
-                    self.write_users()
+                    user["plants"].append(plant_json["plantCode"])
+                    self.catalog["plants"].append(plant_json)
+                    self.write_catalog()
                     return "done"
         if found == 0:
             return "User not found"
-        
-    def remove_plant(self, userId, plantId):
+    def removeFromPlants(self, plantCode):
+        index = 0
+        for plant in self.catalog["plants"]:
+            if plant["plantCode"] == plantCode:
+                del self.catalog["plants"][index]
+            index +=1
+    def remove_plant(self, userId, plantCode):
         self.load_file()
         found = 0
         foundP = 0
-        for user in self.users["users"]:
+        for user in self.catalog["users"]:
             if user["userId"] == userId:
                 found = 1
                 for plant in user["plants"]:
-                    if plant["plantId"] == plantId:
+                    if plant == plantCode:
                         foundP = 1
                         user["plants"].remove(plant)
-                        self.write_users()
+                        self.removeFromPlants(plantCode)
+                        self.write_catalog()
                         return "Plant removed"
                 if foundP == 0:
                     return "Plant not found"
         if found == 0:
             return "User not found"
-
-            
-        
 
     def update_device(self, deviceID, service):
         """Update timestamp of a device.
@@ -177,26 +151,19 @@ class Catalog(object):
         print(deviceID, service)
         self.load_file()
         found = 0
-        for dev in self.devices['device_list']:
+        for dev in self.catalog['devices']:
             if dev['deviceID'] == deviceID:
                 found = 1
-                foundS = 0
-                for service in dev["services"]:
-                    if service == service:
-                        foundS = 1
-                if foundS == 0:
-                    dev["services"].append(service)
                 print("Updating %s timestamp." % deviceID)
                 dev['lastUpdate'] = time.time()    
         if not found:# Insert again the device
             print("not found")
             device_json = {
                 "deviceID": deviceID,
-                "services": [service],
                 "lastUpdate": time.time()
             }
-            self.devices["device_list"].append(device_json)
-        self.write_devices()
+            self.catalog["devices"].append(device_json)
+        self.write_catalog()
 
     
     def remove_old_device(self):
@@ -205,18 +172,17 @@ class Catalog(object):
         the resource catalog.
         """
         self.load_file()
-
         removable = []
-        for counter, d in enumerate(self.devices['device_list']):
+        for counter, d in enumerate(self.catalog['devices']):
             #print(counter, d)
             if time.time() - d['lastUpdate'] > MAXDELAY:
                 print("Removing... %s" % (d['deviceID']))
                 removable.append(counter)
         for index in sorted(removable, reverse=True):
                 #print (p['device_list'][index])
-                del self.devices['device_list'][index]
+                del self.catalog['device_list'][index]
         #print(self.resource)
-        self.write_devices()
+        self.write_catalog()
 
 class Webserver(object):
     """CherryPy webserver."""
@@ -233,6 +199,11 @@ class Webserver(object):
         cherrypy.config.update({'server.socket_host':'0.0.0.0'})
         cherrypy.engine.start()
         #cherrypy.engine.block()
+        try:
+            with open(SETTINGS, "r") as fs:                
+                self.settings = json.loads(fs.read())            
+        except Exception:
+            print("Problem in loading settings")
 
     #@cherrypy.tools.json_out()
     def GET(self, *uri, **params):
@@ -240,16 +211,19 @@ class Webserver(object):
         cat = Catalog()
         cat.load_file()
         # Get Devices catalog json.
-        if uri[0] == 'devices':
-            return json.dumps(cat.devices["device_list"])
-
-        # Get Devices catalog json.
-        if uri[0] == 'services':
-            return cat.services
-        if uri[0] == 'users':
-            return json.dumps(cat.users["users"])
-        if uri[0] == 'models':
-            return json.dumps(cat.models)
+        if len(uri) == 0:
+            return open(INDEX)
+        else:            
+            if uri[0] == 'devices':
+                return json.dumps(cat.catalog["devices"])
+            # Get Devices catalog json.
+            if uri[0] == 'services':
+                return json.dumps(cat.catalog["services"])
+            if uri[0] == 'users':
+                return json.dumps(cat.catalog["users"])
+            if uri[0] == 'models':
+                return json.dumps(cat.catalog["models"])
+        
 
     def POST(self, *uri, **params):
         """Define POST HTTP method for RESTful webserver.Modify content of catalogs"""  
@@ -278,6 +252,9 @@ class Webserver(object):
                 #raise cherrypy.HTTPError("400", "User already registered")
                 return json.dumps(response)
             else:
+                
+                headers = {'content-type': 'application/json; charset=UTF-8'}
+                response = requests.post(self.settings["adaptor_url"] + "/addUser", data=json.dumps(body), headers=headers)
                 response = {"status": "OK", "code": 200, "message": "Data processed"}
                 return json.dumps(response)
                 
@@ -285,7 +262,7 @@ class Webserver(object):
             body = json.loads(cherrypy.request.body.read())  # Read body data
             cat = Catalog()
             print(json.dumps(body))
-            out = cat.add_plant(body, uri[1])
+            out = cat.add_plant(body)
             if out == "Plant already registered":
                 response = {"status": "NOT_OK", "code": 400, "message": "Plant already registered"}
                 return json.dumps(response)
@@ -308,6 +285,8 @@ class Webserver(object):
                 #raise cherrypy.HTTPError("400", "User already registered")
                 return json.dumps(response)
             else:
+                headers = {'content-type': 'application/json; charset=UTF-8'}
+                response = requests.delete(self.settings["adaptor_url"] + "/deleteUser/" + uri[1])
                 response = {"status": "OK", "code": 200}
                 return json.dumps(response)
                 

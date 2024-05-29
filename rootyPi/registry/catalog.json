@@ -1,0 +1,35 @@
+{
+  "users": [
+    {
+      "userId": "user1",
+      "password": "user1",
+      "plants": []
+    },
+    {
+      "userId": "user2",
+      "password": "sdadsa",
+      "plants": []
+    }
+  ],
+  "plants": [
+    {
+      "userId": "user1",
+      "plantId": "plant1",
+      "plantCode": "AB123"
+    }
+  ],
+  "devices": [],
+  "services": [],
+  "models": [
+    {
+      "model_code": "AA",
+      "max_lux": 1000,
+      "max_opening": 500
+    },
+    {
+      "model_code": "AB",
+      "max_lux": 1100,
+      "max_opening": 500
+    }
+  ]
+}

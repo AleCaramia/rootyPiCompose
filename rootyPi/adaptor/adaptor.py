@@ -76,9 +76,7 @@ class Adaptor(object):
         
     def GET(self,*uri,**params):
         #http://localhost:8080/getData/user1/plant1?measurament=humidity&duration=1 
-        if len(uri) == 0:
-            return open("index.html")
-        elif len(uri)!=0:
+        if len(uri)!=0:
             if uri[0] == "getData":
                 print(1)
                 if self.checkUserPresent(uri[1]):
@@ -108,94 +106,30 @@ class Adaptor(object):
                         raise cherrypy.HTTPError("400", "Invalid plantId")                    
                 else:
                     raise cherrypy.HTTPError("400", "Invalid User")
-            elif uri[0] == "getUsers":
-                url = self.registryBaseUrl + "/users"
-                return requests.get(url)
-            elif uri[0] == "getModels":
-                url = self.registryBaseUrl + "/models"
-                return requests.get(url)
             else:
                 raise cherrypy.HTTPError("400", "Invalid operation")
+        else:
+            raise cherrypy.HTTPError("400", "no uri")
 
     def PUT(self,*uri,**params):
         return  
     
     def POST(self,*uri,**params):
         if uri[0] == "addUser":
-            body = json.loads(cherrypy.request.body.read())
-            url = self.registryBaseUrl + "/addu/" + body["input1"]
-            data = { 'userId': body["input1"], 'password': body["input2"]}
-            headers = {'content-type': 'application/json; charset=UTF-8'}
-            response = requests.post(url, data=json.dumps(data), headers=headers)
-            print(response.text)
-            r = json.loads(response.text)
-            if r["status"] == "OK":
-                newUser = data = { 'userId': body["input1"], "plants": []}
-                self.users.append(newUser)
-                self.addUserBuckets(body["input1"])
-            return response.text  
-        elif uri[0] == "addPlant":
-            body = json.loads(cherrypy.request.body.read())
-            url = self.registryBaseUrl + "/addp/" + body["input1"]
-            data = { 'plantId': body["input2"],'code': body["input3"], 'ownerId': body["input1"],"plantType": "Evergreen"}
-            headers = {'content-type': 'application/json; charset=UTF-8'}
-            response = requests.post(url, data=json.dumps(data), headers=headers)
-            print(response.text)
-            r = json.loads(response.text)
-            if r["status"] == "OK":
-                index = 0
-                for user in self.users:
-                    if user["userId"] == body["input1"]:
-                        user["plants"].append(data)
-                    index += 1
-                print(self.users)
-                print(f"Added plant {body['input2']}to user: {body['input1']}")
-            return response.text 
+            body = json.loads(cherrypy.request.body.read())  # Read body data
+            self.addUserBuckets(body["userId"])
+            response = {"status": "OK", "code": 200}
+            return response 
     def DELETE(self,*uri,**params):
         if uri[0] == "deleteUser":
-            #body = json.loads(cherrypy.request.body.read())
-            url = self.registryBaseUrl + "/rmu/" + uri[1]
-            #data = { 'userId': body["input1"]}
-            headers = {'content-type': 'application/json; charset=UTF-8'}
-            response = requests.delete(url)
-            print(response.text)
-            r = json.loads(response.text)
-            if r["status"] == "OK":
-                index = 0
-                for user in self.users:
-                    if user["userId"] == uri[1]:
-                        del self.users[index]
-                    index += 1
-                self.deleteUserBuckets(uri[1])
-                print(f"Deleted {uri[1]}'s buckets")
-            return response.text  
-        elif uri[0] == "deletePlant":
-            #body = json.loads(cherrypy.request.body.read())
-            url = self.registryBaseUrl + "/rmp/" + uri[1] + "/" + uri[2]
-            headers = {'content-type': 'application/json; charset=UTF-8'}
-            response = requests.delete(url)
-            print(response.text)
-            r = json.loads(response.text)
-            if r["status"] == "OK":
-                index = 0
-                for user in self.users:
-                    if user["userId"] == uri[1]:
-                        for plant in user["plants"]:
-                            if plant["plantId"] == uri[2]:
-                                user["plants"].remove(plant)
-                    index += 1
-                print(self.users)
-                print(f"Deleted plant:{uri[2]} from {uri[1]}")
-            return response.text  
-                    
+            self.deleteUserBuckets(uri[1])
+            print(f"Deleted {uri[1]}'s buckets")
+            response = {"status": "OK", "code": 200}
+            return response             
     def addUserBuckets(self, userID):  
         retention_rules = BucketRetentionRules(type="expire", every_seconds=2592000)
         created_bucket = self.bucket_api.create_bucket(bucket_name=f"{userID}", retention_rules = retention_rules,org = self.org)
         print(created_bucket)
-    def addPlant(self, userID, plantID):
-        self.dictUserPlants[userID].append(plantID)
-        self.write_usersPlants()
-        print(f"Added plant: {plantID} to {userID}")
     def listBuckets(self):
         buckets = self.bucket_api.find_buckets().buckets
         return buckets
