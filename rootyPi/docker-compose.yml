@@ -1,0 +1,112 @@
+version: "3"
+
+services:
+  influxdb:
+    image: influxdb:latest
+    volumes:
+      - influxdb-storage:/var/lib/influxdb2:rw
+    env_file:
+      - .env
+    entrypoint: ["./entrypoint.sh"]
+    restart: on-failure:10
+    ports:
+      - ${DOCKER_INFLUXDB_INIT_PORT}:8086
+    networks:
+      net:
+        ipv4_address: 192.68.0.21
+  grafana:
+    image: grafana/grafana-oss:latest
+    volumes:
+      - grafana-storage:/var/lib/grafana:rw
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=programmingforIOT
+      - GF_SECURITY_ADMIN_USER=AleCaramia
+    depends_on:
+      - influxdb
+    ports:
+      - ${GRAFANA_PORT}:3000
+    networks:
+      net:
+        ipv4_address: 192.68.0.23
+  registry:
+    build: registry
+    volumes:
+      - registry-storage:/var/lib/registry:rw
+    ports:
+      - 8081:8081
+    networks:
+      net:
+        ipv4_address: 192.68.0.24
+  adaptor:
+    build: adaptor
+    volumes:
+      - adaptor-storage:/var/lib/adaptor:rw
+    links:
+      - influxdb
+    depends_on:
+      - registry
+      - influxdb
+    ports:
+      - 8080:8080
+    networks:
+      net:
+        ipv4_address: 192.68.0.25
+  moisture:
+    build: moisture
+    links:
+      - registry
+    depends_on:
+      - registry
+    networks:
+      net:
+        ipv4_address: 192.68.0.26
+  sunlight:
+    build: sunlight
+    links:
+      - registry
+    depends_on:
+      - registry
+    networks:
+      net:
+        ipv4_address: 192.68.0.27
+  node-red:
+    image: nodered/node-red:latest
+    environment:
+      - TZ=Europe/Amsterdam
+    ports:
+      - "1880:1880"
+    depends_on:
+      - registry
+      - adaptor
+    networks:
+      net:
+        ipv4_address: 192.68.0.28
+    volumes:
+      - node-red-data:/data
+  env_monitoring:
+    build: env_monitoring
+    volumes:
+      - env_monitoring-storage:/var/lib/adaptor:rw
+    links:
+      - influxdb
+    depends_on:
+      - registry
+      - adaptor
+    ports:
+      - 8085:8085
+    networks:
+      net:
+        ipv4_address: 192.68.0.29
+volumes:
+  grafana-storage:
+  influxdb-storage:
+  adaptor-storage:
+  registry-storage:
+  node-red-data:
+  env_monitoring-storage:
+networks:
+  net:
+    ipam: 
+      driver: default
+      config:
+        - subnet: "192.68.0.0/24"
