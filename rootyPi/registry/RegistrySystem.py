@@ -11,7 +11,8 @@ P = Path(__file__).parent.absolute()
 CATALOG = P / 'catalog.json'
 SETTINGS = P / 'settings.json'
 INDEX = P / 'index.html'
-MAXDELAY = 30
+MAXDELAY_DEVICE = 30
+MAXDELAY_SERVICE = 30
 
 
 class Catalog(object):
@@ -149,26 +150,49 @@ class Catalog(object):
         if found == 0:
             return "User not found"
 
-    def update_device(self, deviceID, service):
+    def update_device(self, deviceJson):
         """Update timestamp of a device.
         Update timestamp or insert it again in the resource catalog if it has
         expired.
         """
-        print(deviceID, service)
         self.load_file()
         found = 0
         for dev in self.catalog['devices']:
-            if dev['deviceID'] == deviceID:
+            if dev['deviceID'] == deviceJson["n"]:
                 found = 1
-                print("Updating %s timestamp." % deviceID)
-                dev['lastUpdate'] = time.time()    
+                print("Updating %s timestamp." % dev['deviceID'])
+                dev['lastUpdate'] = deviceJson["t"]    
         if not found:# Insert again the device
             print("not found")
             device_json = {
-                "deviceID": deviceID,
-                "lastUpdate": time.time()
+                "deviceID": deviceJson["n"],
+                "netType": deviceJson["u"],
+                "route": deviceJson["v"],
+                "lastUpdate": deviceJson["t"]
             }
             self.catalog["devices"].append(device_json)
+        self.write_catalog()
+    def update_service(self, serviceJson):
+        """Update timestamp of a device.
+        Update timestamp or insert it again in the resource catalog if it has
+        expired.
+        """
+        self.load_file()
+        found = 0
+        for serivice in self.catalog['services']:
+            if serivice['seriviceID'] == serviceJson["n"]:
+                found = 1
+                print("Updating %s timestamp." % serivice['seriviceID'])
+                serivice['lastUpdate'] = serviceJson["t"]    
+        if not found:# Insert again the device
+            print("not found")
+            serivice_json = {
+                "seriviceID": serviceJson["n"],
+                "netType": serviceJson["u"],
+                "route": serviceJson["v"],
+                "lastUpdate": serviceJson["t"]
+            }
+            self.catalog["services"].append(serivice_json)
         self.write_catalog()
 
     
@@ -180,14 +204,27 @@ class Catalog(object):
         self.load_file()
         removable = []
         for counter, d in enumerate(self.catalog['devices']):
-            #print(counter, d)
-            if time.time() - d['lastUpdate'] > MAXDELAY:
+            if time.time() - d['lastUpdate'] > MAXDELAY_DEVICE:
                 print("Removing... %s" % (d['deviceID']))
                 removable.append(counter)
         for index in sorted(removable, reverse=True):
-                #print (p['device_list'][index])
-                del self.catalog['device_list'][index]
-        #print(self.resource)
+                del self.catalog['devices'][index]
+        self.write_catalog()
+        
+    def remove_old_service(self):
+        """Remove old services whose timestamp is expired.
+        Check all the services whose timestamps are old and remove them from
+        the resource catalog.
+        """
+        self.load_file()
+        removable = []
+        for counter, s in enumerate(self.catalog['services']):
+            #print(counter, d)
+            if time.time() - s['lastUpdate'] > MAXDELAY_SERVICE:
+                print("Removing... %s" % (s['serviceID']))
+                removable.append(counter)
+        for index in sorted(removable, reverse=True):
+                del self.catalog['services'][index]
         self.write_catalog()
 
 class Webserver(object):
@@ -343,22 +380,13 @@ class MySubscriber:
             print ("Connected to %s with result code: %d" % (self.messageBroker, rc))
 
         def myOnMessageReceived (self, paho_mqtt , userdata, msg):
-            msg.payload = msg.payload.decode("utf-8")
-            message = json.loads(msg.payload)
+            message = json.loads(msg.payload.decode("utf-8")) #{"bn": updateCatalog<>, "e": [{...}]}
             catalog = Catalog()
-            devID = message['bn'].replace("rootyPi/", "")
-            #devID = devID.split('/')[0]
-            print("test")
-            try:
-                for e in message['e']:
-                    j = json.loads(e)
-                    if float(j['t']) > 0:
-                        print(j["t"])
-                        service = j['n']
-                        print("devID")
-                        catalog.update_device(devID, service)
-            except Exception:
-                pass
+            if message['bn'] == "updateCatalogDevice":            
+                catalog.update_device(message['e'][0])# {"n": PlantCode/deviceName, "t": time.time(), "v": "", "u": IP}
+            if message['bn'] == "updateCatalogService":            
+                catalog.update_service(message['e'][0])# {"n": serviceName, "t": time.time(), "v": "", "u": IP}
+
 
 # Threads
 class First(threading.Thread):
@@ -417,15 +445,35 @@ class Third(threading.Thread):
         """Initialise thread widh ID and name."""
         threading.Thread.__init__(self)
         self.ThreadID = ThreadID
-        self.name = self.name
+        self.name = name
 
     def run(self):
         """Run thread."""
-        time.sleep(MAXDELAY+1)
+        time.sleep(MAXDELAY_DEVICE+1)
         while True:
             cat = Catalog()
             cat.remove_old_device()
-            time.sleep(MAXDELAY+1)
+            time.sleep(MAXDELAY_DEVICE+1)
+            
+class Fourth(threading.Thread):
+    """Old device remover thread.
+    Remove old devices which do not send alive messages anymore.
+    Devices are removed every five minutes.
+    """
+
+    def __init__(self, ThreadID, name):
+        """Initialise thread widh ID and name."""
+        threading.Thread.__init__(self)
+        self.ThreadID = ThreadID
+        self.name = name
+
+    def run(self):
+        """Run thread."""
+        time.sleep(MAXDELAY_SERVICE+1)
+        while True:
+            cat = Catalog()
+            cat.remove_old_service()
+            time.sleep(MAXDELAY_SERVICE+1)
 
 #Main
 
@@ -433,7 +481,8 @@ def main():
     """Start all threads."""
     thread1 = First(1, "CherryPy")
     thread2 = Second(2, "Updater")
-    thread3 = Third(3, "Remover")
+    thread3 = Third(3, "RemoverDevices")
+    thread4 = Third(4, "RemoverServices")
 
     print("> Starting CherryPy...")
     thread1.start()
@@ -443,8 +492,12 @@ def main():
     thread2.start()
 
     time.sleep(1)
-    print("\n> Starting remover...\nDelete old devices every %d seconds."% MAXDELAY)
+    print("\n> Starting Device remover...\nDelete old devices every %d seconds."% MAXDELAY_DEVICE)
     thread3.start()
+    
+    time.sleep(1)
+    print("\n> Starting Service remover...\nDelete old devices every %d seconds."% MAXDELAY_SERVICE)
+    thread4.start()
 
 if __name__ == '__main__':
     main()

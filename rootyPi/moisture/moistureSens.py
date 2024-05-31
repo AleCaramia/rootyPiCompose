@@ -12,13 +12,16 @@ P = Path(__file__).parent.absolute()
 SETTINGS = P / 'settings.json'
 
 class MoistureSens:
-    def __init__(self, sensorId, decreaseCoef, currentState, baseTopic):
+    def __init__(self, sensorId, decreaseCoef, currentState, baseTopic, plantCode):
         self.sensorId = sensorId
         self.decayCoef = decreaseCoef
         self.currentState = currentState
         self.active = True
         self.pubTopic = baseTopic + "/moisture"
         self.subTopic = baseTopic + "/tank" 
+        self.aliveBn = "updateCatalogDevice"
+        self.plantCode = plantCode
+        self.aliveTopic = plantCode + "/moisture"
         self.myPub = MyPublisher(self.sensorId + "Pub", self.pubTopic)
         self.mySub = MySubscriber(self.sensorId + "Sub", self.subTopic)
         self.myPub.start()
@@ -59,9 +62,9 @@ class MyPublisher:
         self._paho_mqtt.loop_stop()
         self._paho_mqtt.disconnect()
 
-    def myPublish(self, message):
+    def myPublish(self, message, topic):
 		# publish a message with a certain topic
-        self._paho_mqtt.publish(self.topic, message, 2)
+        self._paho_mqtt.publish(topic, message, 2)
 
     def myOnConnect (self, paho_mqtt, userdata, flags, rc):
         print ("Connected to %s with result code: %d" % (self.messageBroker, rc))
@@ -126,8 +129,8 @@ def update_sensors(sensors):
             if sens.sensorId == sensId:
                 found = 1
         if found == 0:
-            baseTopic = "Rootypy/" + plant["userId"] + "/" + plant["plantCode"]
-            sens = MoistureSens(sensId, 1, 100, baseTopic)
+            baseTopic = "RootyPy/" + plant["userId"] + "/" + plant["plantCode"]
+            sens = MoistureSens(sensId, 1, 100, baseTopic, plant["plantCode"])
             sensors.append(sens)
     for sens in sensors:
         found = 0
@@ -138,32 +141,7 @@ def update_sensors(sensors):
                 found = 1
         if found == 0:
             sensors.remove(sens)
-        
-class AllSubs(threading.Thread):
 
-    def __init__(self, ThreadID, name):
-        """Initialise thread widh ID and name."""
-        threading.Thread.__init__(self)
-        self.ThreadID = ThreadID
-        self.name = name
-        #load all sensors
-        self.sensors = []
-
-    def run(self):
-        """Run thread."""
-        while True:
-            update_sensors(self.sensors)
-            for sens in self.sensors:
-                waterQuantity = 0
-                if not sens.mySub.q.empty():
-                    msg = sens.mySub.q.get()
-                    if msg is None:
-                        continue
-                    else:
-                        payload = json.loads(msg.payload.decode("utf-8"))
-                        waterQuantity += float(payload['e'][0]['v'])                 
-                sens.currentState += waterQuantity
-            time.sleep(10)
 
 class AllPubs(threading.Thread):
 
@@ -193,7 +171,11 @@ class AllPubs(threading.Thread):
                 event = {"n": "moisture", "u": "VWC", "t": str(time.time()), "v": float(sens.currentState)}#VolumetricWaterContent
                 out = {"bn": sens.pubTopic,"e":[event]}
                 print(out)
-                sens.myPub.myPublish(json.dumps(out))
+                sens.myPub.myPublish(json.dumps(out), sens.pubTopic)
+                eventAlive = {"n": sens.plantCode+"/moisture", "u": "IP", "t": str(time.time()), "v": ""}
+                outAlive = {"bn": sens.aliveBn ,"e":[eventAlive]}
+                print(outAlive)
+                sens.myPub.myPublish(json.dumps(outAlive), sens.aliveTopic)
                 sens.currentState -= sens.decayCoef
                 time.sleep(2)
             time.sleep(10)
