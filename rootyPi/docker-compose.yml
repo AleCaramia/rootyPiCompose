@@ -78,6 +78,15 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.30
+  light:
+    build: light
+    links:
+      - registry
+    depends_on:
+      - registry
+    networks:
+      net:
+        ipv4_address: 192.68.0.31
   node-red:
     image: nodered/node-red:latest
     environment:

@@ -89,6 +89,8 @@ class Catalog(object):
         for user in self.catalog["users"]:
             if user["userId"] == userId:
                 found = 1
+                for plant in user["plants"]:
+                    self.removeFromPlants(plant)
                 del self.catalog["users"][index]
                 self.write_catalog()
             index += 1
@@ -204,7 +206,7 @@ class Catalog(object):
         self.load_file()
         removable = []
         for counter, d in enumerate(self.catalog['devices']):
-            if time.time() - d['lastUpdate'] > MAXDELAY_DEVICE:
+            if time.time() - float(d['lastUpdate']) > MAXDELAY_DEVICE:
                 print("Removing... %s" % (d['deviceID']))
                 removable.append(counter)
         for index in sorted(removable, reverse=True):

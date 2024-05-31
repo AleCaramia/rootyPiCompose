@@ -26,7 +26,7 @@ class SunlightSimulator:
         self.luxList = sunnyDaySim()
         self.pubTopic = baseTopic + "/sunlight"
         self.plantCode = plantCode
-        self.aliveTopic = baseTopic + "/sunlight"
+        self.aliveTopic = baseTopic + "/alive"
         self.aliveBn = "updateCatalogDevice"
         self.myPub = MyPublisher(self.simId + "Pub", self.pubTopic)
         self.myPub.start()
