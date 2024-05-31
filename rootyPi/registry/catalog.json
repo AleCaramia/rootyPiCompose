@@ -16,9 +16,7 @@
       "userId": "user1",
       "plantId": "plant1",
       "plantCode": "AB123",
-      "plantType":"Evergreen",
-      "autoOptions":{"start_time":"09:00","end_time":"19:00"},
-      "lampIntensity":70
+      "plantType":"Evergreen"
     }
   ],
   "devices": [],

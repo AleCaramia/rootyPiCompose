@@ -236,7 +236,7 @@ class Iamalive(object):
         self.client.on_connect = self.myconnect
         #########################################################################################
         #Il message è da definire, vedere come preferisce ale
-        self.message = {"bn":"updateCatalogService","e":{"n": settings['ID'], "t": time.time(), "v":None,"u":"IP"}}
+        self.message = {"bn":"updateCatalogService","e":[{"n": settings['ID'], "t": time.time(), "v":None,"u":"IP"}]}
         #########################################################################################à
         self.time = time.time()
     
