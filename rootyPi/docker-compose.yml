@@ -69,6 +69,15 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.27
+  lamplight:
+    build: lamplight
+    links:
+      - registry
+    depends_on:
+      - registry
+    networks:
+      net:
+        ipv4_address: 192.68.0.30
   node-red:
     image: nodered/node-red:latest
     environment:
