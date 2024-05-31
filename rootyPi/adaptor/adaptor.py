@@ -190,14 +190,22 @@ class MySubscriber:
                         if plant == plantCode:
                             return True
             return False
+        def checkBnNotAlive(self, bn):
+            aliveMessages = ["updateCatalogDevice", "updateCatalogService"]
+            if bn in aliveMessages:
+                return False
+            else:
+                return True
+            
             
         def myOnMessageReceived (self, paho_mqtt , userdata, msg):
             if len(msg.topic.split("/")) > 3:
                 userId = msg.topic.split("/")[1]
                 plantCode = msg.topic.split("/")[2]
-                service = msg.topic.split("/")[3]                
-                if service in self.services2register and self.checkUserPlantPresence(userId, plantCode):
-                    converted = senmlToInflux(json.loads(msg.payload), plantCode)
+                service = msg.topic.split("/")[3]
+                msgJson = json.loads(msg.payload)                
+                if service in self.services2register and self.checkUserPlantPresence(userId, plantCode) and self.checkBnNotAlive(msgJson["bn"]):
+                    converted = senmlToInflux(msgJson, plantCode)
                     for c in converted:
                         print(c)                
                         self.write_api.write(bucket=userId, org=self.org, record= c)

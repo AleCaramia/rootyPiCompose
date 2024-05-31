@@ -21,7 +21,7 @@ class MoistureSens:
         self.subTopic = baseTopic + "/tank" 
         self.aliveBn = "updateCatalogDevice"
         self.plantCode = plantCode
-        self.aliveTopic = plantCode + "/moisture"
+        self.aliveTopic = baseTopic + "/moisture"
         self.myPub = MyPublisher(self.sensorId + "Pub", self.pubTopic)
         self.mySub = MySubscriber(self.sensorId + "Sub", self.subTopic)
         self.myPub.start()
