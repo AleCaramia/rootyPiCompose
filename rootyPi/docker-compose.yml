@@ -104,7 +104,7 @@ services:
   env_monitoring:
     build: env_monitoring
     volumes:
-      - env_monitoring-storage:/var/lib/adaptor:rw
+      - env_monitoring-storage:/var/lib/env_monitoring:rw
     links:
       - influxdb
     depends_on:
@@ -115,6 +115,20 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.29
+  uv_light_shift:
+    build: uv_light_shift
+    volumes:
+      - uv_light_shift-storage:/var/lib/uv_light_shift:rw
+    # links:
+    #   - influxdb
+    depends_on:
+      - registry
+      - adaptor
+    ports:
+      - 8088:8088
+    networks:
+      net:
+        ipv4_address: 192.68.0.32
 volumes:
   grafana-storage:
   influxdb-storage:
@@ -122,6 +136,7 @@ volumes:
   registry-storage:
   node-red-data:
   env_monitoring-storage:
+  uv_light_shift-storage:
 networks:
   net:
     ipam: 

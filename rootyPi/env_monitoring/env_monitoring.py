@@ -319,28 +319,28 @@ class thredFunction(object):
 #########################################################################################################################################
 if __name__ == "__main__":
 
-    try:
-        # settings,response=start_env_monitoring()
-        settings=json.load(open("configEnv.json",'r'))
-        Alive = Iamalive(settings)
-        thread_Alive = threading.Thread(target=Alive.start_mqtt)
-        print("> Starting I am alive...")
-        thread_Alive.start()
-        
-        # webserver= ThreadServer()
-        # thread_server = threading.Thread(target=webserver.start())
-        # print("> Starting thread_server...")
-        # thread_server.start()
+    # try:
+    # settings,response=start_env_monitoring()
+    settings=json.load(open("configEnv.json",'r'))
+    Alive = Iamalive(settings)
+    thread_Alive = threading.Thread(target=Alive.start_mqtt)
+    print("> Starting I am alive...")
+    thread_Alive.start()
+    
+    # webserver= ThreadServer()
+    # thread_server = threading.Thread(target=webserver.start())
+    # print("> Starting thread_server...")
+    # thread_server.start()
 
-        tFunction = thredFunction(settings)
-        thread_function = threading.Thread(target=tFunction.RunThred())
-        print("> Starting thread_function...")
-        thread_function.start()
+    tFunction = thredFunction(settings)
+    thread_function = threading.Thread(target=tFunction.RunThred())
+    print("> Starting thread_function...")
+    thread_function.start()
 
-        # while True:
-        #     time.sleep(3)
-    except:
-        pass
+    # while True:
+    #     time.sleep(3)
+    # except:
+    #     pass
 
 
  
