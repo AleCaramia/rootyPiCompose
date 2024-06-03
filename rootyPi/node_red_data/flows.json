@@ -1,0 +1,7743 @@
+[
+    {
+        "id": "d577e00432a6933c",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "a3da6d9a2fc34851",
+        "type": "tab",
+        "label": "Log in",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b66b92d26529c7fa",
+        "type": "tab",
+        "label": "Plant info tab",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6c9fffb498ae62dd",
+        "type": "tab",
+        "label": "User options",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "027e63256a54231e",
+        "type": "tab",
+        "label": "Light_flows",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d6f8aab227f7b0e8",
+        "type": "tab",
+        "label": "Operations about registratios",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b5ada79ec2c2bd4a",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6e716fb5.71658",
+        "type": "tab",
+        "label": "Flow 2"
+    },
+    {
+        "id": "f28aa0bcad7a8f9d",
+        "type": "group",
+        "z": "b66b92d26529c7fa",
+        "name": "Url generator",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "af29ecfd017e0edb",
+            "d819301bcf0ae72c",
+            "303fb800babdbe5a",
+            "995302f2f30eee72"
+        ],
+        "x": 2274,
+        "y": 199,
+        "w": 492,
+        "h": 202
+    },
+    {
+        "id": "c3e16cfe173e374a",
+        "type": "group",
+        "z": "a3da6d9a2fc34851",
+        "name": "Log in",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "9a17698450959d0f",
+            "40df30086f912630",
+            "63d1d1abd474fd73",
+            "ba476bee8c4456db",
+            "e5b38d716fbc838a",
+            "acb3e1c703d7ed4b",
+            "f3496b149d759ba3",
+            "2dbb229a90ced828",
+            "c92033e6f4d9bacb",
+            "74d88e495b04ec7b",
+            "b10aa3fd85d2e364",
+            "747c3f2292c7cd13",
+            "e2df31bb6b818bc7",
+            "7f4b1cdedc7b413f",
+            "e4abfd9e2cf711a1",
+            "049250fe163033c4",
+            "f561665e4b07c58b",
+            "7583541f0b273db3",
+            "ff14be34c8999c78",
+            "5f51dfcd1d79c430",
+            "beb0088c90120734",
+            "7da98c94947c8790",
+            "dd9e11fe7d4864db",
+            "41fc9c0e1fafcaa8",
+            "22e8bd7f8249c68a",
+            "934fd7b3574203a2",
+            "882dd7c49dae2613",
+            "d1b6bbb81f8f8ce0",
+            "4755f36e7e085fa2",
+            "a1e75bc18bd90dd7",
+            "09c20eeea4fd17e6",
+            "d5c86f525b32fa0b",
+            "0564ed2dc39baf0d",
+            "1774b976e85d7954",
+            "3ce55724e56034a1",
+            "5815c8b69a6f9988",
+            "3a46f16355c6f1df",
+            "1480c8ec871f9b5a",
+            "9bee625ac7a3b9d5",
+            "aa7c94e7e71b1f4a",
+            "836a36d93ca23ff6",
+            "9bf10589b44345be",
+            "8cc1f32cf4d1546b",
+            "092191c2b6a4f8ad"
+        ],
+        "x": 14,
+        "y": 99,
+        "w": 2312,
+        "h": 722
+    },
+    {
+        "id": "b3e251a7ce0c1dd4",
+        "type": "group",
+        "z": "027e63256a54231e",
+        "name": "Auto time settings",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "1194bd8dbb39acdb",
+            "f290a0e4e9a23ad5",
+            "be0ec8dfad205227",
+            "aafe3a1f55a3d801",
+            "a9cb94fbe1f0d7e1"
+        ],
+        "x": 1434,
+        "y": 779,
+        "w": 912,
+        "h": 222
+    },
+    {
+        "id": "dd311112b83d4dfd",
+        "type": "group",
+        "z": "027e63256a54231e",
+        "name": "Manual time settings",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "f28bab33329b5be3",
+            "d028038d625c4eda",
+            "0a19aa6542b82728",
+            "8353529b8b366951",
+            "2a29c48c1136536b",
+            "e44330c2fdaac8da",
+            "ffb899ca2d7dce06",
+            "6ff4f71e6fae1e7e",
+            "31a1787cfcd7312d"
+        ],
+        "x": 674,
+        "y": 1319,
+        "w": 612,
+        "h": 222
+    },
+    {
+        "id": "0b96c7e23874f3b5",
+        "type": "group",
+        "z": "d6f8aab227f7b0e8",
+        "name": "Check online services",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "40005bc4f518b476",
+            "f575ad5b1996d58d",
+            "9288eb2d65281b4f",
+            "fdd10e849a488082",
+            "939ea6ef7df49930"
+        ],
+        "x": 54,
+        "y": 619,
+        "w": 952,
+        "h": 182
+    },
+    {
+        "id": "a6fc352a98cf7dd9",
+        "type": "group",
+        "z": "d6f8aab227f7b0e8",
+        "name": "Register and save online services",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "2b241b0de1dafdb9",
+            "a7d72b06cb325052",
+            "bc43f6c75254a6aa",
+            "b4cd612beaef10f7",
+            "96f19442a6ac2c5c",
+            "981aab7934f436e7",
+            "4855af751157dadc",
+            "72c8b64a56030f4c"
+        ],
+        "x": 44,
+        "y": 159,
+        "w": 922,
+        "h": 222
+    },
+    {
+        "id": "f70c2a4e4b3302a0",
+        "type": "group",
+        "z": "6c9fffb498ae62dd",
+        "name": "Add plant",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "074f239edc23ac64",
+            "168141f039e401dd",
+            "e9951e8f69a8fcfd",
+            "7ca05419e74cb1c4",
+            "1e792fc77dbddc85",
+            "056a3a5de86cad2a",
+            "e3cd499d6963e884",
+            "2b6bbfaaf424d808",
+            "bbfd1b98cc70eed7",
+            "bd5f9a790b594323",
+            "59146c9d2db3aa06",
+            "1ad2accbbae0ba6c",
+            "d9b3b36511c34cac",
+            "adcd0507206a0ae0",
+            "066fa958bdf0b0e5",
+            "7d61070136b87eb2",
+            "512957682703a656",
+            "631da5f677855d42",
+            "51dab2aabcd8a00b",
+            "04ab02d0ca969d0e",
+            "33ad3afe072e4115",
+            "af75e6621a35ddc7",
+            "443b37b7d0bdba4f",
+            "f167e22b18f1c822"
+        ],
+        "x": 14,
+        "y": 299,
+        "w": 1892,
+        "h": 322
+    },
+    {
+        "id": "5666d265ea80cc9d",
+        "type": "group",
+        "z": "6c9fffb498ae62dd",
+        "name": "Delete plant",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "46eceb3e0a38b8b8",
+            "c921f1d7b26558ac",
+            "abf9591fed26b814",
+            "bd733eddbb263279",
+            "436f5506dd4af823",
+            "ce4232a67a848e76",
+            "d123aff08542f7eb",
+            "85868b2ce877e946",
+            "e31108ccf78cbd96",
+            "7b5c9b6499992f48",
+            "46aa5978e8feb292",
+            "8cb123b09e2f44ae",
+            "bab6bf0154b8ad87",
+            "2cb582f5f9dc86cf",
+            "7ece927db8fa3e1a",
+            "55629a5a0e01c657",
+            "764c52bd6a321232",
+            "14bd135e2147e59f",
+            "c50d8f57a08661bf",
+            "5481efddc7a9bc0a",
+            "c8ce85c14c1821c9",
+            "ac7913107c9f0227",
+            "1f157a8bca86bf9b",
+            "8c4a9a94b85a2c84",
+            "93b0e905e146636b",
+            "23770fee940ac72a"
+        ],
+        "x": 14,
+        "y": 639,
+        "w": 2792,
+        "h": 262
+    },
+    {
+        "id": "69fde56228e705a2",
+        "type": "group",
+        "z": "6c9fffb498ae62dd",
+        "name": "Account deletion",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "64d4142bc91fb89b",
+            "612184038dcedb32",
+            "d8e7d2bba1d6743c",
+            "f4501e43f40e21fb",
+            "2add826f90d0c99f",
+            "51f211db1af8e22f",
+            "58130e8e99b43cdd",
+            "d2a5100ee5faef2c",
+            "c8b0c0e94d07b1c3",
+            "bcf6c864ee71179d",
+            "65ed87e85ee54e55",
+            "9dc8e084a12c73db",
+            "f86d2b5c1f134ca3",
+            "8bc28fc98fbe24d3",
+            "0a15b29c347416c3",
+            "ccdddecc69c3a692",
+            "523165a97db8a68d"
+        ],
+        "x": 14,
+        "y": 59,
+        "w": 1722,
+        "h": 202
+    },
+    {
+        "id": "6c34da6f3065cbbd",
+        "type": "group",
+        "z": "b66b92d26529c7fa",
+        "name": "User options",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "7b4f6a9496a4a79b",
+            "08b2841fda9ca0e6",
+            "f8943be831db8d76",
+            "60eccf3be3e4ae09",
+            "d39a1a1fbe5d310b",
+            "07ec3715e63937fc",
+            "ad3e28bab0fe03bf",
+            "b92ee598e22634d0",
+            "1b8573df29324477",
+            "c3f8a5f4867aee6f",
+            "7539740f49724ec7"
+        ],
+        "x": 54,
+        "y": 559,
+        "w": 682,
+        "h": 282
+    },
+    {
+        "id": "8957198026b47e18",
+        "type": "mqtt-broker",
+        "name": "eclipse",
+        "broker": "mqtt.eclipseprojects.io",
+        "port": "1883",
+        "clientid": "Red-node",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "48688b2bd3395750",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0ecc00",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#09772f",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "reset": false
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": true
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0ecc00",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#29ff1a",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0ecc00",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "6eafc24cd03c3171",
+        "type": "ui_tab",
+        "name": "Access",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "363a57f6eb311ab9",
+        "type": "ui_tab",
+        "name": "Plant status",
+        "icon": "dashboard",
+        "order": 3,
+        "disabled": false,
+        "hidden": true
+    },
+    {
+        "id": "b6795e559d1e41a6",
+        "type": "ui_group",
+        "name": "Water info",
+        "tab": "363a57f6eb311ab9",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "7c7cd39c63cd8c95",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "4a4e34e7851021a0",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a7f34f2f87de6c59",
+        "type": "ui_group",
+        "name": "cazz",
+        "tab": "4a4e34e7851021a0",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "0bcc6aa87385e51f",
+        "type": "ui_group",
+        "name": "Log in",
+        "tab": "27597ee0e5ce9069",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "7a7ae5378c8e68d8",
+        "type": "ui_group",
+        "name": "Register User",
+        "tab": "27597ee0e5ce9069",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "2b2d41db03025b6a",
+        "type": "ui_group",
+        "name": "User plants",
+        "tab": "ccac12f5f7d7ecf9",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "afc5e4ddbfed26d1",
+        "type": "ui_group",
+        "name": "Light",
+        "tab": "ccac12f5f7d7ecf9",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d05efae24612854a",
+        "type": "ui_group",
+        "name": "Water",
+        "tab": "ccac12f5f7d7ecf9",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "da3c9cc364e77e99",
+        "type": "ui_group",
+        "name": "Charts",
+        "tab": "ccac12f5f7d7ecf9",
+        "order": 4,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ba0dd7e6f8909fab",
+        "type": "ui_spacer",
+        "z": "a3da6d9a2fc34851",
+        "name": "spacer",
+        "group": "d9bb3581b58cf74c",
+        "order": 1,
+        "width": 12,
+        "height": 1
+    },
+    {
+        "id": "99174d8a5efa4eab",
+        "type": "ui_spacer",
+        "z": "a3da6d9a2fc34851",
+        "name": "spacer",
+        "group": "d9bb3581b58cf74c",
+        "order": 2,
+        "width": 12,
+        "height": 1
+    },
+    {
+        "id": "0804374119ac6975",
+        "type": "ui_spacer",
+        "z": "a3da6d9a2fc34851",
+        "name": "spacer",
+        "group": "d9bb3581b58cf74c",
+        "order": 3,
+        "width": 12,
+        "height": 1
+    },
+    {
+        "id": "eb1a75bfb77d3d6c",
+        "type": "ui_spacer",
+        "z": "a3da6d9a2fc34851",
+        "name": "spacer",
+        "group": "d9bb3581b58cf74c",
+        "order": 4,
+        "width": 12,
+        "height": 1
+    },
+    {
+        "id": "58c2ec0aa6717dbd",
+        "type": "ui_spacer",
+        "z": "a3da6d9a2fc34851",
+        "name": "spacer",
+        "group": "d9bb3581b58cf74c",
+        "order": 5,
+        "width": 12,
+        "height": 1
+    },
+    {
+        "id": "2fa8481bd97de621",
+        "type": "ui_spacer",
+        "z": "a3da6d9a2fc34851",
+        "name": "spacer",
+        "group": "d9bb3581b58cf74c",
+        "order": 6,
+        "width": 12,
+        "height": 1
+    },
+    {
+        "id": "13992361a6d4443c",
+        "type": "ui_group",
+        "name": "Plant selector",
+        "tab": "363a57f6eb311ab9",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "43a5a58f83248d8e",
+        "type": "ui_group",
+        "name": "Lamp info",
+        "tab": "363a57f6eb311ab9",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1e337ada666de5c8",
+        "type": "ui_group",
+        "name": "a5606bb016d6d1c0",
+        "tab": "",
+        "order": 5,
+        "disp": true,
+        "width": 6
+    },
+    {
+        "id": "c5d374ba2834794a",
+        "type": "ui_group",
+        "name": "79404650b2f99f0a",
+        "tab": "",
+        "order": 3,
+        "disp": true,
+        "width": 6
+    },
+    {
+        "id": "9195f498d7783b6d",
+        "type": "ui_group",
+        "name": "897de1565acb2be9",
+        "tab": "",
+        "order": 3,
+        "disp": true,
+        "width": 6
+    },
+    {
+        "id": "263e8a9ced74d536",
+        "type": "ui_group",
+        "name": "d9bb3581b58cf74c",
+        "tab": "",
+        "order": 2,
+        "disp": true,
+        "width": 6
+    },
+    {
+        "id": "6d7fed1744c73108",
+        "type": "ui_group",
+        "name": "Log in form",
+        "tab": "6eafc24cd03c3171",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "dbbed62931a3f420",
+        "type": "ui_tab",
+        "name": "Registration",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": true
+    },
+    {
+        "id": "47a1019f02139280",
+        "type": "ui_group",
+        "name": "Registration",
+        "tab": "dbbed62931a3f420",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "c846bf76c8606a05",
+        "type": "ui_group",
+        "name": "User option",
+        "tab": "363a57f6eb311ab9",
+        "order": 1,
+        "disp": true,
+        "width": 5,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "c243bfe85c6ab65f",
+        "type": "ui_tab",
+        "name": "Plant registration",
+        "icon": "dashboard",
+        "order": 4,
+        "disabled": false,
+        "hidden": true
+    },
+    {
+        "id": "a82a07a6313512b6",
+        "type": "ui_group",
+        "name": "ask for plant info",
+        "tab": "c243bfe85c6ab65f",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "7878e3a866e9f281",
+        "type": "ui_tab",
+        "name": "Plant deletion",
+        "icon": "dashboard",
+        "order": 5,
+        "disabled": false,
+        "hidden": true
+    },
+    {
+        "id": "2a8f5bc0a956d188",
+        "type": "ui_group",
+        "name": "form",
+        "tab": "7878e3a866e9f281",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "dcaa7817229e050d",
+        "type": "ui_spacer",
+        "z": "b66b92d26529c7fa",
+        "name": "spacer",
+        "group": "a82a07a6313512b6",
+        "order": 4,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "46cf1572341eccb0",
+        "type": "ui_spacer",
+        "z": "b66b92d26529c7fa",
+        "name": "spacer",
+        "group": "2a8f5bc0a956d188",
+        "order": 2,
+        "width": "6",
+        "height": "1"
+    },
+    {
+        "id": "8fda65c920cfe174",
+        "type": "ui_group",
+        "d": true,
+        "name": "Auto-manual",
+        "tab": "363a57f6eb311ab9",
+        "order": 5,
+        "disp": true,
+        "width": "6",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "a8e4a3.d31edb6",
+        "type": "ui_group",
+        "name": "Chart",
+        "tab": "8032fe72.980b98",
+        "order": 3,
+        "disp": false,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "8032fe72.980b98",
+        "type": "ui_tab",
+        "name": "PnH",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "2473e6b78cc0b20a",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "navigationStyle": "default",
+        "titleBarStyle": "default"
+    },
+    {
+        "id": "47f04daae5c4fa3e",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "167364c9.528973",
+        "type": "ui_group",
+        "name": "Group 1",
+        "tab": "62634de7.2b06e4",
+        "order": 1,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "62634de7.2b06e4",
+        "type": "ui_tab",
+        "name": "switch test",
+        "icon": "dashboard",
+        "order": 3
+    },
+    {
+        "id": "4b73637202834bde",
+        "type": "ui_spacer",
+        "z": "6c9fffb498ae62dd",
+        "name": "spacer",
+        "group": "6d7fed1744c73108",
+        "order": 2,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "97742e85327f3df7",
+        "type": "ui_spacer",
+        "z": "6c9fffb498ae62dd",
+        "name": "spacer",
+        "group": "6d7fed1744c73108",
+        "order": 4,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "c15452ddfca90cb2",
+        "type": "ui_spacer",
+        "z": "6c9fffb498ae62dd",
+        "name": "spacer",
+        "group": "43a5a58f83248d8e",
+        "order": 2,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "a3fbed01812b4bda",
+        "type": "ui_spacer",
+        "z": "6c9fffb498ae62dd",
+        "name": "spacer",
+        "group": "43a5a58f83248d8e",
+        "order": 10,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "a30632257d98a8e4",
+        "type": "ui_spacer",
+        "z": "6c9fffb498ae62dd",
+        "name": "spacer",
+        "group": "43a5a58f83248d8e",
+        "order": 12,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "572be765045252b3",
+        "type": "ui_spacer",
+        "z": "6c9fffb498ae62dd",
+        "name": "spacer",
+        "group": "8fda65c920cfe174",
+        "order": 1,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "5b7227d037e3b0f3",
+        "type": "ui_spacer",
+        "z": "6c9fffb498ae62dd",
+        "name": "spacer",
+        "group": "8fda65c920cfe174",
+        "order": 3,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "541a6711ad52f59f",
+        "type": "ui_spacer",
+        "z": "6c9fffb498ae62dd",
+        "name": "spacer",
+        "group": "8fda65c920cfe174",
+        "order": 4,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "e8b9ecaebae20128",
+        "type": "ui_spacer",
+        "z": "6c9fffb498ae62dd",
+        "name": "spacer",
+        "group": "8fda65c920cfe174",
+        "order": 9,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "8b6499f94a978874",
+        "type": "ui_spacer",
+        "z": "6c9fffb498ae62dd",
+        "name": "spacer",
+        "group": "8fda65c920cfe174",
+        "order": 11,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "6920ccd43a17e44e",
+        "type": "comment",
+        "z": "d577e00432a6933c",
+        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
+        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
+        "x": 350,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "91455ee90421defb",
+        "type": "mqtt in",
+        "z": "d577e00432a6933c",
+        "name": "provaMQTT",
+        "topic": "Health/band/temperature",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "8957198026b47e18",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 250,
+        "y": 440,
+        "wires": [
+            [
+                "390e7433a081a510"
+            ]
+        ]
+    },
+    {
+        "id": "4f6a5b88f332d245",
+        "type": "debug",
+        "z": "d577e00432a6933c",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "03499e2d21eacc3f",
+        "type": "http request",
+        "z": "d577e00432a6933c",
+        "name": "req",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://127.0.0.1:8080/anna",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 350,
+        "y": 640,
+        "wires": [
+            [
+                "8601735b1fd0db8f"
+            ]
+        ]
+    },
+    {
+        "id": "931072a0295b2756",
+        "type": "inject",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 80,
+        "y": 640,
+        "wires": [
+            [
+                "03499e2d21eacc3f"
+            ]
+        ]
+    },
+    {
+        "id": "0c8c5ccf8ba05e0d",
+        "type": "change",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "method",
+                "pt": "msg",
+                "to": "get",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "127.0.0.1:8080/anna",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 300,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8601735b1fd0db8f",
+        "type": "debug",
+        "z": "d577e00432a6933c",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "ea1a783b48dbd6e2",
+        "type": "inject",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "options",
+                "v": "[\"Choice 1\",\"Choice 2\",{\"Choice 3\":\"3\"}]",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 1220,
+        "wires": [
+            [
+                "4bba5a86b7cd510f"
+            ]
+        ]
+    },
+    {
+        "id": "7d16ecd829fa8213",
+        "type": "function",
+        "z": "d577e00432a6933c",
+        "name": "function 1",
+        "func": "// Generate list of elements\nmsg.payload = ['Button 1', 'Button 2', 'Button 3'];\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 860,
+        "wires": [
+            [
+                "2a6991a84e76abc7"
+            ]
+        ]
+    },
+    {
+        "id": "083e8b4cb3c40f5e",
+        "type": "split",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 450,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0cab3d50d3c391ee",
+        "type": "split",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 350,
+        "y": 1080,
+        "wires": [
+            [
+                "8c50943e2d156f86"
+            ]
+        ]
+    },
+    {
+        "id": "aa63f915c0d24c56",
+        "type": "inject",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"op1\":1,\"op2\":2}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 1080,
+        "wires": [
+            [
+                "0cab3d50d3c391ee"
+            ]
+        ]
+    },
+    {
+        "id": "c61cfe30b323ea99",
+        "type": "http request",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://192.68.0.24:8080/getUsers",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 270,
+        "y": 1340,
+        "wires": [
+            [
+                "af31b74c8b9955ad"
+            ]
+        ]
+    },
+    {
+        "id": "41b70669d577ec24",
+        "type": "inject",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 1340,
+        "wires": [
+            [
+                "c61cfe30b323ea99"
+            ]
+        ]
+    },
+    {
+        "id": "af31b74c8b9955ad",
+        "type": "debug",
+        "z": "d577e00432a6933c",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 1340,
+        "wires": []
+    },
+    {
+        "id": "390e7433a081a510",
+        "type": "python3-function",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "func": "import json\ntemp={}\ntemp[\"topic\"]=\"prova\"\ntemp[\"payload\"]=msg[\"payload\"][\"e\"][0][\"v\"]\n\n#p=msg[\"payload\"][\"e\"][0][\"v\"]\nreturn temp",
+        "outputs": 1,
+        "x": 470,
+        "y": 440,
+        "wires": [
+            [
+                "4f6a5b88f332d245",
+                "8f7bb710292ec254"
+            ]
+        ]
+    },
+    {
+        "id": "941982583c7fbc77",
+        "type": "ui_button",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "group": "",
+        "order": 2,
+        "width": "2",
+        "height": "1",
+        "passthru": false,
+        "label": "msg.payload.label",
+        "tooltip": "",
+        "color": "green",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "msg.payload.payload",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 550,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8c50943e2d156f86",
+        "type": "ui_button",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "group": "1e337ada666de5c8",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "button",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 510,
+        "y": 1080,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0756c9f5d888926f",
+        "type": "ui_dropdown",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "label": "",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "",
+                "value": "",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 180,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4bba5a86b7cd510f",
+        "type": "ui_dropdown",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "label": "",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 320,
+        "y": 1220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8f7bb710292ec254",
+        "type": "ui_chart",
+        "z": "d577e00432a6933c",
+        "name": "",
+        "group": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "35",
+        "ymax": "40",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 690,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2a6991a84e76abc7",
+        "type": "ui_template",
+        "z": "d577e00432a6933c",
+        "group": "1e337ada666de5c8",
+        "name": "",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "format": "<md-button style=\"display:inline-block\" ng-repeat=\"(key, value) in msg.payload\"\n    ng-click=\"send({payload: value.number})\">{{value.name}}</md-button>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 600,
+        "y": 920,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8ef37ec48314bb55",
+        "type": "inject",
+        "z": "a3da6d9a2fc34851",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "options",
+                "v": "[ \"Choice 1\", \"Choice 2\", {\"Choice 3\":\"3\"} ]",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 40,
+        "wires": [
+            [
+                "4eec88bb2034281c"
+            ]
+        ]
+    },
+    {
+        "id": "4eec88bb2034281c",
+        "type": "ui_dropdown",
+        "z": "a3da6d9a2fc34851",
+        "name": "",
+        "label": "",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 340,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "063bc68ca417b87f",
+        "type": "comment",
+        "z": "a3da6d9a2fc34851",
+        "name": "",
+        "info": "Manca da fare la parte dei grafici e da gestire il cambio utente.\nImplementare log in",
+        "x": 120,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "09c20eeea4fd17e6",
+        "type": "change",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "user",
+                "pt": "global",
+                "to": "user",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "possMeasures",
+                "pt": "global",
+                "to": "possMeasures",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1520,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "22e8bd7f8249c68a",
+        "type": "inject",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "",
+        "props": [
+            {
+                "p": "user",
+                "v": "user1",
+                "vt": "str"
+            },
+            {
+                "p": "possMeasures",
+                "v": "[\"humidity\", \"temperature\",\"moisture\", \"dli\", \"tankLvl\", \"sunlight\"]",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 1750,
+        "y": 480,
+        "wires": [
+            [
+                "09c20eeea4fd17e6"
+            ]
+        ]
+    },
+    {
+        "id": "9a17698450959d0f",
+        "type": "ui_form",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "",
+        "label": "Sign in",
+        "group": "6d7fed1744c73108",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "user",
+                "value": "usr",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "password",
+                "value": "pwd",
+                "type": "password",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "usr": "",
+            "pwd": ""
+        },
+        "payload": "",
+        "submit": "Login",
+        "cancel": "Cancel",
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": false,
+        "className": "",
+        "x": 110,
+        "y": 280,
+        "wires": [
+            [
+                "e5b38d716fbc838a",
+                "ba476bee8c4456db",
+                "b10aa3fd85d2e364"
+            ]
+        ]
+    },
+    {
+        "id": "40df30086f912630",
+        "type": "python3-function",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Access function",
+        "func": "#deve vedere se il nome inserito è nella lista utenti\nsubbed_users=msg['payload']\npot_user=msg['user']\npot_user_name=pot_user['usr']\npot_user_pwd=pot_user['pwd']\nresult=0\n\nfor user in subbed_users:\n    username=user['userId']\n    \n    \n    if username==pot_user_name:\n        password=user['password']\n        if password == pot_user_pwd:\n            result=1\n            msg['payload']={'username':pot_user_name,'plants':user['plants']}\n        break\n\n    \nmsg['result']=result\n\n\n\nreturn msg",
+        "outputs": 1,
+        "x": 580,
+        "y": 280,
+        "wires": [
+            [
+                "2dbb229a90ced828",
+                "e2df31bb6b818bc7"
+            ]
+        ]
+    },
+    {
+        "id": "63d1d1abd474fd73",
+        "type": "python3-function",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Register function",
+        "func": "\ninformation=msg['payload']\n\nusr=information['usr']\npwd=information['pwd']\ncpwd=information['cpwd']\nspecial_characters = {' ', ':', '/', ';', ',', '\"', \"'\",\"{\",\"}\",\"[\",\"[\",\"]\"}\nresult=0\nif pwd!=cpwd:\n    result=1 #pwd e cpwd non combaciano\n    msg['payload']=f\"There are password inputs inconsistencies:Please try again\"\nelif any(char in special_characters for char in usr):\n    msg['payload']=f\"user or password cannot contain the following: {special_characters}\"\n    result=2\nelif any(char in special_characters for char in pwd):\n    msg['payload']=f\"user or password cannot contain the following: {special_characters}\"\n    result=2\n\n    \nmsg['result']=result\nif result <1:\n    msg['payload']={'userId':usr,'password':pwd}        \n \n\n\n\n\nreturn msg\n",
+        "outputs": 1,
+        "x": 270,
+        "y": 660,
+        "wires": [
+            [
+                "882dd7c49dae2613"
+            ]
+        ]
+    },
+    {
+        "id": "ba476bee8c4456db",
+        "type": "debug",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Show choice",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 330,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "e5b38d716fbc838a",
+        "type": "http request",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Http req users",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.68.0.24:8081/users",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 340,
+        "y": 180,
+        "wires": [
+            [
+                "acb3e1c703d7ed4b",
+                "836a36d93ca23ff6"
+            ]
+        ]
+    },
+    {
+        "id": "acb3e1c703d7ed4b",
+        "type": "debug",
+        "z": "a3da6d9a2fc34851",
+        "d": true,
+        "g": "c3e16cfe173e374a",
+        "name": "Show response",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "f3496b149d759ba3",
+        "type": "ui_button",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Registartion button",
+        "group": "6d7fed1744c73108",
+        "order": 3,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "label": "Register",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 130,
+        "y": 600,
+        "wires": [
+            [
+                "7da98c94947c8790"
+            ]
+        ]
+    },
+    {
+        "id": "2dbb229a90ced828",
+        "type": "switch",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Present/notPresent",
+        "property": "result",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 790,
+        "y": 280,
+        "wires": [
+            [
+                "7f4b1cdedc7b413f",
+                "049250fe163033c4"
+            ],
+            [
+                "f561665e4b07c58b"
+            ]
+        ]
+    },
+    {
+        "id": "c92033e6f4d9bacb",
+        "type": "ui_toast",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "User not found",
+        "x": 1320,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "74d88e495b04ec7b",
+        "type": "http request",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 570,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b10aa3fd85d2e364",
+        "type": "change",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "user",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "747c3f2292c7cd13",
+        "type": "debug",
+        "z": "a3da6d9a2fc34851",
+        "d": true,
+        "g": "c3e16cfe173e374a",
+        "name": "debug 8",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "e2df31bb6b818bc7",
+        "type": "debug",
+        "z": "a3da6d9a2fc34851",
+        "d": true,
+        "g": "c3e16cfe173e374a",
+        "name": "debug 10",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "result",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "7f4b1cdedc7b413f",
+        "type": "change",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "user",
+                "pt": "global",
+                "to": "user.usr",
+                "tot": "flow"
+            },
+            {
+                "t": "set",
+                "p": "user",
+                "pt": "flow",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "plants",
+                "pt": "global",
+                "to": "payload.plants",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1080,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e4abfd9e2cf711a1",
+        "type": "ui_toast",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Welcome to Rootypy",
+        "x": 1280,
+        "y": 180,
+        "wires": [
+            [
+                "ff14be34c8999c78"
+            ]
+        ]
+    },
+    {
+        "id": "049250fe163033c4",
+        "type": "python3-function",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "User found mess",
+        "func": "user=msg['payload']['username']\nmsg['payload']=f\"Welcome to Rootypy {user}\"\nreturn msg",
+        "outputs": 1,
+        "x": 1050,
+        "y": 180,
+        "wires": [
+            [
+                "e4abfd9e2cf711a1"
+            ]
+        ]
+    },
+    {
+        "id": "f561665e4b07c58b",
+        "type": "python3-function",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "User not found mess",
+        "func": "msg['payload']=f\"Username or password NOT found:\\nPlease try again\"\nreturn msg\n",
+        "outputs": 1,
+        "x": 1040,
+        "y": 400,
+        "wires": [
+            [
+                "c92033e6f4d9bacb"
+            ]
+        ]
+    },
+    {
+        "id": "7583541f0b273db3",
+        "type": "ui_text",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "group": "6d7fed1744c73108",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "New to Rootypy?",
+        "format": "",
+        "layout": "col-center",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": "24",
+        "color": "#ffffff",
+        "x": 130,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "ff14be34c8999c78",
+        "type": "function",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Change tab to user tab",
+        "func": "msg['payload']={'tab': 'Plant status',\n    \"tabs\": {\n        \"hide\": 'Access',\n        \"show\": 'Plant status'\n    }}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1520,
+        "y": 180,
+        "wires": [
+            [
+                "5f51dfcd1d79c430"
+            ]
+        ]
+    },
+    {
+        "id": "5f51dfcd1d79c430",
+        "type": "ui_ui_control",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "",
+        "events": "change",
+        "x": 1520,
+        "y": 280,
+        "wires": [
+            [
+                "beb0088c90120734"
+            ]
+        ]
+    },
+    {
+        "id": "beb0088c90120734",
+        "type": "link out",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "767eee5a96118a93"
+        ],
+        "x": 1575,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "7da98c94947c8790",
+        "type": "python3-function",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Hide login/show register",
+        "func": "msg['payload']={'tab': 'Registration',\n    \"tabs\": {\n        \"hide\": 'Access',\n        \"show\": 'Registration'\n    }}\nreturn msg;\n",
+        "outputs": 1,
+        "x": 370,
+        "y": 600,
+        "wires": [
+            [
+                "41fc9c0e1fafcaa8"
+            ]
+        ]
+    },
+    {
+        "id": "dd9e11fe7d4864db",
+        "type": "ui_form",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "",
+        "label": "",
+        "group": "47a1019f02139280",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "username",
+                "value": "usr",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "password",
+                "value": "pwd",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "confirm password",
+                "value": "cpwd",
+                "type": "text",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "usr": "",
+            "pwd": "",
+            "cpwd": ""
+        },
+        "payload": "",
+        "submit": "submit",
+        "cancel": "cancel",
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "x": 90,
+        "y": 660,
+        "wires": [
+            [
+                "63d1d1abd474fd73"
+            ]
+        ]
+    },
+    {
+        "id": "41fc9c0e1fafcaa8",
+        "type": "ui_ui_control",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "",
+        "events": "all",
+        "x": 580,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "934fd7b3574203a2",
+        "type": "ui_text",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "group": "47a1019f02139280",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Instruction reg",
+        "label": "Please fill the required fields",
+        "format": "",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 120,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "882dd7c49dae2613",
+        "type": "switch",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "",
+        "property": "result",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 630,
+        "y": 660,
+        "wires": [
+            [
+                "d1b6bbb81f8f8ce0"
+            ],
+            [
+                "a1e75bc18bd90dd7"
+            ],
+            [
+                "4755f36e7e085fa2"
+            ]
+        ]
+    },
+    {
+        "id": "d1b6bbb81f8f8ce0",
+        "type": "ui_toast",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Pwd inconsistencies",
+        "x": 840,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4755f36e7e085fa2",
+        "type": "python3-function",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Request subscription",
+        "func": "username=msg['payload']['userId']\npassword=msg['payload']['password']\nmsg['payload']={ 'userId': username, 'password': password}\nreturn msg\n",
+        "outputs": 1,
+        "x": 840,
+        "y": 700,
+        "wires": [
+            [
+                "d5c86f525b32fa0b"
+            ]
+        ]
+    },
+    {
+        "id": "a1e75bc18bd90dd7",
+        "type": "ui_toast",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "User taken",
+        "x": 810,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d5c86f525b32fa0b",
+        "type": "http request",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "addUser",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.68.0.24:8081/addu",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1040,
+        "y": 700,
+        "wires": [
+            [
+                "0564ed2dc39baf0d",
+                "5815c8b69a6f9988"
+            ]
+        ]
+    },
+    {
+        "id": "0564ed2dc39baf0d",
+        "type": "debug",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "debug 12",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1220,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "1774b976e85d7954",
+        "type": "ui_toast",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Completed registration",
+        "x": 1780,
+        "y": 660,
+        "wires": [
+            [
+                "3a46f16355c6f1df"
+            ]
+        ]
+    },
+    {
+        "id": "3ce55724e56034a1",
+        "type": "python3-function",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Mess complete registration",
+        "func": "msg['payload']=f\"Registration complete\"\nreturn msg\n",
+        "outputs": 1,
+        "x": 1520,
+        "y": 660,
+        "wires": [
+            [
+                "1774b976e85d7954"
+            ]
+        ]
+    },
+    {
+        "id": "5815c8b69a6f9988",
+        "type": "switch",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Response add user",
+        "property": "payload.status",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "OK",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1270,
+        "y": 700,
+        "wires": [
+            [
+                "3ce55724e56034a1"
+            ],
+            [
+                "9bee625ac7a3b9d5"
+            ]
+        ]
+    },
+    {
+        "id": "3a46f16355c6f1df",
+        "type": "function",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Change tab to user tab",
+        "func": "msg['payload']={'tab': 'Access',\n    \"tabs\": {\n        \"hide\": 'Registration',\n        \"show\": 'Access'\n    }}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2040,
+        "y": 660,
+        "wires": [
+            [
+                "1480c8ec871f9b5a"
+            ]
+        ]
+    },
+    {
+        "id": "1480c8ec871f9b5a",
+        "type": "ui_ui_control",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "",
+        "events": "all",
+        "x": 2240,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9bee625ac7a3b9d5",
+        "type": "python3-function",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Mess user name already present",
+        "func": "msg['payload']=f\"Username was already taken. Please try with a different name\"\nreturn msg\n",
+        "outputs": 1,
+        "x": 1540,
+        "y": 740,
+        "wires": [
+            [
+                "aa7c94e7e71b1f4a"
+            ]
+        ]
+    },
+    {
+        "id": "aa7c94e7e71b1f4a",
+        "type": "ui_toast",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "User already taken",
+        "x": 1810,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "836a36d93ca23ff6",
+        "type": "function",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Fetch current user",
+        "func": "msg.user = flow.get(\"user\");\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 220,
+        "wires": [
+            [
+                "40df30086f912630",
+                "747c3f2292c7cd13"
+            ]
+        ]
+    },
+    {
+        "id": "9bf10589b44345be",
+        "type": "ui_button",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "",
+        "group": "47a1019f02139280",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Back",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 110,
+        "y": 740,
+        "wires": [
+            [
+                "8cc1f32cf4d1546b"
+            ]
+        ]
+    },
+    {
+        "id": "8cc1f32cf4d1546b",
+        "type": "python3-function",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Exit page",
+        "func": "msg['payload']={'tab': 'Access',\n    \"tabs\": {\n        \"hide\": 'Registration',\n        \"show\": 'Access'\n    }}\nreturn msg;",
+        "outputs": 1,
+        "x": 260,
+        "y": 740,
+        "wires": [
+            [
+                "092191c2b6a4f8ad"
+            ]
+        ]
+    },
+    {
+        "id": "092191c2b6a4f8ad",
+        "type": "ui_ui_control",
+        "z": "a3da6d9a2fc34851",
+        "g": "c3e16cfe173e374a",
+        "name": "Return to log in",
+        "events": "change",
+        "x": 440,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6959585a9d31f0e3",
+        "type": "http request",
+        "z": "b66b92d26529c7fa",
+        "name": "Http req plant tank lvl",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 2560,
+        "y": 480,
+        "wires": [
+            [
+                "622a1f78355836df",
+                "e79d7184404356eb"
+            ]
+        ]
+    },
+    {
+        "id": "3bff06ebbd46ff98",
+        "type": "python3-function",
+        "z": "b66b92d26529c7fa",
+        "name": "Show first",
+        "func": "import json\n\noption=msg['options']\nuser=msg['user']\nif len(option)>0:\n    first_option=option[0]\n    msg['text']=first_option\n    #for measurament in possMeasures:\n    #richiedo l'umidità per ora\n    msg['choice']=first_option\n    #msg['url']=f\"http://192.68.0.25:8080/getData/{user}/{first_option}?measurament=humidity&duration=1\"\nelse:\n    msg['choice']=\"\"\nreturn msg\n",
+        "outputs": 1,
+        "x": 820,
+        "y": 360,
+        "wires": [
+            [
+                "3c1e045ac6ea2368",
+                "7ee5c58e292bc37b"
+            ]
+        ]
+    },
+    {
+        "id": "1dc9181509302b73",
+        "type": "python3-function",
+        "z": "b66b92d26529c7fa",
+        "name": "Choice manager",
+        "func": "import json\nchoice=msg['payload']\nmsg['text']=choice\nmsg['choice']=choice\nreturn msg",
+        "outputs": 1,
+        "x": 1020,
+        "y": 300,
+        "wires": [
+            [
+                "3c1e045ac6ea2368",
+                "7ee5c58e292bc37b"
+            ]
+        ]
+    },
+    {
+        "id": "622a1f78355836df",
+        "type": "python3-function",
+        "z": "b66b92d26529c7fa",
+        "name": "Read tanklvl",
+        "func": "msg['payload']=15\nreturn msg",
+        "outputs": 1,
+        "x": 2790,
+        "y": 480,
+        "wires": [
+            [
+                "993f4b0eed109863"
+            ]
+        ]
+    },
+    {
+        "id": "c482e021bd9470f0",
+        "type": "ui_dropdown",
+        "z": "b66b92d26529c7fa",
+        "name": "",
+        "label": "Plant list",
+        "tooltip": "",
+        "place": "Select plant",
+        "group": "c846bf76c8606a05",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 820,
+        "y": 300,
+        "wires": [
+            [
+                "1dc9181509302b73"
+            ]
+        ]
+    },
+    {
+        "id": "f446cd676ac4cc90",
+        "type": "ui_text",
+        "z": "b66b92d26529c7fa",
+        "group": "",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Welcome ",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 420,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "993f4b0eed109863",
+        "type": "ui_gauge",
+        "z": "b66b92d26529c7fa",
+        "name": "Tank level",
+        "group": "b6795e559d1e41a6",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "wave",
+        "title": "gauge",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 3040,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "adc72e4e1f64d760",
+        "type": "python3-function",
+        "z": "b66b92d26529c7fa",
+        "name": "Read users plants",
+        "func": "import json\nuser=msg['user']\nplants=msg[\"payload\"]\n #palce holder\n#importante dire options se no non capisce\nmsg['options']=[]\nmsg['plants']=[]\nfor plant in plants:\n    ID=plant['plantId']\n    CODE=plant['plantCode']\n    if plant['userId']==user:\n        msg['options'].append(ID)\n        msg['plants'].append(plant)\n    \n\nreturn msg",
+        "outputs": 1,
+        "x": 590,
+        "y": 300,
+        "wires": [
+            [
+                "c482e021bd9470f0",
+                "3bff06ebbd46ff98",
+                "2286028bd71d7cb5"
+            ]
+        ]
+    },
+    {
+        "id": "51be9d5f47265a60",
+        "type": "debug",
+        "z": "b66b92d26529c7fa",
+        "name": "debug 6",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1180,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "e79d7184404356eb",
+        "type": "debug",
+        "z": "b66b92d26529c7fa",
+        "name": "debug 7",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2800,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "3c1e045ac6ea2368",
+        "type": "ui_text",
+        "z": "b66b92d26529c7fa",
+        "group": "c846bf76c8606a05",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Showing:",
+        "format": "{{msg.text}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1280,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "af29ecfd017e0edb",
+        "type": "python3-function",
+        "z": "b66b92d26529c7fa",
+        "g": "f28aa0bcad7a8f9d",
+        "name": "Url measure humidity",
+        "func": "possMeasures=msg['possMeasures']\nuser=msg['user']\nchoice=msg['choice']\nmsg['url']=f\"http://192.68.0.25:8080/getData/{user}/{choice}?measurament={possMeasures[0]}&duration=1\"\nreturn msg",
+        "outputs": 1,
+        "x": 2640,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d819301bcf0ae72c",
+        "type": "python3-function",
+        "z": "b66b92d26529c7fa",
+        "g": "f28aa0bcad7a8f9d",
+        "name": "Url measure  \"tankLvl\"",
+        "func": "\nuser=msg['user']\nchoice=msg['choice']\nmeasure= \"tankLvl\"\nmsg['url']=f\"http://192.68.0.25:8080/getData/{user}/{choice}?measurament={measure}&duration=1\"\nreturn msg\n",
+        "outputs": 1,
+        "x": 2640,
+        "y": 360,
+        "wires": [
+            [
+                "6959585a9d31f0e3"
+            ]
+        ]
+    },
+    {
+        "id": "ed3a717890a7705d",
+        "type": "function",
+        "z": "b66b92d26529c7fa",
+        "name": "UserFetcher",
+        "func": "msg.user = global.get(\"user\");\n//msg.plants=global.get(\"plants\")\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 300,
+        "wires": [
+            [
+                "b3aad840f8e4a12c",
+                "3b7a92a2e271f7d4",
+                "adc72e4e1f64d760"
+            ]
+        ]
+    },
+    {
+        "id": "303fb800babdbe5a",
+        "type": "function",
+        "z": "b66b92d26529c7fa",
+        "g": "f28aa0bcad7a8f9d",
+        "name": "PossMeasureFetcher",
+        "func": "msg.possMeasures = global.get(\"possMeasures\");\nmsg.user = msg.user\nmsg.choice=msg.choice\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2400,
+        "y": 300,
+        "wires": [
+            [
+                "af29ecfd017e0edb",
+                "d819301bcf0ae72c"
+            ]
+        ]
+    },
+    {
+        "id": "995302f2f30eee72",
+        "type": "comment",
+        "z": "b66b92d26529c7fa",
+        "g": "f28aa0bcad7a8f9d",
+        "name": "",
+        "info": "Qua in realtà dovrei richiedere il tank level\ne il light intensity, ma per ora chiedo\nhumidità e temperature per semplicità",
+        "x": 2420,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "7ee5c58e292bc37b",
+        "type": "function",
+        "z": "b66b92d26529c7fa",
+        "name": "PlantUserFetch",
+        "func": "msg.plants = global.get(\"plants\");\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1260,
+        "y": 300,
+        "wires": [
+            [
+                "a3c6905e5998bd78"
+            ]
+        ]
+    },
+    {
+        "id": "767eee5a96118a93",
+        "type": "link in",
+        "z": "b66b92d26529c7fa",
+        "name": "link in 1",
+        "links": [
+            "4ce6ca462e133b32",
+            "beb0088c90120734",
+            "f167e22b18f1c822"
+        ],
+        "x": 25,
+        "y": 300,
+        "wires": [
+            [
+                "f6e89d54704c6f88"
+            ]
+        ]
+    },
+    {
+        "id": "b3aad840f8e4a12c",
+        "type": "ui_text",
+        "z": "b66b92d26529c7fa",
+        "group": "c846bf76c8606a05",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Display username",
+        "label": "User:",
+        "format": "{{msg.user}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 590,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "3b7a92a2e271f7d4",
+        "type": "debug",
+        "z": "b66b92d26529c7fa",
+        "name": "debug 16",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "54dcd7f58b1e80b4",
+        "type": "change",
+        "z": "b66b92d26529c7fa",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "selected_plant",
+                "pt": "global",
+                "to": "selected_plant",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1830,
+        "y": 340,
+        "wires": [
+            [
+                "9f6223fcb9cf8dfa",
+                "5fbf06efc0a38be0"
+            ]
+        ]
+    },
+    {
+        "id": "9f6223fcb9cf8dfa",
+        "type": "debug",
+        "z": "b66b92d26529c7fa",
+        "name": "debug 22",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2100,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "7b4f6a9496a4a79b",
+        "type": "ui_button",
+        "z": "b66b92d26529c7fa",
+        "g": "6c34da6f3065cbbd",
+        "name": "Esc",
+        "group": "c846bf76c8606a05",
+        "order": 7,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "label": "Log out",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 150,
+        "y": 600,
+        "wires": [
+            [
+                "08b2841fda9ca0e6"
+            ]
+        ]
+    },
+    {
+        "id": "08b2841fda9ca0e6",
+        "type": "python3-function",
+        "z": "b66b92d26529c7fa",
+        "g": "6c34da6f3065cbbd",
+        "name": "Exit page",
+        "func": "msg['payload']={'tab': 'Access',\n    \"tabs\": {\n        \"hide\": 'Plant status',\n        \"show\": 'Access'\n    }}\nreturn msg;",
+        "outputs": 1,
+        "x": 300,
+        "y": 600,
+        "wires": [
+            [
+                "f8943be831db8d76",
+                "60eccf3be3e4ae09"
+            ]
+        ]
+    },
+    {
+        "id": "f8943be831db8d76",
+        "type": "ui_ui_control",
+        "z": "b66b92d26529c7fa",
+        "g": "6c34da6f3065cbbd",
+        "name": "Return to log in",
+        "events": "change",
+        "x": 500,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "60eccf3be3e4ae09",
+        "type": "change",
+        "z": "b66b92d26529c7fa",
+        "g": "6c34da6f3065cbbd",
+        "name": "Forget current info",
+        "rules": [
+            {
+                "t": "set",
+                "p": "user",
+                "pt": "global",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "choice",
+                "pt": "global",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "plants",
+                "pt": "global",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 510,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "299c0856d68d8e62",
+        "type": "http request",
+        "z": "b66b92d26529c7fa",
+        "name": "Give water",
+        "method": "PUT",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1030,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9c435cfde6507de8",
+        "type": "ui_button",
+        "z": "b66b92d26529c7fa",
+        "name": "Give water",
+        "group": "b6795e559d1e41a6",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Give water",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 850,
+        "y": 560,
+        "wires": [
+            [
+                "fe909123e4587748",
+                "299c0856d68d8e62"
+            ]
+        ]
+    },
+    {
+        "id": "fe909123e4587748",
+        "type": "function",
+        "z": "b66b92d26529c7fa",
+        "name": "User&ChoiceFetcher",
+        "func": "msg.user = global.get(\"user\");\nmsg.choice = global.get(\"choice\");\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1140,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2b0b33e5a21125a1",
+        "type": "python3-function",
+        "z": "b66b92d26529c7fa",
+        "name": "Water response manager",
+        "func": "\nreturn msg",
+        "outputs": 1,
+        "x": 1270,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d7631c6fce3923e5",
+        "type": "switch",
+        "z": "b66b92d26529c7fa",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1310,
+        "y": 620,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "80f7796008bf77a0",
+        "type": "ui_switch",
+        "z": "b66b92d26529c7fa",
+        "name": "",
+        "label": "switch",
+        "tooltip": "",
+        "group": "",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 1570,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e01651082211d2e3",
+        "type": "ui_form",
+        "z": "b66b92d26529c7fa",
+        "name": "",
+        "label": "",
+        "group": "",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "",
+                "value": "",
+                "type": "text",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "": ""
+        },
+        "payload": "",
+        "submit": "submit",
+        "cancel": "cancel",
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "x": 1610,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d39a1a1fbe5d310b",
+        "type": "ui_button",
+        "z": "b66b92d26529c7fa",
+        "g": "6c34da6f3065cbbd",
+        "name": "Add new plant",
+        "group": "c846bf76c8606a05",
+        "order": 4,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "label": "Add new plant",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 160,
+        "y": 740,
+        "wires": [
+            [
+                "07ec3715e63937fc"
+            ]
+        ]
+    },
+    {
+        "id": "07ec3715e63937fc",
+        "type": "python3-function",
+        "z": "b66b92d26529c7fa",
+        "g": "6c34da6f3065cbbd",
+        "name": "Go to registration form",
+        "func": "msg['payload']={'tab': 'Plant registration',\n    \"tabs\": {\n        \"hide\": 'Plant status',\n        \"show\": 'Plant registration'\n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 380,
+        "y": 740,
+        "wires": [
+            [
+                "ad3e28bab0fe03bf"
+            ]
+        ]
+    },
+    {
+        "id": "ad3e28bab0fe03bf",
+        "type": "ui_ui_control",
+        "z": "b66b92d26529c7fa",
+        "g": "6c34da6f3065cbbd",
+        "name": "",
+        "events": "change",
+        "x": 580,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1b8573df29324477",
+        "type": "ui_button",
+        "z": "b66b92d26529c7fa",
+        "g": "6c34da6f3065cbbd",
+        "name": "Delete plant",
+        "group": "c846bf76c8606a05",
+        "order": 5,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "label": "Delete plant",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 150,
+        "y": 800,
+        "wires": [
+            [
+                "b92ee598e22634d0"
+            ]
+        ]
+    },
+    {
+        "id": "b92ee598e22634d0",
+        "type": "python3-function",
+        "z": "b66b92d26529c7fa",
+        "g": "6c34da6f3065cbbd",
+        "name": "Go to registration form",
+        "func": "msg['payload']={'tab': 'Plant deletion',\n    \"tabs\": {\n        \"hide\": 'Plant status',\n        \"show\": 'Plant deletion'\n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 360,
+        "y": 800,
+        "wires": [
+            [
+                "c3f8a5f4867aee6f"
+            ]
+        ]
+    },
+    {
+        "id": "c3f8a5f4867aee6f",
+        "type": "ui_ui_control",
+        "z": "b66b92d26529c7fa",
+        "g": "6c34da6f3065cbbd",
+        "name": "",
+        "events": "change",
+        "x": 580,
+        "y": 800,
+        "wires": [
+            [
+                "7539740f49724ec7"
+            ]
+        ]
+    },
+    {
+        "id": "7539740f49724ec7",
+        "type": "link out",
+        "z": "b66b92d26529c7fa",
+        "g": "6c34da6f3065cbbd",
+        "name": "Deletion button",
+        "mode": "link",
+        "links": [
+            "23770fee940ac72a"
+        ],
+        "x": 695,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "f6e89d54704c6f88",
+        "type": "http request",
+        "z": "b66b92d26529c7fa",
+        "name": "Req plants",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.68.0.24:8081/plants",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 170,
+        "y": 300,
+        "wires": [
+            [
+                "ed3a717890a7705d"
+            ]
+        ]
+    },
+    {
+        "id": "2286028bd71d7cb5",
+        "type": "change",
+        "z": "b66b92d26529c7fa",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "plants",
+                "pt": "global",
+                "to": "plants",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a3c6905e5998bd78",
+        "type": "python3-function",
+        "z": "b66b92d26529c7fa",
+        "name": "Retrive selected plant info",
+        "func": "choice=msg['choice']\nplants=msg['plants']\n\nfor plant in plants:\n    if plant['plantId']==choice:\n        msg['selected_plant']=plant\nreturn msg",
+        "outputs": 1,
+        "x": 1490,
+        "y": 300,
+        "wires": [
+            [
+                "54dcd7f58b1e80b4"
+            ]
+        ]
+    },
+    {
+        "id": "5dd34eadb5752bcf",
+        "type": "link out",
+        "z": "b66b92d26529c7fa",
+        "name": "Selecting plant",
+        "mode": "link",
+        "links": [
+            "8586bb7fbb3dde7b"
+        ],
+        "x": 2395,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "5fbf06efc0a38be0",
+        "type": "http request",
+        "z": "b66b92d26529c7fa",
+        "name": "Req online devices",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.68.0.24:8081/devices",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1470,
+        "y": 460,
+        "wires": [
+            [
+                "0906432955bba73f"
+            ]
+        ]
+    },
+    {
+        "id": "86365e15fd934aa7",
+        "type": "python3-function",
+        "z": "b66b92d26529c7fa",
+        "name": "Find current plant devices",
+        "func": "online_dev=msg['payload']\nsel_plant=msg['selected_plant']\ncurrent_plant_online_dev=[]\nfor dev in online_dev:\n    plant_code,dev_type = dev['deviceID'].split('/')\n    if plant_code==sel_plant['plantCode']:\n        current_plant_online_dev.append(dev_type)\n\n\nmsg[\"current_plant_online_dev\"]=current_plant_online_dev\nreturn msg",
+        "outputs": 1,
+        "x": 1950,
+        "y": 460,
+        "wires": [
+            [
+                "01073a15bc3dd13d"
+            ]
+        ]
+    },
+    {
+        "id": "0906432955bba73f",
+        "type": "change",
+        "z": "b66b92d26529c7fa",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "selected_plant",
+                "pt": "msg",
+                "to": "selected_plant",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1700,
+        "y": 460,
+        "wires": [
+            [
+                "86365e15fd934aa7"
+            ]
+        ]
+    },
+    {
+        "id": "01073a15bc3dd13d",
+        "type": "change",
+        "z": "b66b92d26529c7fa",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "online_devices",
+                "pt": "global",
+                "to": "current_plant_online_dev",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2210,
+        "y": 460,
+        "wires": [
+            [
+                "5dd34eadb5752bcf"
+            ]
+        ]
+    },
+    {
+        "id": "074f239edc23ac64",
+        "type": "ui_text_input",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "",
+        "label": "Plant code:",
+        "tooltip": "",
+        "group": "a82a07a6313512b6",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "code",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "str",
+        "x": 170,
+        "y": 340,
+        "wires": [
+            [
+                "056a3a5de86cad2a"
+            ]
+        ]
+    },
+    {
+        "id": "168141f039e401dd",
+        "type": "ui_dropdown",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "",
+        "label": "Select plant type from list",
+        "tooltip": "",
+        "place": "Select plant type from list",
+        "group": "a82a07a6313512b6",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "Evergreen1",
+                "value": "Evergreen",
+                "type": "str"
+            },
+            {
+                "label": "Flower1",
+                "value": "Flower",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "plant_type",
+        "topicType": "str",
+        "className": "",
+        "x": 210,
+        "y": 440,
+        "wires": [
+            [
+                "2b6bbfaaf424d808"
+            ]
+        ]
+    },
+    {
+        "id": "e9951e8f69a8fcfd",
+        "type": "ui_text_input",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "",
+        "label": "Plant name:",
+        "tooltip": "",
+        "group": "a82a07a6313512b6",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "plantId",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "str",
+        "x": 170,
+        "y": 380,
+        "wires": [
+            [
+                "e3cd499d6963e884"
+            ]
+        ]
+    },
+    {
+        "id": "7ca05419e74cb1c4",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "Set plant info",
+        "func": "#msg['payload']={\n#    \"code\": msg[\"code\"],\n#    \"plantId\": msg[\"new_plantId\"],\n#    \"plant_type\": msg[\"plant_type\"]\n#};\n#plants_list=msg['plant_list']\n#new_plant=msg['new_plantId']\n#result=0\n#if new_plant and msg['code'] and msg['plant_type']:\n#    for plant in plants_list:\n#        if plant['plantId']==new_plant:\n#            result=1\n#            msg['payload']=\"The chosen plant id is alredy registered in your plant list\"\n#            break\n#else:\n#    result=2\n            \n#if result==0:\nmsg['payload']={'userId':msg['user'],'plantId':msg[\"new_plantId\"],\"plantCode\":msg[\"code\"],\"type\":msg[\"plant_type\"]}\n    \n#msg['result']=result\nreturn msg",
+        "outputs": 1,
+        "x": 570,
+        "y": 520,
+        "wires": [
+            [
+                "59146c9d2db3aa06"
+            ]
+        ]
+    },
+    {
+        "id": "1e792fc77dbddc85",
+        "type": "debug",
+        "z": "6c9fffb498ae62dd",
+        "d": true,
+        "g": "f70c2a4e4b3302a0",
+        "name": "debug 14",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "056a3a5de86cad2a",
+        "type": "change",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "code",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 430,
+        "y": 340,
+        "wires": [
+            [
+                "1e792fc77dbddc85"
+            ]
+        ]
+    },
+    {
+        "id": "e3cd499d6963e884",
+        "type": "change",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "new_plantId",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 380,
+        "wires": [
+            [
+                "1e792fc77dbddc85"
+            ]
+        ]
+    },
+    {
+        "id": "2b6bbfaaf424d808",
+        "type": "change",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "plant_type",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 450,
+        "y": 440,
+        "wires": [
+            [
+                "1e792fc77dbddc85"
+            ]
+        ]
+    },
+    {
+        "id": "bbfd1b98cc70eed7",
+        "type": "function",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "Fetch new plant info",
+        "func": "msg.user = global.get(\"user\")\nmsg.new_plantId=flow.get(\"new_plantId\")\nmsg.code=flow.get(\"code\")\nmsg.plant_type = flow.get(\"plant_type\")\n//msg.plant_list=global.get(\"plants\")\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 520,
+        "wires": [
+            [
+                "7ca05419e74cb1c4"
+            ]
+        ]
+    },
+    {
+        "id": "bd5f9a790b594323",
+        "type": "ui_button",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "Submit button",
+        "group": "a82a07a6313512b6",
+        "order": 6,
+        "width": 3,
+        "height": 1,
+        "passthru": false,
+        "label": "Submit",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 120,
+        "y": 520,
+        "wires": [
+            [
+                "bbfd1b98cc70eed7"
+            ]
+        ]
+    },
+    {
+        "id": "59146c9d2db3aa06",
+        "type": "http request",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "Add plant",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.68.0.24:8081/addp",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 760,
+        "y": 500,
+        "wires": [
+            [
+                "066fa958bdf0b0e5"
+            ]
+        ]
+    },
+    {
+        "id": "1ad2accbbae0ba6c",
+        "type": "switch",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "",
+        "property": "result",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1090,
+        "y": 500,
+        "wires": [
+            [
+                "d9b3b36511c34cac"
+            ],
+            [
+                "adcd0507206a0ae0"
+            ]
+        ]
+    },
+    {
+        "id": "d9b3b36511c34cac",
+        "type": "ui_toast",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Succesful add",
+        "x": 1280,
+        "y": 420,
+        "wires": [
+            [
+                "f167e22b18f1c822",
+                "512957682703a656"
+            ]
+        ]
+    },
+    {
+        "id": "adcd0507206a0ae0",
+        "type": "ui_toast",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "failed",
+        "x": 1270,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "066fa958bdf0b0e5",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "Plant sub res",
+        "func": "response=msg['payload']\nsub_status=response['status']\n\nif sub_status == \"OK\":\n    result=1\n    msg['payload']=\"Plant was added to list\"\n    \nelse:\n    result=0\n    msg['payload']=\"Could not add plant to list. Try again\"\nmsg['result']=result\nreturn msg",
+        "outputs": 1,
+        "x": 930,
+        "y": 500,
+        "wires": [
+            [
+                "1ad2accbbae0ba6c"
+            ]
+        ]
+    },
+    {
+        "id": "7d61070136b87eb2",
+        "type": "change",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "Forget current info",
+        "rules": [
+            {
+                "t": "set",
+                "p": "code",
+                "pt": "flow",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "new_plantId",
+                "pt": "flow",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "plant_type",
+                "pt": "flow",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1790,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "512957682703a656",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "Exit page",
+        "func": "msg['payload']={'tab': 'Plant status',\n    \"tabs\": {\n        \"hide\": 'Plant registration',\n        \"show\": 'Plant status'\n    }}\nreturn msg;",
+        "outputs": 1,
+        "x": 1520,
+        "y": 420,
+        "wires": [
+            [
+                "7d61070136b87eb2",
+                "631da5f677855d42"
+            ]
+        ]
+    },
+    {
+        "id": "631da5f677855d42",
+        "type": "ui_ui_control",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "Return to log in",
+        "events": "change",
+        "x": 1760,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "51dab2aabcd8a00b",
+        "type": "switch",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "",
+        "property": "result",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 810,
+        "y": 560,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "04ab02d0ca969d0e",
+        "type": "ui_toast",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Plant already present",
+        "x": 1020,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "33ad3afe072e4115",
+        "type": "ui_button",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "",
+        "group": "a82a07a6313512b6",
+        "order": 5,
+        "width": 3,
+        "height": 1,
+        "passthru": false,
+        "label": "Back",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 90,
+        "y": 580,
+        "wires": [
+            [
+                "af75e6621a35ddc7"
+            ]
+        ]
+    },
+    {
+        "id": "af75e6621a35ddc7",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "Go to plant status",
+        "func": "msg['payload']={'tab': 'Plant status',\n    \"tabs\": {\n        \"hide\": 'Plant deletion',\n        \"show\": 'Plant status'\n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 270,
+        "y": 580,
+        "wires": [
+            [
+                "443b37b7d0bdba4f"
+            ]
+        ]
+    },
+    {
+        "id": "443b37b7d0bdba4f",
+        "type": "ui_ui_control",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "",
+        "events": "all",
+        "x": 460,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "46eceb3e0a38b8b8",
+        "type": "ui_dropdown",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "Choose plant to delete",
+        "label": "Select a plant to delete from this list",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "2a8f5bc0a956d188",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 620,
+        "y": 720,
+        "wires": [
+            [
+                "436f5506dd4af823"
+            ]
+        ]
+    },
+    {
+        "id": "c921f1d7b26558ac",
+        "type": "function",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "PlantFetcher",
+        "func": "msg.user = global.get(\"user\");\nmsg.plants=global.get(\"plants\")\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 720,
+        "wires": [
+            [
+                "abf9591fed26b814"
+            ]
+        ]
+    },
+    {
+        "id": "abf9591fed26b814",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "Read users plants",
+        "func": "import json\nuser=msg['user']\nplants=msg[\"plants\"]\n #palce holder\n#importante dire options se no non capisce\nmsg['options']=[]\nfor plant in plants:\n    msg['options'].append(plant['plantId'])\n    \n\nreturn msg",
+        "outputs": 1,
+        "x": 390,
+        "y": 720,
+        "wires": [
+            [
+                "46eceb3e0a38b8b8",
+                "ac7913107c9f0227"
+            ]
+        ]
+    },
+    {
+        "id": "bd733eddbb263279",
+        "type": "ui_toast",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "Cancel",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "First question",
+        "x": 1080,
+        "y": 720,
+        "wires": [
+            [
+                "ce4232a67a848e76"
+            ]
+        ]
+    },
+    {
+        "id": "436f5506dd4af823",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "1 Dialog delete plant",
+        "func": "msg['plant_to_delete']=msg['payload']\nmsg['payload']=\"You have selected a plant to delete. Do you want to continue?\"\nreturn msg",
+        "outputs": 1,
+        "x": 860,
+        "y": 720,
+        "wires": [
+            [
+                "bd733eddbb263279"
+            ]
+        ]
+    },
+    {
+        "id": "ce4232a67a848e76",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "2 Dialog delete account",
+        "func": "msg['payload']=\"This will imply the deletion of your plant infomation in Rootypy. Do you uderstand?\"\nreturn msg",
+        "outputs": 1,
+        "x": 1310,
+        "y": 720,
+        "wires": [
+            [
+                "d123aff08542f7eb"
+            ]
+        ]
+    },
+    {
+        "id": "d123aff08542f7eb",
+        "type": "ui_toast",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "I understand",
+        "cancel": "Cancel",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Last question",
+        "x": 190,
+        "y": 800,
+        "wires": [
+            [
+                "85868b2ce877e946"
+            ]
+        ]
+    },
+    {
+        "id": "85868b2ce877e946",
+        "type": "function",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "Fetch user",
+        "func": "msg.user = global.get(\"user\")\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 800,
+        "wires": [
+            [
+                "7b5c9b6499992f48"
+            ]
+        ]
+    },
+    {
+        "id": "e31108ccf78cbd96",
+        "type": "http request",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "Req plant deletion",
+        "method": "DELETE",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 810,
+        "y": 800,
+        "wires": [
+            [
+                "46aa5978e8feb292"
+            ]
+        ]
+    },
+    {
+        "id": "7b5c9b6499992f48",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "Produce deletion url",
+        "func": "user=msg['user']\nplantId=msg['plant_to_delete']\nmsg['url']=f\"http://192.68.0.25:8080/rmp/{user}/{plantId}\"\nreturn msg",
+        "outputs": 1,
+        "x": 580,
+        "y": 800,
+        "wires": [
+            [
+                "e31108ccf78cbd96"
+            ]
+        ]
+    },
+    {
+        "id": "46aa5978e8feb292",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "Deletion result",
+        "func": "response=msg['payload']\ndeletion_status=response['status']\nif deletion_status == \"OK\":\n    result=1\n    msg['payload']=\"Plant deletion was successful\"\n    \nelse:\n    result=0\n    msg['payload']=\"Deletion refused, please try again\"\nmsg['result']=result\nreturn msg",
+        "outputs": 1,
+        "x": 1020,
+        "y": 800,
+        "wires": [
+            [
+                "8cb123b09e2f44ae"
+            ]
+        ]
+    },
+    {
+        "id": "8cb123b09e2f44ae",
+        "type": "switch",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "",
+        "property": "result",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1190,
+        "y": 800,
+        "wires": [
+            [
+                "bab6bf0154b8ad87"
+            ],
+            [
+                "2cb582f5f9dc86cf"
+            ]
+        ]
+    },
+    {
+        "id": "bab6bf0154b8ad87",
+        "type": "ui_toast",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Succesful deletion",
+        "x": 1390,
+        "y": 780,
+        "wires": [
+            [
+                "7ece927db8fa3e1a"
+            ]
+        ]
+    },
+    {
+        "id": "2cb582f5f9dc86cf",
+        "type": "ui_toast",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Deletion failed",
+        "x": 1380,
+        "y": 840,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7ece927db8fa3e1a",
+        "type": "http request",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "Http req users",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.68.0.25:8080/getUsers",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1600,
+        "y": 780,
+        "wires": [
+            [
+                "55629a5a0e01c657"
+            ]
+        ]
+    },
+    {
+        "id": "55629a5a0e01c657",
+        "type": "function",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "Fetch current user",
+        "func": "msg.user = global.get(\"user\");\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1810,
+        "y": 780,
+        "wires": [
+            [
+                "764c52bd6a321232"
+            ]
+        ]
+    },
+    {
+        "id": "764c52bd6a321232",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "refresh_plant_list",
+        "func": "#deve vedere se il nome inserito è nella lista utenti\nsubbed_users=msg['payload']\ncurr_user=msg['user']\n\nresult=0\n\nfor user in subbed_users:\n    username=user['userId']\n    if username==curr_user:\n        msg['payload']=user['plants']\n        break\n\n    \nreturn msg",
+        "outputs": 1,
+        "x": 2030,
+        "y": 780,
+        "wires": [
+            [
+                "14bd135e2147e59f"
+            ]
+        ]
+    },
+    {
+        "id": "14bd135e2147e59f",
+        "type": "change",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "plants",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2240,
+        "y": 780,
+        "wires": [
+            [
+                "c50d8f57a08661bf"
+            ]
+        ]
+    },
+    {
+        "id": "c50d8f57a08661bf",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "Exit page",
+        "func": "msg['payload']={'tab': 'Plant status',\n    \"tabs\": {\n        \"hide\": 'Plant deletion',\n        \"show\": 'Plant status'\n    }}\nreturn msg;",
+        "outputs": 1,
+        "x": 2420,
+        "y": 780,
+        "wires": [
+            [
+                "5481efddc7a9bc0a"
+            ]
+        ]
+    },
+    {
+        "id": "5481efddc7a9bc0a",
+        "type": "ui_ui_control",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "Return to status",
+        "events": "change",
+        "x": 2620,
+        "y": 780,
+        "wires": [
+            [
+                "c8ce85c14c1821c9"
+            ]
+        ]
+    },
+    {
+        "id": "c8ce85c14c1821c9",
+        "type": "link out",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "link out 4",
+        "mode": "link",
+        "links": [
+            "4f8c68064609087b",
+            "07c10727c5973eea"
+        ],
+        "x": 2765,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "ac7913107c9f0227",
+        "type": "debug",
+        "z": "6c9fffb498ae62dd",
+        "d": true,
+        "g": "5666d265ea80cc9d",
+        "name": "debug 17",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "1f157a8bca86bf9b",
+        "type": "ui_button",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "",
+        "group": "2a8f5bc0a956d188",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Back",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 110,
+        "y": 860,
+        "wires": [
+            [
+                "8c4a9a94b85a2c84"
+            ]
+        ]
+    },
+    {
+        "id": "8c4a9a94b85a2c84",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "Go to plant status",
+        "func": "msg['payload']={'tab': 'Plant status',\n    \"tabs\": {\n        \"hide\": 'Plant deletion',\n        \"show\": 'Plant status'\n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 290,
+        "y": 860,
+        "wires": [
+            [
+                "93b0e905e146636b"
+            ]
+        ]
+    },
+    {
+        "id": "93b0e905e146636b",
+        "type": "ui_ui_control",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "",
+        "events": "all",
+        "x": 480,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "64d4142bc91fb89b",
+        "type": "ui_button",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "name": "Delete account",
+        "group": "c846bf76c8606a05",
+        "order": 6,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "label": "Delete account",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 120,
+        "y": 100,
+        "wires": [
+            [
+                "d8e7d2bba1d6743c"
+            ]
+        ]
+    },
+    {
+        "id": "612184038dcedb32",
+        "type": "ui_toast",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "Cancel",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "First question",
+        "x": 580,
+        "y": 100,
+        "wires": [
+            [
+                "f4501e43f40e21fb"
+            ]
+        ]
+    },
+    {
+        "id": "d8e7d2bba1d6743c",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "name": "1 Dialog delete account",
+        "func": "msg['payload']=\"You have selected the deletion of the account\\nDo you want to continue?\"\nreturn msg",
+        "outputs": 1,
+        "x": 350,
+        "y": 100,
+        "wires": [
+            [
+                "612184038dcedb32"
+            ]
+        ]
+    },
+    {
+        "id": "f4501e43f40e21fb",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "name": "2 Dialog delete account",
+        "func": "msg['payload']=\"This will imply the deletion of your infomation in Rootypy.\\nDo you uderstand?\"\nreturn msg",
+        "outputs": 1,
+        "x": 810,
+        "y": 100,
+        "wires": [
+            [
+                "2add826f90d0c99f"
+            ]
+        ]
+    },
+    {
+        "id": "2add826f90d0c99f",
+        "type": "ui_toast",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "I understand",
+        "cancel": "Cancel",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Last question",
+        "x": 1030,
+        "y": 100,
+        "wires": [
+            [
+                "d2a5100ee5faef2c"
+            ]
+        ]
+    },
+    {
+        "id": "51f211db1af8e22f",
+        "type": "http request",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "name": "Req user deletion",
+        "method": "DELETE",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 160,
+        "wires": [
+            [
+                "c8b0c0e94d07b1c3",
+                "bcf6c864ee71179d"
+            ]
+        ]
+    },
+    {
+        "id": "58130e8e99b43cdd",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "name": "Produce deletion url",
+        "func": "user=msg['user']\nmsg['url']=f\"http://192.68.0.25:8080/rmu/{user}\"\nreturn msg",
+        "outputs": 1,
+        "x": 340,
+        "y": 160,
+        "wires": [
+            [
+                "51f211db1af8e22f"
+            ]
+        ]
+    },
+    {
+        "id": "d2a5100ee5faef2c",
+        "type": "function",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "name": "Fetch user",
+        "func": "msg.user = global.get(\"user\")\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "58130e8e99b43cdd"
+            ]
+        ]
+    },
+    {
+        "id": "c8b0c0e94d07b1c3",
+        "type": "debug",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "name": "debug 13",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "bcf6c864ee71179d",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "name": "Deletion result",
+        "func": "response=msg['payload']\ndeletion_status=response['status']\nif deletion_status == \"OK\":\n    result=1\n    msg['payload']=\"Account deletion was successful\"\n    \nelse:\n    result=0\n    msg['payload']=\"Deletion refused, please try again\"\nmsg['result']=result\nreturn msg",
+        "outputs": 1,
+        "x": 760,
+        "y": 160,
+        "wires": [
+            [
+                "65ed87e85ee54e55"
+            ]
+        ]
+    },
+    {
+        "id": "65ed87e85ee54e55",
+        "type": "switch",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "name": "",
+        "property": "result",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 910,
+        "y": 160,
+        "wires": [
+            [
+                "9dc8e084a12c73db"
+            ],
+            [
+                "ccdddecc69c3a692"
+            ]
+        ]
+    },
+    {
+        "id": "9dc8e084a12c73db",
+        "type": "ui_toast",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Succesful deletion",
+        "x": 1110,
+        "y": 160,
+        "wires": [
+            [
+                "f86d2b5c1f134ca3"
+            ]
+        ]
+    },
+    {
+        "id": "f86d2b5c1f134ca3",
+        "type": "python3-function",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "name": "Exit page",
+        "func": "msg['payload']={'tab': 'Access',\n    \"tabs\": {\n        \"hide\": 'Plant status',\n        \"show\": 'Access'\n    }}\nreturn msg;",
+        "outputs": 1,
+        "x": 1300,
+        "y": 160,
+        "wires": [
+            [
+                "8bc28fc98fbe24d3",
+                "0a15b29c347416c3"
+            ]
+        ]
+    },
+    {
+        "id": "8bc28fc98fbe24d3",
+        "type": "ui_ui_control",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "name": "Return to log in",
+        "events": "change",
+        "x": 1540,
+        "y": 160,
+        "wires": [
+            [
+                "523165a97db8a68d"
+            ]
+        ]
+    },
+    {
+        "id": "0a15b29c347416c3",
+        "type": "change",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "name": "Forget current info",
+        "rules": [
+            {
+                "t": "set",
+                "p": "user",
+                "pt": "global",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "choice",
+                "pt": "global",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "plants",
+                "pt": "global",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1530,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ccdddecc69c3a692",
+        "type": "ui_toast",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Deletion failed",
+        "x": 1100,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "523165a97db8a68d",
+        "type": "link out",
+        "z": "6c9fffb498ae62dd",
+        "g": "69fde56228e705a2",
+        "name": "link out 2",
+        "mode": "link",
+        "links": [
+            "4f8c68064609087b",
+            "07c10727c5973eea"
+        ],
+        "x": 1695,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "23770fee940ac72a",
+        "type": "link in",
+        "z": "6c9fffb498ae62dd",
+        "g": "5666d265ea80cc9d",
+        "name": "Deletion",
+        "links": [
+            "7539740f49724ec7"
+        ],
+        "x": 55,
+        "y": 720,
+        "wires": [
+            [
+                "c921f1d7b26558ac"
+            ]
+        ]
+    },
+    {
+        "id": "f167e22b18f1c822",
+        "type": "link out",
+        "z": "6c9fffb498ae62dd",
+        "g": "f70c2a4e4b3302a0",
+        "name": "From add plant",
+        "mode": "link",
+        "links": [
+            "767eee5a96118a93"
+        ],
+        "x": 1435,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "2abfebe04b829b6f",
+        "type": "http request",
+        "z": "027e63256a54231e",
+        "name": "Req Current light intensity",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 2570,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "42c458bf7bccb924",
+        "type": "ui_gauge",
+        "z": "027e63256a54231e",
+        "name": "Lamp intensity",
+        "group": "43a5a58f83248d8e",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "gauge",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 2800,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "87afa432b60c0321",
+        "type": "ui_switch",
+        "z": "027e63256a54231e",
+        "name": "",
+        "label": "Manual<->Auto",
+        "tooltip": "",
+        "group": "43a5a58f83248d8e",
+        "order": 4,
+        "width": 3,
+        "height": 1,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "state",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 2620,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f28bab33329b5be3",
+        "type": "ui_text_input",
+        "z": "027e63256a54231e",
+        "d": true,
+        "g": "dd311112b83d4dfd",
+        "name": "",
+        "label": "Starting time",
+        "tooltip": "",
+        "group": "8fda65c920cfe174",
+        "order": 6,
+        "width": 3,
+        "height": 1,
+        "passthru": true,
+        "mode": "time",
+        "delay": 300,
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 970,
+        "y": 1400,
+        "wires": [
+            [
+                "ffb899ca2d7dce06"
+            ]
+        ]
+    },
+    {
+        "id": "d028038d625c4eda",
+        "type": "ui_text_input",
+        "z": "027e63256a54231e",
+        "d": true,
+        "g": "dd311112b83d4dfd",
+        "name": "ending time",
+        "label": "Ending time",
+        "tooltip": "",
+        "group": "8fda65c920cfe174",
+        "order": 8,
+        "width": 3,
+        "height": 1,
+        "passthru": true,
+        "mode": "time",
+        "delay": 300,
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 970,
+        "y": 1440,
+        "wires": [
+            [
+                "6ff4f71e6fae1e7e"
+            ]
+        ]
+    },
+    {
+        "id": "0a19aa6542b82728",
+        "type": "ui_text",
+        "z": "027e63256a54231e",
+        "d": true,
+        "g": "dd311112b83d4dfd",
+        "group": "8fda65c920cfe174",
+        "order": 2,
+        "width": 3,
+        "height": 1,
+        "name": "",
+        "label": "Current start",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 790,
+        "y": 1400,
+        "wires": []
+    },
+    {
+        "id": "8353529b8b366951",
+        "type": "ui_text",
+        "z": "027e63256a54231e",
+        "d": true,
+        "g": "dd311112b83d4dfd",
+        "group": "8fda65c920cfe174",
+        "order": 7,
+        "width": 3,
+        "height": 1,
+        "name": "",
+        "label": "Current end",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 790,
+        "y": 1440,
+        "wires": []
+    },
+    {
+        "id": "2a29c48c1136536b",
+        "type": "ui_button",
+        "z": "027e63256a54231e",
+        "d": true,
+        "g": "dd311112b83d4dfd",
+        "name": "submit manual",
+        "group": "8fda65c920cfe174",
+        "order": 10,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "label": "button",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 880,
+        "y": 1500,
+        "wires": [
+            [
+                "31a1787cfcd7312d"
+            ]
+        ]
+    },
+    {
+        "id": "b9636e8b27729ff4",
+        "type": "change",
+        "z": "027e63256a54231e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 200,
+        "y": 1460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7e81c9581075bf15",
+        "type": "debug",
+        "z": "027e63256a54231e",
+        "name": "debug 18",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 400,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "108346ed9bb4feda",
+        "type": "inject",
+        "z": "027e63256a54231e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 230,
+        "y": 1120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d2f0ca7488dd1080",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "Auto settings enabler",
+        "func": "msg['enabled']=True\nreturn msg",
+        "outputs": 1,
+        "x": 300,
+        "y": 1140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e077fe03d2821fe5",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "Auto settings disabler",
+        "func": "msg['enabled']=False\nreturn msg",
+        "outputs": 1,
+        "x": 660,
+        "y": 920,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b3f81be50fff75d7",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "d": true,
+        "name": "Manual settings enabler",
+        "func": "msg['enabled']=True\nreturn msg",
+        "outputs": 1,
+        "x": 310,
+        "y": 1380,
+        "wires": [
+            [
+                "0a19aa6542b82728",
+                "8353529b8b366951",
+                "2a29c48c1136536b",
+                "f28bab33329b5be3",
+                "d028038d625c4eda",
+                "e44330c2fdaac8da"
+            ]
+        ]
+    },
+    {
+        "id": "8197e8bcad974ed2",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "d": true,
+        "name": "Manual settings disabler",
+        "func": "msg['enabled']=False\nreturn msg",
+        "outputs": 1,
+        "x": 330,
+        "y": 1300,
+        "wires": [
+            [
+                "0a19aa6542b82728",
+                "8353529b8b366951",
+                "f28bab33329b5be3",
+                "2a29c48c1136536b",
+                "d028038d625c4eda",
+                "e44330c2fdaac8da"
+            ]
+        ]
+    },
+    {
+        "id": "e44330c2fdaac8da",
+        "type": "ui_text",
+        "z": "027e63256a54231e",
+        "d": true,
+        "g": "dd311112b83d4dfd",
+        "group": "8fda65c920cfe174",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "manual settings",
+        "label": "",
+        "format": "Manual settings:",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 780,
+        "y": 1360,
+        "wires": []
+    },
+    {
+        "id": "ffb899ca2d7dce06",
+        "type": "change",
+        "z": "027e63256a54231e",
+        "d": true,
+        "g": "dd311112b83d4dfd",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "init",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1190,
+        "y": 1400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6ff4f71e6fae1e7e",
+        "type": "change",
+        "z": "027e63256a54231e",
+        "d": true,
+        "g": "dd311112b83d4dfd",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "final",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1190,
+        "y": 1440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "31a1787cfcd7312d",
+        "type": "function",
+        "z": "027e63256a54231e",
+        "d": true,
+        "g": "dd311112b83d4dfd",
+        "name": "Fetch manual settings",
+        "func": "msg.user = global.get(\"user\")\nmsg.choice=global.get(\"choice\")\nmsg.init=flow.get(\"init\")\nmsg.final = flow.get(\"final\")\nmsg.new_light_int = flow.get(\"new_light_int\")\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 1500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "34e4895b0feaec1b",
+        "type": "link in",
+        "z": "027e63256a54231e",
+        "name": "from choice",
+        "links": [
+            "aafe3a1f55a3d801"
+        ],
+        "x": 125,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b25884f0813c73df",
+        "type": "debug",
+        "z": "027e63256a54231e",
+        "name": "debug 20",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "2f582d4ba699d1e0",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "Set old time",
+        "func": "msg['start_time']=msg['payload']['start_time']\nmsg['end_time']=msg['payload']['end_time']\nreturn msg",
+        "outputs": 1,
+        "x": 90,
+        "y": 1060,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1194bd8dbb39acdb",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "g": "b3e251a7ce0c1dd4",
+        "name": "Body creator",
+        "func": "msg['payload']={\n    \"user\":msg['user'],\n    \"plant\":msg['plantId'],\n    \"start_time\":f\"{round(msg['start']/3600000)}:00\",\n    \"end_time\":f\"{round(msg['end']/3600000)}:00\"\n}\nreturn msg",
+        "outputs": 1,
+        "x": 1530,
+        "y": 960,
+        "wires": [
+            [
+                "f290a0e4e9a23ad5"
+            ]
+        ]
+    },
+    {
+        "id": "6957945e61ca463c",
+        "type": "debug",
+        "z": "027e63256a54231e",
+        "name": "debug 21",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1780,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "f290a0e4e9a23ad5",
+        "type": "http request",
+        "z": "027e63256a54231e",
+        "g": "b3e251a7ce0c1dd4",
+        "name": "Change env Time req",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.68.0.27:8085/ChangeEnvTime",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1780,
+        "y": 960,
+        "wires": [
+            [
+                "6957945e61ca463c",
+                "be0ec8dfad205227"
+            ]
+        ]
+    },
+    {
+        "id": "aafe3a1f55a3d801",
+        "type": "link out",
+        "z": "027e63256a54231e",
+        "g": "b3e251a7ce0c1dd4",
+        "name": "from change time env",
+        "mode": "link",
+        "links": [
+            "34e4895b0feaec1b"
+        ],
+        "x": 2305,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "be0ec8dfad205227",
+        "type": "function",
+        "z": "027e63256a54231e",
+        "g": "b3e251a7ce0c1dd4",
+        "name": "GlobUserFetch",
+        "func": "msg.user = global.get(\"user\");\nmsg.choice = global.get(\"choice\")\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2100,
+        "y": 960,
+        "wires": [
+            [
+                "aafe3a1f55a3d801"
+            ]
+        ]
+    },
+    {
+        "id": "a9cb94fbe1f0d7e1",
+        "type": "comment",
+        "z": "027e63256a54231e",
+        "g": "b3e251a7ce0c1dd4",
+        "name": "Aggiungere caso risp negativa",
+        "info": "",
+        "x": 2080,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "ba6ed38cd8a7caaf",
+        "type": "change",
+        "z": "027e63256a54231e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "settings",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 280,
+        "y": 220,
+        "wires": [
+            [
+                "f8ccf7ed5d9c5bea"
+            ]
+        ]
+    },
+    {
+        "id": "7e5e99ea8d4994bf",
+        "type": "function",
+        "z": "027e63256a54231e",
+        "name": "Fetch online service",
+        "func": "msg.services = global.get(\"services_online\")\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 220,
+        "wires": [
+            [
+                "fb567918e9f345c9"
+            ]
+        ]
+    },
+    {
+        "id": "f0bae7600d90b6e4",
+        "type": "switch",
+        "z": "027e63256a54231e",
+        "name": "Online/offline",
+        "property": "status",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "off",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1550,
+        "y": 140,
+        "wires": [
+            [
+                "5d6d66a5228cfeb2"
+            ],
+            [
+                "31a63bb019c6363c",
+                "2e2c7d38012cbdc9"
+            ]
+        ]
+    },
+    {
+        "id": "31a63bb019c6363c",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "Functionality disabler",
+        "func": "msg['enabled']=False\nreturn msg",
+        "outputs": 1,
+        "x": 1780,
+        "y": 160,
+        "wires": [
+            [
+                "8214e4a9834f98cd"
+            ]
+        ]
+    },
+    {
+        "id": "5d6d66a5228cfeb2",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "Functionality enabler",
+        "func": "msg['enabled']=True\nreturn msg",
+        "outputs": 1,
+        "x": 1780,
+        "y": 100,
+        "wires": [
+            [
+                "8214e4a9834f98cd"
+            ]
+        ]
+    },
+    {
+        "id": "ba63eac8e8bee4bb",
+        "type": "ui_toast",
+        "z": "027e63256a54231e",
+        "d": true,
+        "position": "top left",
+        "displayTime": "5",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Offline awareness",
+        "x": 1990,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "fb567918e9f345c9",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "Check if service is online",
+        "func": "msg['status']='off'\nfor services in msg['services']:\n    if services['seriviceID']==msg['payload']:\n        msg['status']='on'\nreturn msg",
+        "outputs": 1,
+        "x": 1110,
+        "y": 220,
+        "wires": [
+            [
+                "b440055cd0f0f7e7"
+            ]
+        ]
+    },
+    {
+        "id": "9eec78f0280b3e7f",
+        "type": "split",
+        "z": "027e63256a54231e",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 670,
+        "y": 220,
+        "wires": [
+            [
+                "7e5e99ea8d4994bf",
+                "28cbeb9fabeb3bde"
+            ]
+        ]
+    },
+    {
+        "id": "f8ccf7ed5d9c5bea",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "services",
+        "func": "msg['payload']=msg['payload']['light']['services']\nreturn msg",
+        "outputs": 1,
+        "x": 500,
+        "y": 220,
+        "wires": [
+            [
+                "9eec78f0280b3e7f"
+            ]
+        ]
+    },
+    {
+        "id": "4c6c5724ed77335f",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "devices",
+        "func": "msg['need_dev']=msg['need_dev']['light']['devices']\nreturn msg",
+        "outputs": 1,
+        "x": 740,
+        "y": 880,
+        "wires": [
+            [
+                "e4e9d9ed76c6f9cd"
+            ]
+        ]
+    },
+    {
+        "id": "e4e9d9ed76c6f9cd",
+        "type": "split",
+        "z": "027e63256a54231e",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 870,
+        "y": 880,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b440055cd0f0f7e7",
+        "type": "switch",
+        "z": "027e63256a54231e",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "UV_light_shift",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "EnvMonitoring",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1350,
+        "y": 220,
+        "wires": [
+            [
+                "f0bae7600d90b6e4"
+            ],
+            [
+                "4da5ff40b79dcbad"
+            ]
+        ]
+    },
+    {
+        "id": "2e2c7d38012cbdc9",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "d": true,
+        "name": "Produce message",
+        "func": "msg['payload']=f\"The service: {msg['payload']} is offline\"\nreturn msg",
+        "outputs": 1,
+        "x": 1770,
+        "y": 220,
+        "wires": [
+            [
+                "ba63eac8e8bee4bb",
+                "0145ae994218fd0a"
+            ]
+        ]
+    },
+    {
+        "id": "033c2405bd514559",
+        "type": "comment",
+        "z": "027e63256a54231e",
+        "d": true,
+        "name": "Gestione uv shift",
+        "info": "Se non funziona, devo:\n-diabilitare tutta la parte di gestione\ndelle modalità",
+        "x": 1540,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "cbd510a403daa463",
+        "type": "ui_text_input",
+        "z": "027e63256a54231e",
+        "name": "new start time",
+        "label": "Starting time",
+        "tooltip": "",
+        "group": "43a5a58f83248d8e",
+        "order": 6,
+        "width": 3,
+        "height": 1,
+        "passthru": true,
+        "mode": "time",
+        "delay": 300,
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 2700,
+        "y": 420,
+        "wires": [
+            [
+                "42422cc4e6597244"
+            ]
+        ]
+    },
+    {
+        "id": "06a73c335911d59c",
+        "type": "ui_text_input",
+        "z": "027e63256a54231e",
+        "name": "new end time",
+        "label": "Ending time",
+        "tooltip": "",
+        "group": "43a5a58f83248d8e",
+        "order": 8,
+        "width": 3,
+        "height": 1,
+        "passthru": true,
+        "mode": "time",
+        "delay": 300,
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 2690,
+        "y": 460,
+        "wires": [
+            [
+                "f0f7539958bb97f2"
+            ]
+        ]
+    },
+    {
+        "id": "9f3e4d3603e8f717",
+        "type": "ui_text",
+        "z": "027e63256a54231e",
+        "group": "43a5a58f83248d8e",
+        "order": 5,
+        "width": 3,
+        "height": 1,
+        "name": "curr mode start",
+        "label": "Current start",
+        "format": "{{msg.start_time}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 2520,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "c6e3619eda18fe4f",
+        "type": "ui_text",
+        "z": "027e63256a54231e",
+        "group": "43a5a58f83248d8e",
+        "order": 7,
+        "width": 3,
+        "height": 1,
+        "name": "curr mode end ",
+        "label": "Current end",
+        "format": "{{msg.end_time}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 2520,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "d521136f12a4cfa6",
+        "type": "ui_button",
+        "z": "027e63256a54231e",
+        "name": "submit mode change",
+        "group": "43a5a58f83248d8e",
+        "order": 11,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "label": "button",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 2600,
+        "y": 560,
+        "wires": [
+            [
+                "a20c17d48b8373d2"
+            ]
+        ]
+    },
+    {
+        "id": "638568adadd7dcc7",
+        "type": "ui_text",
+        "z": "027e63256a54231e",
+        "group": "43a5a58f83248d8e",
+        "order": 3,
+        "width": 3,
+        "height": 1,
+        "name": "Current mode",
+        "label": "",
+        "format": "Current mode:",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 2620,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "42422cc4e6597244",
+        "type": "change",
+        "z": "027e63256a54231e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "start",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2910,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f0f7539958bb97f2",
+        "type": "change",
+        "z": "027e63256a54231e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "end",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2910,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a20c17d48b8373d2",
+        "type": "function",
+        "z": "027e63256a54231e",
+        "name": "Fetch auto settings",
+        "func": "msg.user = global.get(\"user\")\nmsg.plantId=global.get(\"choice\")\nmsg.start=flow.get(\"start\")\nmsg.end = flow.get(\"end\")\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2890,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "34c082dda9b6395d",
+        "type": "ui_slider",
+        "z": "027e63256a54231e",
+        "name": "",
+        "label": "Light intensity picker",
+        "tooltip": "",
+        "group": "43a5a58f83248d8e",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "100",
+        "step": "5",
+        "className": "",
+        "x": 2620,
+        "y": 520,
+        "wires": [
+            [
+                "5a1c96153d6618e0"
+            ]
+        ]
+    },
+    {
+        "id": "5a1c96153d6618e0",
+        "type": "change",
+        "z": "027e63256a54231e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "new_light_int",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2900,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8214e4a9834f98cd",
+        "type": "link out",
+        "z": "027e63256a54231e",
+        "name": "From UV_light_shift en/dis",
+        "mode": "link",
+        "links": [
+            "4926d9584df81b75"
+        ],
+        "x": 2005,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "4926d9584df81b75",
+        "type": "link in",
+        "z": "027e63256a54231e",
+        "name": "To light mode option",
+        "links": [
+            "8214e4a9834f98cd",
+            "552859fd47200618",
+            "9cd3c975841313ae",
+            "739a3e78cb7efcf5",
+            "9fbe9357fb7c9f64"
+        ],
+        "x": 2395,
+        "y": 360,
+        "wires": [
+            [
+                "cbd510a403daa463",
+                "06a73c335911d59c",
+                "d521136f12a4cfa6",
+                "34c082dda9b6395d",
+                "87afa432b60c0321"
+            ]
+        ]
+    },
+    {
+        "id": "6018eaea7ababa2c",
+        "type": "link in",
+        "z": "027e63256a54231e",
+        "name": "To online services",
+        "links": [
+            "f18e882b348121f6",
+            "9fbe9357fb7c9f64"
+        ],
+        "x": 115,
+        "y": 220,
+        "wires": [
+            [
+                "ba6ed38cd8a7caaf"
+            ]
+        ]
+    },
+    {
+        "id": "0145ae994218fd0a",
+        "type": "debug",
+        "z": "027e63256a54231e",
+        "d": true,
+        "name": "debug 27",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2020,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "28cbeb9fabeb3bde",
+        "type": "debug",
+        "z": "027e63256a54231e",
+        "name": "debug 28",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "4da5ff40b79dcbad",
+        "type": "switch",
+        "z": "027e63256a54231e",
+        "name": "Online/offline",
+        "property": "status",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "off",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1550,
+        "y": 280,
+        "wires": [
+            [
+                "696f44561aff9609"
+            ],
+            [
+                "4fd60757153e6a5f"
+            ]
+        ]
+    },
+    {
+        "id": "4fd60757153e6a5f",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "Functionality disabler",
+        "func": "msg['payload']=False\nmsg['enabled']=False\nreturn msg",
+        "outputs": 1,
+        "x": 1760,
+        "y": 340,
+        "wires": [
+            [
+                "bbe1a3455eaa1538"
+            ]
+        ]
+    },
+    {
+        "id": "696f44561aff9609",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "Functionality enabler",
+        "func": "msg['enabled']=True\n\n\nreturn msg",
+        "outputs": 1,
+        "x": 1760,
+        "y": 280,
+        "wires": [
+            [
+                "bbe1a3455eaa1538"
+            ]
+        ]
+    },
+    {
+        "id": "bbe1a3455eaa1538",
+        "type": "link out",
+        "z": "027e63256a54231e",
+        "name": "From EnvMonitoring en/dis",
+        "mode": "link",
+        "links": [
+            "ddb88b914213c33a"
+        ],
+        "x": 1965,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "ddb88b914213c33a",
+        "type": "link in",
+        "z": "027e63256a54231e",
+        "name": "To switch",
+        "links": [
+            "bbe1a3455eaa1538",
+            "d31d0c27b0f29d98",
+            "9fbe9357fb7c9f64"
+        ],
+        "x": 2445,
+        "y": 300,
+        "wires": [
+            [
+                "87afa432b60c0321"
+            ]
+        ]
+    },
+    {
+        "id": "f08f96f72bb80c2b",
+        "type": "comment",
+        "z": "027e63256a54231e",
+        "name": "Cose che mancano",
+        "info": "-riechiesta status corrente\n-cambio di status\n-aggiungere dis/att sulla base della presenza\ndei devices",
+        "x": 2830,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "9b89a1450d42d714",
+        "type": "change",
+        "z": "027e63256a54231e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "need_dev",
+                "pt": "msg",
+                "to": "settings",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 850,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "991a1216910f2ce0",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "devices",
+        "func": "msg['payload']=msg['payload']['light']['devices']\nreturn msg",
+        "outputs": 1,
+        "x": 500,
+        "y": 520,
+        "wires": [
+            [
+                "6ea042feaf5d111c"
+            ]
+        ]
+    },
+    {
+        "id": "6ea042feaf5d111c",
+        "type": "split",
+        "z": "027e63256a54231e",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 670,
+        "y": 520,
+        "wires": [
+            [
+                "9e33575c93e3a81e"
+            ]
+        ]
+    },
+    {
+        "id": "9e33575c93e3a81e",
+        "type": "function",
+        "z": "027e63256a54231e",
+        "name": "Fetch online devices",
+        "func": "msg.devices = global.get(\"online_devices\")\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 520,
+        "wires": [
+            [
+                "0fc3cae50e142398"
+            ]
+        ]
+    },
+    {
+        "id": "0fc3cae50e142398",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "Check if device is online",
+        "func": "msg['status']='off'\nfor device in msg['devices']:\n    if device==msg['payload']:\n        msg['status']='on'\nreturn msg",
+        "outputs": 1,
+        "x": 1090,
+        "y": 520,
+        "wires": [
+            [
+                "5451f3b66ae03d60",
+                "ab24da683df587be"
+            ]
+        ]
+    },
+    {
+        "id": "6abccd6d4d096cdd",
+        "type": "change",
+        "z": "027e63256a54231e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "settings",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 280,
+        "y": 520,
+        "wires": [
+            [
+                "991a1216910f2ce0"
+            ]
+        ]
+    },
+    {
+        "id": "8586bb7fbb3dde7b",
+        "type": "link in",
+        "z": "027e63256a54231e",
+        "name": "link in 3",
+        "links": [
+            "5dd34eadb5752bcf"
+        ],
+        "x": 115,
+        "y": 520,
+        "wires": [
+            [
+                "6abccd6d4d096cdd"
+            ]
+        ]
+    },
+    {
+        "id": "3fd062dc443de055",
+        "type": "switch",
+        "z": "027e63256a54231e",
+        "name": "Online/offline",
+        "property": "status",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "off",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1570,
+        "y": 440,
+        "wires": [
+            [
+                "3850bd1e7eb5696b"
+            ],
+            [
+                "4b2cdffab08ba243",
+                "af8cef51f4fc69ef"
+            ]
+        ]
+    },
+    {
+        "id": "4b2cdffab08ba243",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "Functionality disabler",
+        "func": "msg['enabled']=False\nreturn msg",
+        "outputs": 1,
+        "x": 1800,
+        "y": 460,
+        "wires": [
+            [
+                "9fbe9357fb7c9f64"
+            ]
+        ]
+    },
+    {
+        "id": "3850bd1e7eb5696b",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "Functionality enabler",
+        "func": "msg['enabled']=True\nreturn msg",
+        "outputs": 1,
+        "x": 1800,
+        "y": 400,
+        "wires": [
+            [
+                "9fbe9357fb7c9f64"
+            ]
+        ]
+    },
+    {
+        "id": "fc18881e81b28603",
+        "type": "ui_toast",
+        "z": "027e63256a54231e",
+        "d": true,
+        "position": "top left",
+        "displayTime": "5",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Offline awareness",
+        "x": 2010,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "5451f3b66ae03d60",
+        "type": "switch",
+        "z": "027e63256a54231e",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "lampLight",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "sunlight",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1370,
+        "y": 520,
+        "wires": [
+            [
+                "3fd062dc443de055"
+            ],
+            [
+                "23de832144164be3"
+            ]
+        ]
+    },
+    {
+        "id": "af8cef51f4fc69ef",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "d": true,
+        "name": "Produce message",
+        "func": "msg['payload']=f\"The service: {msg['payload']} is offline\"\nreturn msg",
+        "outputs": 1,
+        "x": 1790,
+        "y": 520,
+        "wires": [
+            [
+                "fc18881e81b28603",
+                "f001dd698b19c728"
+            ]
+        ]
+    },
+    {
+        "id": "2bb1a27de5a86035",
+        "type": "comment",
+        "z": "027e63256a54231e",
+        "d": true,
+        "name": "Gestione uv shift",
+        "info": "Se non funziona, devo:\n-diabilitare tutta la parte di gestione\ndelle modalità",
+        "x": 1560,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "9fbe9357fb7c9f64",
+        "type": "link out",
+        "z": "027e63256a54231e",
+        "name": "From lampLight en/dis",
+        "mode": "link",
+        "links": [
+            "398bca5e7a5187e2",
+            "4926d9584df81b75",
+            "6018eaea7ababa2c",
+            "ddb88b914213c33a"
+        ],
+        "x": 2025,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "f001dd698b19c728",
+        "type": "debug",
+        "z": "027e63256a54231e",
+        "d": true,
+        "name": "debug 29",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2040,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "23de832144164be3",
+        "type": "switch",
+        "z": "027e63256a54231e",
+        "name": "Online/offline",
+        "property": "status",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "off",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1570,
+        "y": 580,
+        "wires": [
+            [
+                "7e2fc6a079ed683f"
+            ],
+            [
+                "7978479f4a80a685"
+            ]
+        ]
+    },
+    {
+        "id": "7978479f4a80a685",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "Functionality disabler",
+        "func": "msg['payload']=False\nmsg['enabled']=False\nreturn msg",
+        "outputs": 1,
+        "x": 1780,
+        "y": 640,
+        "wires": [
+            [
+                "d31d0c27b0f29d98"
+            ]
+        ]
+    },
+    {
+        "id": "7e2fc6a079ed683f",
+        "type": "python3-function",
+        "z": "027e63256a54231e",
+        "name": "Functionality enabler",
+        "func": "msg['enabled']=True\n\n\nreturn msg",
+        "outputs": 1,
+        "x": 1780,
+        "y": 580,
+        "wires": [
+            [
+                "d31d0c27b0f29d98"
+            ]
+        ]
+    },
+    {
+        "id": "d31d0c27b0f29d98",
+        "type": "link out",
+        "z": "027e63256a54231e",
+        "name": "From EnvMonitoring en/dis",
+        "mode": "link",
+        "links": [
+            "ddb88b914213c33a"
+        ],
+        "x": 1985,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "398bca5e7a5187e2",
+        "type": "link in",
+        "z": "027e63256a54231e",
+        "name": "To light section",
+        "links": [
+            "9fbe9357fb7c9f64"
+        ],
+        "x": 2305,
+        "y": 280,
+        "wires": [
+            [
+                "2abfebe04b829b6f",
+                "42c458bf7bccb924"
+            ]
+        ]
+    },
+    {
+        "id": "ab24da683df587be",
+        "type": "debug",
+        "z": "027e63256a54231e",
+        "name": "debug 30",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1280,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "2b241b0de1dafdb9",
+        "type": "inject",
+        "z": "d6f8aab227f7b0e8",
+        "g": "a6fc352a98cf7dd9",
+        "name": "Activate registration process",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "15",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 210,
+        "y": 260,
+        "wires": [
+            [
+                "981aab7934f436e7",
+                "4855af751157dadc"
+            ]
+        ]
+    },
+    {
+        "id": "76b7ef364e570f31",
+        "type": "python3-function",
+        "z": "d6f8aab227f7b0e8",
+        "name": "Take reg_url and connected services",
+        "func": "\nreturn msg",
+        "outputs": 1,
+        "x": 850,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a7d72b06cb325052",
+        "type": "mqtt out",
+        "z": "d6f8aab227f7b0e8",
+        "g": "a6fc352a98cf7dd9",
+        "name": "publish alive message",
+        "topic": "",
+        "qos": "2",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "8957198026b47e18",
+        "x": 720,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "bc43f6c75254a6aa",
+        "type": "change",
+        "z": "d6f8aab227f7b0e8",
+        "g": "a6fc352a98cf7dd9",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "services_online",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 830,
+        "y": 340,
+        "wires": [
+            [
+                "f18e882b348121f6"
+            ]
+        ]
+    },
+    {
+        "id": "40005bc4f518b476",
+        "type": "function",
+        "z": "d6f8aab227f7b0e8",
+        "g": "0b96c7e23874f3b5",
+        "name": "Fetch online service",
+        "func": "msg.services = global.get(\"services_online\")\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 180,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f575ad5b1996d58d",
+        "type": "switch",
+        "z": "d6f8aab227f7b0e8",
+        "g": "0b96c7e23874f3b5",
+        "name": "Online/offline",
+        "property": "status",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "off",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 650,
+        "y": 700,
+        "wires": [
+            [
+                "fdd10e849a488082"
+            ],
+            [
+                "9288eb2d65281b4f",
+                "939ea6ef7df49930"
+            ]
+        ]
+    },
+    {
+        "id": "9288eb2d65281b4f",
+        "type": "python3-function",
+        "z": "d6f8aab227f7b0e8",
+        "g": "0b96c7e23874f3b5",
+        "name": "Functionality disabler",
+        "func": "msg['enabled']=False\nreturn msg",
+        "outputs": 1,
+        "x": 880,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fdd10e849a488082",
+        "type": "python3-function",
+        "z": "d6f8aab227f7b0e8",
+        "g": "0b96c7e23874f3b5",
+        "name": "Functionality enabler",
+        "func": "msg['enabled']=True\nreturn msg",
+        "outputs": 1,
+        "x": 880,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "939ea6ef7df49930",
+        "type": "ui_toast",
+        "z": "d6f8aab227f7b0e8",
+        "g": "0b96c7e23874f3b5",
+        "position": "top left",
+        "displayTime": "5",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Offline awareness",
+        "x": 870,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "96f19442a6ac2c5c",
+        "type": "debug",
+        "z": "d6f8aab227f7b0e8",
+        "g": "a6fc352a98cf7dd9",
+        "name": "debug 23",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "b4cd612beaef10f7",
+        "type": "http request",
+        "z": "d6f8aab227f7b0e8",
+        "g": "a6fc352a98cf7dd9",
+        "name": "Req activated services to registry",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 520,
+        "y": 340,
+        "wires": [
+            [
+                "bc43f6c75254a6aa",
+                "72c8b64a56030f4c"
+            ]
+        ]
+    },
+    {
+        "id": "981aab7934f436e7",
+        "type": "python3-function",
+        "z": "d6f8aab227f7b0e8",
+        "g": "a6fc352a98cf7dd9",
+        "name": "Registartion payload",
+        "func": "\nimport time\nmsg[\"topic\"]=\"RootyPy/node_red\"\nmsg[\"payload\"]={\"bn\":\"updateCatalogService\",\"e\":[{\"n\": \"node_red\", \"t\": time.time(), \"v\":None,\"u\":\"IP\"}]}\nreturn msg",
+        "outputs": 1,
+        "x": 480,
+        "y": 260,
+        "wires": [
+            [
+                "a7d72b06cb325052",
+                "96f19442a6ac2c5c"
+            ]
+        ]
+    },
+    {
+        "id": "4855af751157dadc",
+        "type": "python3-function",
+        "z": "d6f8aab227f7b0e8",
+        "g": "a6fc352a98cf7dd9",
+        "name": "Ask active services to registry",
+        "func": "msg['url']=\"http://192.68.0.24:8081/services\"\nreturn msg",
+        "outputs": 1,
+        "x": 210,
+        "y": 340,
+        "wires": [
+            [
+                "b4cd612beaef10f7"
+            ]
+        ]
+    },
+    {
+        "id": "72c8b64a56030f4c",
+        "type": "debug",
+        "z": "d6f8aab227f7b0e8",
+        "g": "a6fc352a98cf7dd9",
+        "name": "debug 24",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "de89cf752fcfd98c",
+        "type": "file in",
+        "z": "d6f8aab227f7b0e8",
+        "name": "Read config",
+        "filename": "./data/Config_node_red.json",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 370,
+        "y": 140,
+        "wires": [
+            [
+                "907b61bbce5a52de",
+                "e6a953ecfeea373f"
+            ]
+        ]
+    },
+    {
+        "id": "c3be44662ec45d44",
+        "type": "inject",
+        "z": "d6f8aab227f7b0e8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 140,
+        "wires": [
+            [
+                "de89cf752fcfd98c",
+                "907b61bbce5a52de"
+            ]
+        ]
+    },
+    {
+        "id": "e7630bcd2facd51c",
+        "type": "change",
+        "z": "d6f8aab227f7b0e8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "settings",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 750,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "907b61bbce5a52de",
+        "type": "debug",
+        "z": "d6f8aab227f7b0e8",
+        "name": "debug 26",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 300,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "e6a953ecfeea373f",
+        "type": "json",
+        "z": "d6f8aab227f7b0e8",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": true,
+        "x": 550,
+        "y": 140,
+        "wires": [
+            [
+                "e7630bcd2facd51c"
+            ]
+        ]
+    },
+    {
+        "id": "f18e882b348121f6",
+        "type": "link out",
+        "z": "d6f8aab227f7b0e8",
+        "name": "From online check",
+        "mode": "link",
+        "links": [
+            "6018eaea7ababa2c"
+        ],
+        "x": 1065,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "inject_1",
+        "type": "inject",
+        "z": "b5ada79ec2c2bd4a",
+        "name": "Input 1",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "value1",
+        "payloadType": "str",
+        "x": 170,
+        "y": 140,
+        "wires": [
+            [
+                "join_node"
+            ]
+        ]
+    },
+    {
+        "id": "inject_2",
+        "type": "inject",
+        "z": "b5ada79ec2c2bd4a",
+        "name": "Input 2",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "input2",
+        "payload": "value2",
+        "payloadType": "str",
+        "x": 170,
+        "y": 190,
+        "wires": [
+            [
+                "join_node"
+            ]
+        ]
+    },
+    {
+        "id": "inject_3",
+        "type": "inject",
+        "z": "b5ada79ec2c2bd4a",
+        "name": "Input 3",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "input3",
+        "payload": "value3",
+        "payloadType": "str",
+        "x": 170,
+        "y": 240,
+        "wires": [
+            [
+                "join_node"
+            ]
+        ]
+    },
+    {
+        "id": "join_node",
+        "type": "join",
+        "z": "b5ada79ec2c2bd4a",
+        "name": "Join Inputs",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 370,
+        "y": 190,
+        "wires": [
+            [
+                "function_node"
+            ]
+        ]
+    },
+    {
+        "id": "function_node",
+        "type": "function",
+        "z": "b5ada79ec2c2bd4a",
+        "name": "Process Combined Message",
+        "func": "msg.payload = {\n    input1: msg.payload.input1,\n    input2: msg.payload.input2,\n    input3: msg.payload.input3\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 190,
+        "wires": [
+            [
+                "ui_button"
+            ]
+        ]
+    },
+    {
+        "id": "ui_button",
+        "type": "ui_button",
+        "z": "b5ada79ec2c2bd4a",
+        "name": "Submit Button",
+        "group": "ui_group_id",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Submit",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 820,
+        "y": 200,
+        "wires": [
+            [
+                "debug_node"
+            ]
+        ]
+    },
+    {
+        "id": "debug_node",
+        "type": "debug",
+        "z": "b5ada79ec2c2bd4a",
+        "name": "Debug",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 970,
+        "y": 190,
+        "wires": []
+    },
+    {
+        "id": "e40d7ca6e47e7995",
+        "type": "ui_button",
+        "z": "b5ada79ec2c2bd4a",
+        "name": "Submit Button",
+        "group": "b6795e559d1e41a6",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Submit",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 800,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "56435afa.3ae99c",
+        "type": "ui_text",
+        "z": "b5ada79ec2c2bd4a",
+        "group": "a8e4a3.d31edb6",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "ENABLED?",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 630,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "441e1771.e9ba9",
+        "type": "inject",
+        "z": "b5ada79ec2c2bd4a",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "value",
+        "payload": "",
+        "payloadType": "date",
+        "x": 300,
+        "y": 620,
+        "wires": [
+            [
+                "4baf59f6.2a492"
+            ]
+        ]
+    },
+    {
+        "id": "ebba6d6d.4c3ee8",
+        "type": "inject",
+        "z": "b5ada79ec2c2bd4a",
+        "name": "Enable",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "state",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 290,
+        "y": 700,
+        "wires": [
+            [
+                "4baf59f6.2a492"
+            ]
+        ]
+    },
+    {
+        "id": "f262a093.2db73",
+        "type": "inject",
+        "z": "b5ada79ec2c2bd4a",
+        "name": "Disable",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "state",
+        "payload": "false",
+        "payloadType": "bool",
+        "x": 290,
+        "y": 740,
+        "wires": [
+            [
+                "4baf59f6.2a492"
+            ]
+        ]
+    },
+    {
+        "id": "4baf59f6.2a492",
+        "type": "join",
+        "z": "b5ada79ec2c2bd4a",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": true,
+        "timeout": "",
+        "count": "1",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 470,
+        "y": 660,
+        "wires": [
+            [
+                "a31f5ff.a4caa2"
+            ]
+        ]
+    },
+    {
+        "id": "a31f5ff.a4caa2",
+        "type": "function",
+        "z": "b5ada79ec2c2bd4a",
+        "name": "Combine state and value",
+        "func": "if (typeof msg.payload.state != \"undefined\") {\n    msg.enabled = msg.payload.state\n}\nmsg.payload = msg.payload.value\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 660,
+        "wires": [
+            [
+                "56435afa.3ae99c"
+            ]
+        ]
+    },
+    {
+        "id": "60271d4c.18ec2c",
+        "type": "ui_switch",
+        "z": "6e716fb5.71658",
+        "name": "",
+        "label": "switch",
+        "group": "167364c9.528973",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "switch",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 230,
+        "y": 60,
+        "wires": [
+            [
+                "dbfb1d1f.9c27a8"
+            ]
+        ]
+    },
+    {
+        "id": "dbfb1d1f.9c27a8",
+        "type": "function",
+        "z": "6e716fb5.71658",
+        "name": "state",
+        "func": "var state = context.get('state') || false;\n\nif (msg.topic == 'switch') {\n    state = msg.payload;\n    context.set('state', state);\n}\n\n// put your other code here, state contains the state of the switch\n// for example:\nif (msg.payload == 'get state') {\n    return {payload: state};\n}\n\nreturn;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 390,
+        "y": 120,
+        "wires": [
+            [
+                "4e352ab6.2e06ec"
+            ]
+        ]
+    },
+    {
+        "id": "da8d8b81.67d978",
+        "type": "inject",
+        "z": "6e716fb5.71658",
+        "name": "",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "topic": "",
+        "payload": "get state",
+        "payloadType": "str",
+        "x": 100,
+        "y": 160,
+        "wires": [
+            [
+                "dbfb1d1f.9c27a8"
+            ]
+        ]
+    },
+    {
+        "id": "4e352ab6.2e06ec",
+        "type": "debug",
+        "z": "6e716fb5.71658",
+        "name": "state",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 530,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "b837231b.7d88e",
+        "type": "inject",
+        "z": "6e716fb5.71658",
+        "name": "on",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 70,
+        "y": 40,
+        "wires": [
+            [
+                "60271d4c.18ec2c"
+            ]
+        ]
+    },
+    {
+        "id": "fcd622f5.f527e",
+        "type": "inject",
+        "z": "6e716fb5.71658",
+        "name": "off",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "topic": "",
+        "payload": "false",
+        "payloadType": "bool",
+        "x": 90,
+        "y": 80,
+        "wires": [
+            [
+                "60271d4c.18ec2c"
+            ]
+        ]
+    }
+]

@@ -1,0 +1,955 @@
+0 verbose cli /usr/local/bin/node /usr/local/bin/npm
+1 info using npm@8.19.4
+2 info using node@v16.20.2
+3 timing npm:load:whichnode Completed in 0ms
+4 timing config:load:defaults Completed in 1ms
+5 timing config:load:file:/usr/local/lib/node_modules/npm/npmrc Completed in 2ms
+6 timing config:load:builtin Completed in 2ms
+7 warn config production Use `--omit=dev` instead.
+8 timing config:load:cli Completed in 4ms
+9 timing config:load:env Completed in 1ms
+10 timing config:load:file:/data/.npmrc Completed in 1ms
+11 timing config:load:project Completed in 7ms
+12 timing config:load:file:/usr/src/node-red/.npmrc Completed in 0ms
+13 timing config:load:user Completed in 0ms
+14 timing config:load:file:/usr/local/etc/npmrc Completed in 1ms
+15 timing config:load:global Completed in 1ms
+16 timing config:load:validate Completed in 1ms
+17 timing config:load:credentials Completed in 0ms
+18 timing config:load:setEnvs Completed in 1ms
+19 timing config:load Completed in 19ms
+20 timing npm:load:configload Completed in 19ms
+21 timing npm:load:mkdirpcache Completed in 6ms
+22 timing npm:load:mkdirplogs Completed in 5ms
+23 verbose title npm install @flowfuse/node-red-dashboard@1.11.0
+24 verbose argv "install" "--no-audit" "--no-update-notifier" "--no-fund" "--save" "--save-prefix" "~" "--production" "--engine-strict" "@flowfuse/node-red-dashboard@1.11.0"
+25 timing npm:load:setTitle Completed in 2ms
+26 timing config:load:flatten Completed in 2ms
+27 timing npm:load:display Completed in 4ms
+28 verbose logfile logs-max:10 dir:/data/.npm/_logs
+29 verbose logfile /data/.npm/_logs/2024-06-01T10_32_26_114Z-debug-0.log
+30 timing npm:load:logFile Completed in 18ms
+31 timing npm:load:timers Completed in 0ms
+32 timing npm:load:configScope Completed in 0ms
+33 timing npm:load Completed in 55ms
+34 timing arborist:ctor Completed in 1ms
+35 silly logfile start cleaning logs, removing 1 files
+36 silly logfile done cleaning log files
+37 timing idealTree:init Completed in 72ms
+38 timing idealTree:userRequests Completed in 2ms
+39 silly idealTree buildDeps
+40 silly fetch manifest @flowfuse/node-red-dashboard@1.11.0
+41 timing arborist:ctor Completed in 0ms
+42 http fetch GET 200 https://registry.npmjs.org/@flowfuse%2fnode-red-dashboard 270ms (cache miss)
+43 silly placeDep ROOT @flowfuse/node-red-dashboard@1.11.0 OK for: node-red-project@0.0.1 want: 1.11.0
+44 silly fetch manifest d3@^7.8.5
+45 silly fetch manifest vue@^3.4.5
+46 silly fetch manifest acorn@^8.11.2
+47 silly fetch manifest core-js@^3.32.0
+48 silly fetch manifest express@^4.19.2
+49 silly fetch manifest escodegen@^2.1.0
+50 silly fetch manifest chartjs-adapter-luxon@^1.3.1
+51 http fetch GET 200 https://registry.npmjs.org/vue 118ms (cache miss)
+52 http fetch GET 200 https://registry.npmjs.org/escodegen 160ms (cache miss)
+53 http fetch GET 200 https://registry.npmjs.org/chartjs-adapter-luxon 162ms (cache miss)
+54 http fetch GET 200 https://registry.npmjs.org/acorn 169ms (cache miss)
+55 http fetch GET 200 https://registry.npmjs.org/express 172ms (cache miss)
+56 http fetch GET 200 https://registry.npmjs.org/d3 180ms (cache miss)
+57 http fetch GET 200 https://registry.npmjs.org/core-js 199ms (cache miss)
+58 timing idealTree:#root Completed in 486ms
+59 silly fetch manifest typescript@*
+60 http fetch GET 200 https://registry.npmjs.org/typescript 203ms (cache miss)
+61 silly fetch manifest chart.js@>=3.0.0
+62 http fetch GET 200 https://registry.npmjs.org/chart.js 84ms (cache miss)
+63 silly fetch manifest luxon@>=1.0.0
+64 http fetch GET 200 https://registry.npmjs.org/luxon 78ms (cache miss)
+65 silly placeDep ROOT acorn@8.11.3 OK for: @flowfuse/node-red-dashboard@1.11.0 want: ^8.11.2
+66 silly placeDep ROOT chartjs-adapter-luxon@1.3.1 OK for: @flowfuse/node-red-dashboard@1.11.0 want: ^1.3.1
+67 silly placeDep ROOT chart.js@4.4.3 OK for: chartjs-adapter-luxon@1.3.1 want: >=3.0.0
+68 silly placeDep ROOT luxon@3.4.4 OK for: chartjs-adapter-luxon@1.3.1 want: >=1.0.0
+69 silly placeDep ROOT core-js@3.37.1 OK for: @flowfuse/node-red-dashboard@1.11.0 want: ^3.32.0
+70 silly placeDep ROOT d3@7.9.0 OK for: @flowfuse/node-red-dashboard@1.11.0 want: ^7.8.5
+71 silly placeDep ROOT escodegen@2.1.0 OK for: @flowfuse/node-red-dashboard@1.11.0 want: ^2.1.0
+72 silly placeDep ROOT express@4.19.2 OK for: @flowfuse/node-red-dashboard@1.11.0 want: ^4.19.2
+73 silly placeDep ROOT vue@3.4.27 OK for: @flowfuse/node-red-dashboard@1.11.0 want: ^3.4.5
+74 silly fetch manifest @kurkle/color@^0.3.0
+75 silly fetch manifest d3-array@3
+76 silly fetch manifest d3-axis@3
+77 silly fetch manifest d3-brush@3
+78 silly fetch manifest d3-chord@3
+79 silly fetch manifest d3-color@3
+80 silly fetch manifest d3-contour@4
+81 silly fetch manifest d3-delaunay@6
+82 silly fetch manifest d3-dispatch@3
+83 silly fetch manifest d3-drag@3
+84 silly fetch manifest d3-dsv@3
+85 silly fetch manifest d3-ease@3
+86 silly fetch manifest d3-fetch@3
+87 silly fetch manifest d3-force@3
+88 silly fetch manifest d3-format@3
+89 silly fetch manifest d3-geo@3
+90 silly fetch manifest d3-hierarchy@3
+91 silly fetch manifest d3-interpolate@3
+92 silly fetch manifest d3-path@3
+93 silly fetch manifest d3-polygon@3
+94 silly fetch manifest d3-quadtree@3
+95 silly fetch manifest d3-random@3
+96 silly fetch manifest d3-scale@4
+97 silly fetch manifest d3-scale-chromatic@3
+98 silly fetch manifest d3-selection@3
+99 silly fetch manifest d3-shape@3
+100 silly fetch manifest d3-time@3
+101 silly fetch manifest d3-time-format@4
+102 silly fetch manifest d3-timer@3
+103 silly fetch manifest d3-transition@3
+104 silly fetch manifest d3-zoom@3
+105 silly fetch manifest estraverse@^5.2.0
+106 silly fetch manifest esutils@^2.0.2
+107 silly fetch manifest esprima@^4.0.1
+108 silly fetch manifest source-map@~0.6.1
+109 silly fetch manifest qs@6.11.0
+110 silly fetch manifest cookie@0.6.0
+111 silly fetch manifest methods@~1.1.2
+112 silly fetch manifest type-is@~1.6.18
+113 silly fetch manifest proxy-addr@~2.0.7
+114 silly fetch manifest body-parser@1.20.2
+115 silly fetch manifest safe-buffer@5.2.1
+116 silly fetch manifest utils-merge@1.0.1
+117 silly fetch manifest content-type@~1.0.4
+118 silly fetch manifest finalhandler@1.2.0
+119 silly fetch manifest array-flatten@1.1.1
+120 silly fetch manifest path-to-regexp@0.1.7
+121 silly fetch manifest cookie-signature@1.0.6
+122 silly fetch manifest merge-descriptors@1.0.1
+123 silly fetch manifest content-disposition@0.5.4
+124 silly fetch manifest @vue/shared@3.4.27
+125 silly fetch manifest @vue/compiler-dom@3.4.27
+126 silly fetch manifest @vue/compiler-sfc@3.4.27
+127 silly fetch manifest @vue/runtime-dom@3.4.27
+128 silly fetch manifest @vue/server-renderer@3.4.27
+129 http fetch GET 200 https://registry.npmjs.org/d3-contour 206ms (cache miss)
+130 http fetch GET 200 https://registry.npmjs.org/d3-axis 218ms (cache miss)
+131 http fetch GET 200 https://registry.npmjs.org/d3-color 243ms (cache miss)
+132 http fetch GET 200 https://registry.npmjs.org/d3-brush 258ms (cache miss)
+133 http fetch GET 200 https://registry.npmjs.org/d3-array 270ms (cache miss)
+134 http fetch GET 200 https://registry.npmjs.org/d3-chord 340ms (cache miss)
+135 http fetch GET 200 https://registry.npmjs.org/d3-fetch 384ms (cache miss)
+136 http fetch GET 200 https://registry.npmjs.org/d3-path 393ms (cache miss)
+137 http fetch GET 200 https://registry.npmjs.org/d3-interpolate 408ms (cache miss)
+138 http fetch GET 200 https://registry.npmjs.org/safe-buffer 404ms (cache revalidated)
+139 http fetch GET 200 https://registry.npmjs.org/d3-quadtree 429ms (cache miss)
+140 http fetch GET 200 https://registry.npmjs.org/d3-polygon 432ms (cache miss)
+141 http fetch GET 200 https://registry.npmjs.org/cookie 425ms (cache revalidated)
+142 http fetch GET 200 https://registry.npmjs.org/d3-scale-chromatic 442ms (cache miss)
+143 http fetch GET 200 https://registry.npmjs.org/d3-random 454ms (cache miss)
+144 http fetch GET 200 https://registry.npmjs.org/esutils 450ms (cache miss)
+145 http fetch GET 200 https://registry.npmjs.org/d3-dispatch 465ms (cache miss)
+146 http fetch GET 200 https://registry.npmjs.org/d3-scale 467ms (cache miss)
+147 http fetch GET 200 https://registry.npmjs.org/d3-ease 486ms (cache miss)
+148 http fetch GET 200 https://registry.npmjs.org/@kurkle%2fcolor 501ms (cache miss)
+149 http fetch GET 200 https://registry.npmjs.org/d3-selection 491ms (cache miss)
+150 http fetch GET 200 https://registry.npmjs.org/content-type 482ms (cache miss)
+151 http fetch GET 200 https://registry.npmjs.org/methods 489ms (cache miss)
+152 http fetch GET 200 https://registry.npmjs.org/d3-time-format 500ms (cache miss)
+153 http fetch GET 200 https://registry.npmjs.org/esprima 498ms (cache miss)
+154 http fetch GET 200 https://registry.npmjs.org/content-disposition 493ms (cache miss)
+155 http fetch GET 200 https://registry.npmjs.org/merge-descriptors 495ms (cache miss)
+156 http fetch GET 200 https://registry.npmjs.org/d3-dsv 522ms (cache miss)
+157 http fetch GET 200 https://registry.npmjs.org/d3-force 525ms (cache miss)
+158 http fetch GET 200 https://registry.npmjs.org/d3-drag 530ms (cache miss)
+159 http fetch GET 200 https://registry.npmjs.org/d3-format 529ms (cache miss)
+160 http fetch GET 200 https://registry.npmjs.org/utils-merge 512ms (cache miss)
+161 http fetch GET 200 https://registry.npmjs.org/array-flatten 511ms (cache miss)
+162 http fetch GET 200 https://registry.npmjs.org/type-is 520ms (cache miss)
+163 http fetch GET 200 https://registry.npmjs.org/d3-time 531ms (cache miss)
+164 http fetch GET 200 https://registry.npmjs.org/d3-hierarchy 539ms (cache miss)
+165 http fetch GET 200 https://registry.npmjs.org/d3-shape 536ms (cache miss)
+166 http fetch GET 200 https://registry.npmjs.org/finalhandler 530ms (cache miss)
+167 http fetch GET 200 https://registry.npmjs.org/d3-zoom 542ms (cache miss)
+168 http fetch GET 200 https://registry.npmjs.org/estraverse 547ms (cache miss)
+169 http fetch GET 200 https://registry.npmjs.org/d3-timer 552ms (cache miss)
+170 http fetch GET 200 https://registry.npmjs.org/cookie-signature 540ms (cache miss)
+171 http fetch GET 200 https://registry.npmjs.org/body-parser 547ms (cache miss)
+172 http fetch GET 200 https://registry.npmjs.org/d3-geo 567ms (cache miss)
+173 http fetch GET 200 https://registry.npmjs.org/source-map 557ms (cache miss)
+174 http fetch GET 200 https://registry.npmjs.org/d3-transition 571ms (cache miss)
+175 http fetch GET 200 https://registry.npmjs.org/d3-delaunay 586ms (cache miss)
+176 http fetch GET 200 https://registry.npmjs.org/path-to-regexp 565ms (cache miss)
+177 http fetch GET 200 https://registry.npmjs.org/@vue%2fserver-renderer 585ms (cache miss)
+178 http fetch GET 200 https://registry.npmjs.org/qs 607ms (cache miss)
+179 http fetch GET 200 https://registry.npmjs.org/@vue%2fruntime-dom 596ms (cache miss)
+180 http fetch GET 200 https://registry.npmjs.org/@vue%2fcompiler-dom 600ms (cache miss)
+181 http fetch GET 200 https://registry.npmjs.org/@vue%2fcompiler-sfc 604ms (cache miss)
+182 http fetch GET 200 https://registry.npmjs.org/@vue%2fshared 626ms (cache miss)
+183 http fetch GET 200 https://registry.npmjs.org/proxy-addr 802ms (cache miss)
+184 timing idealTree:node_modules/@flowfuse/node-red-dashboard Completed in 1252ms
+185 timing idealTree:node_modules/acorn Completed in 0ms
+186 silly placeDep ROOT @kurkle/color@0.3.2 OK for: chart.js@4.4.3 want: ^0.3.0
+187 timing idealTree:node_modules/chart.js Completed in 1ms
+188 timing idealTree:node_modules/@kurkle/color Completed in 0ms
+189 timing idealTree:node_modules/chartjs-adapter-luxon Completed in 0ms
+190 timing idealTree:node_modules/core-js Completed in 0ms
+191 silly placeDep ROOT d3-array@3.2.4 OK for: d3@7.9.0 want: 3
+192 silly placeDep ROOT d3-axis@3.0.0 OK for: d3@7.9.0 want: 3
+193 silly placeDep ROOT d3-brush@3.0.0 OK for: d3@7.9.0 want: 3
+194 silly placeDep ROOT d3-chord@3.0.1 OK for: d3@7.9.0 want: 3
+195 silly placeDep ROOT d3-color@3.1.0 OK for: d3@7.9.0 want: 3
+196 silly placeDep ROOT d3-contour@4.0.2 OK for: d3@7.9.0 want: 4
+197 silly placeDep ROOT d3-delaunay@6.0.4 OK for: d3@7.9.0 want: 6
+198 silly placeDep ROOT d3-dispatch@3.0.1 OK for: d3@7.9.0 want: 3
+199 silly placeDep ROOT d3-drag@3.0.0 OK for: d3@7.9.0 want: 3
+200 silly placeDep ROOT d3-dsv@3.0.1 OK for: d3@7.9.0 want: 3
+201 silly placeDep ROOT d3-ease@3.0.1 OK for: d3@7.9.0 want: 3
+202 silly placeDep ROOT d3-fetch@3.0.1 OK for: d3@7.9.0 want: 3
+203 silly placeDep ROOT d3-force@3.0.0 OK for: d3@7.9.0 want: 3
+204 silly placeDep ROOT d3-format@3.1.0 OK for: d3@7.9.0 want: 3
+205 silly placeDep ROOT d3-geo@3.1.1 OK for: d3@7.9.0 want: 3
+206 silly placeDep ROOT d3-hierarchy@3.1.2 OK for: d3@7.9.0 want: 3
+207 silly placeDep ROOT d3-interpolate@3.0.1 OK for: d3@7.9.0 want: 3
+208 silly placeDep ROOT d3-path@3.1.0 OK for: d3@7.9.0 want: 3
+209 silly placeDep ROOT d3-polygon@3.0.1 OK for: d3@7.9.0 want: 3
+210 silly placeDep ROOT d3-quadtree@3.0.1 OK for: d3@7.9.0 want: 3
+211 silly placeDep ROOT d3-random@3.0.1 OK for: d3@7.9.0 want: 3
+212 silly placeDep ROOT d3-scale@4.0.2 OK for: d3@7.9.0 want: 4
+213 silly placeDep ROOT d3-scale-chromatic@3.1.0 OK for: d3@7.9.0 want: 3
+214 silly placeDep ROOT d3-selection@3.0.0 OK for: d3@7.9.0 want: 3
+215 silly placeDep ROOT d3-shape@3.2.0 OK for: d3@7.9.0 want: 3
+216 silly placeDep ROOT d3-time@3.1.0 OK for: d3@7.9.0 want: 3
+217 silly placeDep ROOT d3-time-format@4.1.0 OK for: d3@7.9.0 want: 4
+218 silly placeDep ROOT d3-timer@3.0.1 OK for: d3@7.9.0 want: 3
+219 silly placeDep ROOT d3-transition@3.0.1 OK for: d3@7.9.0 want: 3
+220 silly placeDep ROOT d3-zoom@3.0.0 OK for: d3@7.9.0 want: 3
+221 silly fetch manifest internmap@1 - 2
+222 silly fetch manifest delaunator@5
+223 silly fetch manifest commander@7
+224 silly fetch manifest iconv-lite@0.6
+225 silly fetch manifest rw@1
+226 http fetch GET 200 https://registry.npmjs.org/commander 83ms (cache miss)
+227 http fetch GET 200 https://registry.npmjs.org/iconv-lite 85ms (cache miss)
+228 http fetch GET 200 https://registry.npmjs.org/internmap 90ms (cache miss)
+229 http fetch GET 200 https://registry.npmjs.org/delaunator 91ms (cache miss)
+230 http fetch GET 200 https://registry.npmjs.org/rw 271ms (cache miss)
+231 timing idealTree:node_modules/d3 Completed in 315ms
+232 silly placeDep ROOT internmap@2.0.3 OK for: d3-array@3.2.4 want: 1 - 2
+233 timing idealTree:node_modules/d3-array Completed in 1ms
+234 timing idealTree:node_modules/d3-axis Completed in 0ms
+235 timing idealTree:node_modules/d3-brush Completed in 0ms
+236 timing idealTree:node_modules/d3-chord Completed in 0ms
+237 timing idealTree:node_modules/d3-color Completed in 0ms
+238 timing idealTree:node_modules/d3-contour Completed in 0ms
+239 silly placeDep ROOT delaunator@5.0.1 OK for: d3-delaunay@6.0.4 want: 5
+240 silly fetch manifest robust-predicates@^3.0.2
+241 http fetch GET 200 https://registry.npmjs.org/robust-predicates 79ms (cache miss)
+242 timing idealTree:node_modules/d3-delaunay Completed in 82ms
+243 timing idealTree:node_modules/d3-dispatch Completed in 0ms
+244 timing idealTree:node_modules/d3-drag Completed in 0ms
+245 silly placeDep ROOT commander@7.2.0 OK for: d3-dsv@3.0.1 want: 7
+246 silly placeDep ROOT iconv-lite@0.6.3 OK for: d3-dsv@3.0.1 want: 0.6
+247 silly placeDep ROOT rw@1.3.3 OK for: d3-dsv@3.0.1 want: 1
+248 silly fetch manifest safer-buffer@>= 2.1.2 < 3.0.0
+249 http fetch GET 200 https://registry.npmjs.org/safer-buffer 69ms (cache miss)
+250 timing idealTree:node_modules/d3-dsv Completed in 74ms
+251 timing idealTree:node_modules/commander Completed in 0ms
+252 timing idealTree:node_modules/d3-ease Completed in 0ms
+253 timing idealTree:node_modules/d3-fetch Completed in 0ms
+254 timing idealTree:node_modules/d3-force Completed in 0ms
+255 timing idealTree:node_modules/d3-format Completed in 0ms
+256 timing idealTree:node_modules/d3-geo Completed in 0ms
+257 timing idealTree:node_modules/d3-hierarchy Completed in 0ms
+258 timing idealTree:node_modules/d3-interpolate Completed in 0ms
+259 timing idealTree:node_modules/d3-path Completed in 0ms
+260 timing idealTree:node_modules/d3-polygon Completed in 0ms
+261 timing idealTree:node_modules/d3-quadtree Completed in 0ms
+262 timing idealTree:node_modules/d3-random Completed in 0ms
+263 timing idealTree:node_modules/d3-scale Completed in 0ms
+264 timing idealTree:node_modules/d3-scale-chromatic Completed in 0ms
+265 timing idealTree:node_modules/d3-selection Completed in 0ms
+266 timing idealTree:node_modules/d3-shape Completed in 0ms
+267 timing idealTree:node_modules/d3-time Completed in 0ms
+268 timing idealTree:node_modules/d3-time-format Completed in 0ms
+269 timing idealTree:node_modules/d3-timer Completed in 0ms
+270 timing idealTree:node_modules/d3-transition Completed in 0ms
+271 timing idealTree:node_modules/d3-zoom Completed in 0ms
+272 silly placeDep ROOT robust-predicates@3.0.2 OK for: delaunator@5.0.1 want: ^3.0.2
+273 timing idealTree:node_modules/delaunator Completed in 2ms
+274 silly placeDep ROOT esprima@4.0.1 OK for: escodegen@2.1.0 want: ^4.0.1
+275 silly placeDep ROOT estraverse@5.3.0 OK for: escodegen@2.1.0 want: ^5.2.0
+276 silly placeDep ROOT esutils@2.0.3 OK for: escodegen@2.1.0 want: ^2.0.2
+277 silly placeDep ROOT source-map@0.6.1 OK for: escodegen@2.1.0 want: ~0.6.1
+278 timing idealTree:node_modules/escodegen Completed in 3ms
+279 timing idealTree:node_modules/esprima Completed in 0ms
+280 timing idealTree:node_modules/estraverse Completed in 0ms
+281 timing idealTree:node_modules/esutils Completed in 0ms
+282 silly placeDep ROOT array-flatten@1.1.1 OK for: express@4.19.2 want: 1.1.1
+283 silly placeDep ROOT body-parser@1.20.2 OK for: express@4.19.2 want: 1.20.2
+284 silly placeDep ROOT content-disposition@0.5.4 OK for: express@4.19.2 want: 0.5.4
+285 silly placeDep ROOT content-type@1.0.5 OK for: express@4.19.2 want: ~1.0.4
+286 silly placeDep node_modules/express cookie@0.6.0 OK for: express@4.19.2 want: 0.6.0
+287 silly placeDep ROOT cookie-signature@1.0.6 OK for: express@4.19.2 want: 1.0.6
+288 silly placeDep ROOT finalhandler@1.2.0 OK for: express@4.19.2 want: 1.2.0
+289 silly placeDep ROOT merge-descriptors@1.0.1 OK for: express@4.19.2 want: 1.0.1
+290 silly placeDep ROOT methods@1.1.2 OK for: express@4.19.2 want: ~1.1.2
+291 silly placeDep ROOT path-to-regexp@0.1.7 OK for: express@4.19.2 want: 0.1.7
+292 silly placeDep ROOT proxy-addr@2.0.7 OK for: express@4.19.2 want: ~2.0.7
+293 silly placeDep ROOT qs@6.11.0 OK for: express@4.19.2 want: 6.11.0
+294 silly placeDep node_modules/express safe-buffer@5.2.1 OK for: express@4.19.2 want: 5.2.1
+295 silly placeDep ROOT type-is@1.6.18 OK for: express@4.19.2 want: ~1.6.18
+296 silly placeDep ROOT utils-merge@1.0.1 OK for: express@4.19.2 want: 1.0.1
+297 silly fetch manifest bytes@3.1.2
+298 silly fetch manifest unpipe@1.0.0
+299 silly fetch manifest raw-body@2.5.2
+300 silly fetch manifest iconv-lite@0.4.24
+301 silly fetch manifest unpipe@~1.0.0
+302 silly fetch manifest forwarded@0.2.0
+303 silly fetch manifest ipaddr.js@1.9.1
+304 silly fetch manifest side-channel@^1.0.4
+305 silly fetch manifest media-typer@0.3.0
+306 http fetch GET 200 https://registry.npmjs.org/raw-body 97ms (cache miss)
+307 http fetch GET 200 https://registry.npmjs.org/forwarded 96ms (cache miss)
+308 http fetch GET 200 https://registry.npmjs.org/side-channel 98ms (cache miss)
+309 http fetch GET 200 https://registry.npmjs.org/unpipe 104ms (cache miss)
+310 http fetch GET 200 https://registry.npmjs.org/ipaddr.js 102ms (cache miss)
+311 http fetch GET 200 https://registry.npmjs.org/unpipe 104ms (cache miss)
+312 http fetch GET 200 https://registry.npmjs.org/media-typer 110ms (cache miss)
+313 http fetch GET 200 https://registry.npmjs.org/bytes 121ms (cache revalidated)
+314 timing idealTree:node_modules/express Completed in 141ms
+315 timing idealTree:node_modules/array-flatten Completed in 0ms
+316 silly placeDep node_modules/body-parser bytes@3.1.2 OK for: body-parser@1.20.2 want: 3.1.2
+317 silly placeDep node_modules/body-parser iconv-lite@0.4.24 OK for: body-parser@1.20.2 want: 0.4.24
+318 silly placeDep ROOT raw-body@2.5.2 OK for: body-parser@1.20.2 want: 2.5.2
+319 silly placeDep ROOT unpipe@1.0.0 OK for: body-parser@1.20.2 want: 1.0.0
+320 silly fetch manifest safer-buffer@>= 2.1.2 < 3
+321 timing idealTree:node_modules/body-parser Completed in 6ms
+322 silly placeDep node_modules/content-disposition safe-buffer@5.2.1 OK for: content-disposition@0.5.4 want: 5.2.1
+323 timing idealTree:node_modules/content-disposition Completed in 1ms
+324 timing idealTree:node_modules/content-type Completed in 0ms
+325 timing idealTree:node_modules/cookie-signature Completed in 0ms
+326 timing idealTree:node_modules/finalhandler Completed in 0ms
+327 silly placeDep ROOT safer-buffer@2.1.2 OK for: iconv-lite@0.6.3 want: >= 2.1.2 < 3.0.0
+328 timing idealTree:node_modules/iconv-lite Completed in 2ms
+329 timing idealTree:node_modules/internmap Completed in 0ms
+330 timing idealTree:node_modules/luxon Completed in 0ms
+331 timing idealTree:node_modules/merge-descriptors Completed in 0ms
+332 timing idealTree:node_modules/methods Completed in 0ms
+333 timing idealTree:node_modules/path-to-regexp Completed in 0ms
+334 silly placeDep ROOT forwarded@0.2.0 OK for: proxy-addr@2.0.7 want: 0.2.0
+335 silly placeDep ROOT ipaddr.js@1.9.1 OK for: proxy-addr@2.0.7 want: 1.9.1
+336 timing idealTree:node_modules/proxy-addr Completed in 1ms
+337 timing idealTree:node_modules/forwarded Completed in 0ms
+338 timing idealTree:node_modules/ipaddr.js Completed in 0ms
+339 silly placeDep ROOT side-channel@1.0.6 OK for: qs@6.11.0 want: ^1.0.4
+340 silly fetch manifest call-bind@^1.0.7
+341 silly fetch manifest es-errors@^1.3.0
+342 silly fetch manifest get-intrinsic@^1.2.4
+343 silly fetch manifest object-inspect@^1.13.1
+344 http fetch GET 200 https://registry.npmjs.org/es-errors 81ms (cache miss)
+345 http fetch GET 200 https://registry.npmjs.org/get-intrinsic 81ms (cache miss)
+346 http fetch GET 200 https://registry.npmjs.org/call-bind 97ms (cache miss)
+347 http fetch GET 200 https://registry.npmjs.org/object-inspect 94ms (cache miss)
+348 timing idealTree:node_modules/qs Completed in 100ms
+349 silly placeDep node_modules/raw-body bytes@3.1.2 OK for: raw-body@2.5.2 want: 3.1.2
+350 silly placeDep node_modules/raw-body iconv-lite@0.4.24 OK for: raw-body@2.5.2 want: 0.4.24
+351 timing idealTree:node_modules/raw-body Completed in 2ms
+352 timing idealTree:node_modules/robust-predicates Completed in 0ms
+353 timing idealTree:node_modules/rw Completed in 0ms
+354 timing idealTree:node_modules/safer-buffer Completed in 0ms
+355 silly placeDep ROOT call-bind@1.0.7 OK for: side-channel@1.0.6 want: ^1.0.7
+356 silly placeDep ROOT es-errors@1.3.0 OK for: side-channel@1.0.6 want: ^1.3.0
+357 silly placeDep ROOT get-intrinsic@1.2.4 OK for: side-channel@1.0.6 want: ^1.2.4
+358 silly placeDep ROOT object-inspect@1.13.1 OK for: side-channel@1.0.6 want: ^1.13.1
+359 silly fetch manifest es-define-property@^1.0.0
+360 silly fetch manifest function-bind@^1.1.2
+361 silly fetch manifest set-function-length@^1.2.1
+362 silly fetch manifest has-proto@^1.0.1
+363 silly fetch manifest has-symbols@^1.0.3
+364 silly fetch manifest hasown@^2.0.0
+365 http fetch GET 200 https://registry.npmjs.org/hasown 88ms (cache miss)
+366 http fetch GET 200 https://registry.npmjs.org/set-function-length 91ms (cache miss)
+367 http fetch GET 200 https://registry.npmjs.org/has-proto 91ms (cache miss)
+368 http fetch GET 200 https://registry.npmjs.org/has-symbols 94ms (cache miss)
+369 http fetch GET 200 https://registry.npmjs.org/function-bind 98ms (cache miss)
+370 http fetch GET 200 https://registry.npmjs.org/es-define-property 108ms (cache miss)
+371 timing idealTree:node_modules/side-channel Completed in 112ms
+372 silly placeDep ROOT es-define-property@1.0.0 OK for: call-bind@1.0.7 want: ^1.0.0
+373 silly placeDep ROOT function-bind@1.1.2 OK for: call-bind@1.0.7 want: ^1.1.2
+374 silly placeDep ROOT set-function-length@1.2.2 OK for: call-bind@1.0.7 want: ^1.2.1
+375 silly fetch manifest define-data-property@^1.1.4
+376 silly fetch manifest gopd@^1.0.1
+377 silly fetch manifest has-property-descriptors@^1.0.2
+378 http fetch GET 200 https://registry.npmjs.org/gopd 70ms (cache miss)
+379 http fetch GET 200 https://registry.npmjs.org/has-property-descriptors 73ms (cache miss)
+380 http fetch GET 200 https://registry.npmjs.org/define-data-property 76ms (cache miss)
+381 timing idealTree:node_modules/call-bind Completed in 81ms
+382 timing idealTree:node_modules/es-define-property Completed in 0ms
+383 timing idealTree:node_modules/es-errors Completed in 0ms
+384 timing idealTree:node_modules/function-bind Completed in 1ms
+385 silly placeDep ROOT has-proto@1.0.3 OK for: get-intrinsic@1.2.4 want: ^1.0.1
+386 silly placeDep ROOT has-symbols@1.0.3 OK for: get-intrinsic@1.2.4 want: ^1.0.3
+387 silly placeDep ROOT hasown@2.0.2 OK for: get-intrinsic@1.2.4 want: ^2.0.0
+388 timing idealTree:node_modules/get-intrinsic Completed in 10ms
+389 timing idealTree:node_modules/has-proto Completed in 0ms
+390 timing idealTree:node_modules/has-symbols Completed in 0ms
+391 timing idealTree:node_modules/hasown Completed in 0ms
+392 timing idealTree:node_modules/object-inspect Completed in 0ms
+393 silly placeDep ROOT define-data-property@1.1.4 OK for: set-function-length@1.2.2 want: ^1.1.4
+394 silly placeDep ROOT gopd@1.0.1 OK for: set-function-length@1.2.2 want: ^1.0.1
+395 silly placeDep ROOT has-property-descriptors@1.0.2 OK for: set-function-length@1.2.2 want: ^1.0.2
+396 timing idealTree:node_modules/set-function-length Completed in 4ms
+397 timing idealTree:node_modules/define-data-property Completed in 0ms
+398 timing idealTree:node_modules/gopd Completed in 0ms
+399 timing idealTree:node_modules/has-property-descriptors Completed in 0ms
+400 timing idealTree:node_modules/source-map Completed in 0ms
+401 silly placeDep ROOT media-typer@0.3.0 OK for: type-is@1.6.18 want: 0.3.0
+402 timing idealTree:node_modules/type-is Completed in 1ms
+403 timing idealTree:node_modules/media-typer Completed in 0ms
+404 timing idealTree:node_modules/unpipe Completed in 0ms
+405 timing idealTree:node_modules/utils-merge Completed in 0ms
+406 silly fetch manifest vue@3.4.27
+407 silly placeDep ROOT @vue/compiler-dom@3.4.27 OK for: vue@3.4.27 want: 3.4.27
+408 silly placeDep ROOT @vue/compiler-sfc@3.4.27 OK for: vue@3.4.27 want: 3.4.27
+409 silly placeDep ROOT @vue/runtime-dom@3.4.27 OK for: vue@3.4.27 want: 3.4.27
+410 silly placeDep ROOT @vue/server-renderer@3.4.27 OK for: vue@3.4.27 want: 3.4.27
+411 silly placeDep ROOT @vue/shared@3.4.27 OK for: vue@3.4.27 want: 3.4.27
+412 silly fetch manifest @vue/compiler-core@3.4.27
+413 silly fetch manifest @babel/parser@^7.24.4
+414 silly fetch manifest estree-walker@^2.0.2
+415 silly fetch manifest magic-string@^0.30.10
+416 silly fetch manifest postcss@^8.4.38
+417 silly fetch manifest source-map-js@^1.2.0
+418 silly fetch manifest @vue/compiler-ssr@3.4.27
+419 silly fetch manifest csstype@^3.1.3
+420 silly fetch manifest @vue/runtime-core@3.4.27
+421 http fetch GET 200 https://registry.npmjs.org/source-map-js 85ms (cache miss)
+422 http fetch GET 200 https://registry.npmjs.org/magic-string 95ms (cache miss)
+423 http fetch GET 200 https://registry.npmjs.org/estree-walker 100ms (cache miss)
+424 http fetch GET 200 https://registry.npmjs.org/csstype 97ms (cache miss)
+425 http fetch GET 200 https://registry.npmjs.org/postcss 135ms (cache miss)
+426 http fetch GET 200 https://registry.npmjs.org/@babel%2fparser 142ms (cache miss)
+427 http fetch GET 200 https://registry.npmjs.org/@vue%2fcompiler-ssr 189ms (cache miss)
+428 http fetch GET 200 https://registry.npmjs.org/@vue%2fcompiler-core 195ms (cache miss)
+429 http fetch GET 200 https://registry.npmjs.org/@vue%2fruntime-core 191ms (cache miss)
+430 timing idealTree:node_modules/vue Completed in 204ms
+431 silly placeDep ROOT @vue/compiler-core@3.4.27 OK for: @vue/compiler-dom@3.4.27 want: 3.4.27
+432 silly fetch manifest entities@^4.5.0
+433 http fetch GET 200 https://registry.npmjs.org/entities 70ms (cache miss)
+434 timing idealTree:node_modules/@vue/compiler-dom Completed in 82ms
+435 silly placeDep ROOT @babel/parser@7.24.6 OK for: @vue/compiler-core@3.4.27 want: ^7.24.4
+436 silly placeDep ROOT entities@4.5.0 OK for: @vue/compiler-core@3.4.27 want: ^4.5.0
+437 silly placeDep ROOT estree-walker@2.0.2 OK for: @vue/compiler-core@3.4.27 want: ^2.0.2
+438 silly placeDep ROOT source-map-js@1.2.0 OK for: @vue/compiler-core@3.4.27 want: ^1.2.0
+439 timing idealTree:node_modules/@vue/compiler-core Completed in 3ms
+440 timing idealTree:node_modules/@babel/parser Completed in 0ms
+441 silly placeDep ROOT @vue/compiler-ssr@3.4.27 OK for: @vue/compiler-sfc@3.4.27 want: 3.4.27
+442 silly placeDep ROOT magic-string@0.30.10 OK for: @vue/compiler-sfc@3.4.27 want: ^0.30.10
+443 silly placeDep ROOT postcss@8.4.38 OK for: @vue/compiler-sfc@3.4.27 want: ^8.4.38
+444 silly fetch manifest @jridgewell/sourcemap-codec@^1.4.15
+445 silly fetch manifest nanoid@^3.3.7
+446 silly fetch manifest picocolors@^1.0.0
+447 http fetch GET 200 https://registry.npmjs.org/picocolors 74ms (cache miss)
+448 http fetch GET 200 https://registry.npmjs.org/nanoid 76ms (cache miss)
+449 http fetch GET 200 https://registry.npmjs.org/@jridgewell%2fsourcemap-codec 106ms (cache miss)
+450 timing idealTree:node_modules/@vue/compiler-sfc Completed in 110ms
+451 timing idealTree:node_modules/@vue/compiler-ssr Completed in 0ms
+452 silly placeDep ROOT @vue/runtime-core@3.4.27 OK for: @vue/runtime-dom@3.4.27 want: 3.4.27
+453 silly placeDep ROOT csstype@3.1.3 OK for: @vue/runtime-dom@3.4.27 want: ^3.1.3
+454 silly fetch manifest @vue/reactivity@3.4.27
+455 http fetch GET 200 https://registry.npmjs.org/@vue%2freactivity 97ms (cache miss)
+456 timing idealTree:node_modules/@vue/runtime-dom Completed in 101ms
+457 silly placeDep ROOT @vue/reactivity@3.4.27 OK for: @vue/runtime-core@3.4.27 want: 3.4.27
+458 timing idealTree:node_modules/@vue/runtime-core Completed in 1ms
+459 timing idealTree:node_modules/@vue/reactivity Completed in 0ms
+460 timing idealTree:node_modules/@vue/server-renderer Completed in 0ms
+461 timing idealTree:node_modules/@vue/shared Completed in 0ms
+462 timing idealTree:node_modules/csstype Completed in 0ms
+463 timing idealTree:node_modules/entities Completed in 0ms
+464 timing idealTree:node_modules/estree-walker Completed in 0ms
+465 silly placeDep ROOT @jridgewell/sourcemap-codec@1.4.15 OK for: magic-string@0.30.10 want: ^1.4.15
+466 timing idealTree:node_modules/magic-string Completed in 1ms
+467 timing idealTree:node_modules/@jridgewell/sourcemap-codec Completed in 0ms
+468 silly placeDep ROOT nanoid@3.3.7 OK for: postcss@8.4.38 want: ^3.3.7
+469 silly placeDep ROOT picocolors@1.0.1 OK for: postcss@8.4.38 want: ^1.0.0
+470 timing idealTree:node_modules/postcss Completed in 1ms
+471 timing idealTree:node_modules/nanoid Completed in 0ms
+472 timing idealTree:node_modules/picocolors Completed in 0ms
+473 timing idealTree:node_modules/source-map-js Completed in 0ms
+474 timing idealTree:node_modules/body-parser/node_modules/bytes Completed in 0ms
+475 timing idealTree:node_modules/body-parser/node_modules/iconv-lite Completed in 0ms
+476 timing idealTree:node_modules/content-disposition/node_modules/safe-buffer Completed in 0ms
+477 timing idealTree:node_modules/express/node_modules/cookie Completed in 0ms
+478 timing idealTree:node_modules/express/node_modules/safe-buffer Completed in 0ms
+479 timing idealTree:node_modules/raw-body/node_modules/bytes Completed in 0ms
+480 timing idealTree:node_modules/raw-body/node_modules/iconv-lite Completed in 0ms
+481 timing idealTree:buildDeps Completed in 3211ms
+482 timing idealTree:fixDepFlags Completed in 2ms
+483 timing idealTree Completed in 3289ms
+484 timing reify:loadTrees Completed in 3290ms
+485 timing reify:diffTrees Completed in 6ms
+486 silly reify moves {}
+487 timing reify:retireShallow Completed in 1ms
+488 timing reify:createSparse Completed in 109ms
+489 timing reify:trashOmits Completed in 0ms
+490 timing reify:loadBundles Completed in 0ms
+491 silly tarball no local data for picocolors@https://registry.npmjs.org/picocolors/-/picocolors-1.0.1.tgz. Extracting by manifest.
+492 silly tarball no local data for nanoid@https://registry.npmjs.org/nanoid/-/nanoid-3.3.7.tgz. Extracting by manifest.
+493 silly tarball no local data for postcss@https://registry.npmjs.org/postcss/-/postcss-8.4.38.tgz. Extracting by manifest.
+494 silly tarball no local data for csstype@https://registry.npmjs.org/csstype/-/csstype-3.1.3.tgz. Extracting by manifest.
+495 silly tarball no local data for magic-string@https://registry.npmjs.org/magic-string/-/magic-string-0.30.10.tgz. Extracting by manifest.
+496 silly tarball no local data for source-map-js@https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.0.tgz. Extracting by manifest.
+497 silly tarball no local data for @vue/reactivity@https://registry.npmjs.org/@vue/reactivity/-/reactivity-3.4.27.tgz. Extracting by manifest.
+498 silly tarball no local data for @jridgewell/sourcemap-codec@https://registry.npmjs.org/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.4.15.tgz. Extracting by manifest.
+499 silly tarball no local data for @vue/compiler-sfc@https://registry.npmjs.org/@vue/compiler-sfc/-/compiler-sfc-3.4.27.tgz. Extracting by manifest.
+500 silly tarball no local data for @vue/runtime-core@https://registry.npmjs.org/@vue/runtime-core/-/runtime-core-3.4.27.tgz. Extracting by manifest.
+501 silly tarball no local data for estree-walker@https://registry.npmjs.org/estree-walker/-/estree-walker-2.0.2.tgz. Extracting by manifest.
+502 silly tarball no local data for entities@https://registry.npmjs.org/entities/-/entities-4.5.0.tgz. Extracting by manifest.
+503 silly tarball no local data for @vue/server-renderer@https://registry.npmjs.org/@vue/server-renderer/-/server-renderer-3.4.27.tgz. Extracting by manifest.
+504 silly tarball no local data for @vue/compiler-core@https://registry.npmjs.org/@vue/compiler-core/-/compiler-core-3.4.27.tgz. Extracting by manifest.
+505 silly tarball no local data for media-typer@https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz. Extracting by manifest.
+506 silly tarball no local data for @vue/shared@https://registry.npmjs.org/@vue/shared/-/shared-3.4.27.tgz. Extracting by manifest.
+507 silly tarball no local data for gopd@https://registry.npmjs.org/gopd/-/gopd-1.0.1.tgz. Extracting by manifest.
+508 silly tarball no local data for has-property-descriptors@https://registry.npmjs.org/has-property-descriptors/-/has-property-descriptors-1.0.2.tgz. Extracting by manifest.
+509 silly tarball no local data for @vue/compiler-ssr@https://registry.npmjs.org/@vue/compiler-ssr/-/compiler-ssr-3.4.27.tgz. Extracting by manifest.
+510 silly tarball no local data for @vue/runtime-dom@https://registry.npmjs.org/@vue/runtime-dom/-/runtime-dom-3.4.27.tgz. Extracting by manifest.
+511 silly tarball no local data for @vue/compiler-dom@https://registry.npmjs.org/@vue/compiler-dom/-/compiler-dom-3.4.27.tgz. Extracting by manifest.
+512 silly tarball no local data for has-proto@https://registry.npmjs.org/has-proto/-/has-proto-1.0.3.tgz. Extracting by manifest.
+513 silly tarball no local data for @babel/parser@https://registry.npmjs.org/@babel/parser/-/parser-7.24.6.tgz. Extracting by manifest.
+514 silly tarball no local data for hasown@https://registry.npmjs.org/hasown/-/hasown-2.0.2.tgz. Extracting by manifest.
+515 silly tarball no local data for has-symbols@https://registry.npmjs.org/has-symbols/-/has-symbols-1.0.3.tgz. Extracting by manifest.
+516 silly tarball no local data for define-data-property@https://registry.npmjs.org/define-data-property/-/define-data-property-1.1.4.tgz. Extracting by manifest.
+517 silly tarball no local data for function-bind@https://registry.npmjs.org/function-bind/-/function-bind-1.1.2.tgz. Extracting by manifest.
+518 silly tarball no local data for es-errors@https://registry.npmjs.org/es-errors/-/es-errors-1.3.0.tgz. Extracting by manifest.
+519 silly tarball no local data for set-function-length@https://registry.npmjs.org/set-function-length/-/set-function-length-1.2.2.tgz. Extracting by manifest.
+520 silly tarball no local data for side-channel@https://registry.npmjs.org/side-channel/-/side-channel-1.0.6.tgz. Extracting by manifest.
+521 silly tarball no local data for get-intrinsic@https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.2.4.tgz. Extracting by manifest.
+522 silly tarball no local data for ipaddr.js@https://registry.npmjs.org/ipaddr.js/-/ipaddr.js-1.9.1.tgz. Extracting by manifest.
+523 silly tarball no local data for safer-buffer@https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz. Extracting by manifest.
+524 silly tarball no local data for forwarded@https://registry.npmjs.org/forwarded/-/forwarded-0.2.0.tgz. Extracting by manifest.
+525 silly tarball no local data for unpipe@https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz. Extracting by manifest.
+526 silly tarball no local data for raw-body@https://registry.npmjs.org/raw-body/-/raw-body-2.5.2.tgz. Extracting by manifest.
+527 silly tarball no local data for type-is@https://registry.npmjs.org/type-is/-/type-is-1.6.18.tgz. Extracting by manifest.
+528 silly tarball no local data for utils-merge@https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.1.tgz. Extracting by manifest.
+529 silly tarball no local data for es-define-property@https://registry.npmjs.org/es-define-property/-/es-define-property-1.0.0.tgz. Extracting by manifest.
+530 silly tarball no local data for call-bind@https://registry.npmjs.org/call-bind/-/call-bind-1.0.7.tgz. Extracting by manifest.
+531 silly tarball no local data for qs@https://registry.npmjs.org/qs/-/qs-6.11.0.tgz. Extracting by manifest.
+532 silly tarball no local data for object-inspect@https://registry.npmjs.org/object-inspect/-/object-inspect-1.13.1.tgz. Extracting by manifest.
+533 silly tarball no local data for path-to-regexp@https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-0.1.7.tgz. Extracting by manifest.
+534 silly tarball no local data for merge-descriptors@https://registry.npmjs.org/merge-descriptors/-/merge-descriptors-1.0.1.tgz. Extracting by manifest.
+535 silly tarball no local data for proxy-addr@https://registry.npmjs.org/proxy-addr/-/proxy-addr-2.0.7.tgz. Extracting by manifest.
+536 silly tarball no local data for cookie-signature@https://registry.npmjs.org/cookie-signature/-/cookie-signature-1.0.6.tgz. Extracting by manifest.
+537 silly tarball no local data for finalhandler@https://registry.npmjs.org/finalhandler/-/finalhandler-1.2.0.tgz. Extracting by manifest.
+538 silly tarball no local data for methods@https://registry.npmjs.org/methods/-/methods-1.1.2.tgz. Extracting by manifest.
+539 silly tarball no local data for content-disposition@https://registry.npmjs.org/content-disposition/-/content-disposition-0.5.4.tgz. Extracting by manifest.
+540 silly tarball no local data for source-map@https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz. Extracting by manifest.
+541 silly tarball no local data for content-type@https://registry.npmjs.org/content-type/-/content-type-1.0.5.tgz. Extracting by manifest.
+542 silly tarball no local data for esutils@https://registry.npmjs.org/esutils/-/esutils-2.0.3.tgz. Extracting by manifest.
+543 silly tarball no local data for estraverse@https://registry.npmjs.org/estraverse/-/estraverse-5.3.0.tgz. Extracting by manifest.
+544 silly tarball no local data for body-parser@https://registry.npmjs.org/body-parser/-/body-parser-1.20.2.tgz. Extracting by manifest.
+545 silly tarball no local data for array-flatten@https://registry.npmjs.org/array-flatten/-/array-flatten-1.1.1.tgz. Extracting by manifest.
+546 silly tarball no local data for robust-predicates@https://registry.npmjs.org/robust-predicates/-/robust-predicates-3.0.2.tgz. Extracting by manifest.
+547 silly tarball no local data for esprima@https://registry.npmjs.org/esprima/-/esprima-4.0.1.tgz. Extracting by manifest.
+548 silly tarball no local data for delaunator@https://registry.npmjs.org/delaunator/-/delaunator-5.0.1.tgz. Extracting by manifest.
+549 silly tarball no local data for commander@https://registry.npmjs.org/commander/-/commander-7.2.0.tgz. Extracting by manifest.
+550 silly tarball no local data for internmap@https://registry.npmjs.org/internmap/-/internmap-2.0.3.tgz. Extracting by manifest.
+551 silly tarball no local data for rw@https://registry.npmjs.org/rw/-/rw-1.3.3.tgz. Extracting by manifest.
+552 silly tarball no local data for d3-zoom@https://registry.npmjs.org/d3-zoom/-/d3-zoom-3.0.0.tgz. Extracting by manifest.
+553 silly tarball no local data for iconv-lite@https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.6.3.tgz. Extracting by manifest.
+554 silly tarball no local data for d3-time-format@https://registry.npmjs.org/d3-time-format/-/d3-time-format-4.1.0.tgz. Extracting by manifest.
+555 silly tarball no local data for d3-selection@https://registry.npmjs.org/d3-selection/-/d3-selection-3.0.0.tgz. Extracting by manifest.
+556 silly tarball no local data for d3-transition@https://registry.npmjs.org/d3-transition/-/d3-transition-3.0.1.tgz. Extracting by manifest.
+557 silly tarball no local data for d3-timer@https://registry.npmjs.org/d3-timer/-/d3-timer-3.0.1.tgz. Extracting by manifest.
+558 silly tarball no local data for d3-shape@https://registry.npmjs.org/d3-shape/-/d3-shape-3.2.0.tgz. Extracting by manifest.
+559 silly tarball no local data for d3-time@https://registry.npmjs.org/d3-time/-/d3-time-3.1.0.tgz. Extracting by manifest.
+560 silly tarball no local data for d3-random@https://registry.npmjs.org/d3-random/-/d3-random-3.0.1.tgz. Extracting by manifest.
+561 silly tarball no local data for d3-scale-chromatic@https://registry.npmjs.org/d3-scale-chromatic/-/d3-scale-chromatic-3.1.0.tgz. Extracting by manifest.
+562 silly tarball no local data for d3-scale@https://registry.npmjs.org/d3-scale/-/d3-scale-4.0.2.tgz. Extracting by manifest.
+563 silly tarball no local data for d3-polygon@https://registry.npmjs.org/d3-polygon/-/d3-polygon-3.0.1.tgz. Extracting by manifest.
+564 silly tarball no local data for d3-quadtree@https://registry.npmjs.org/d3-quadtree/-/d3-quadtree-3.0.1.tgz. Extracting by manifest.
+565 silly tarball no local data for d3-path@https://registry.npmjs.org/d3-path/-/d3-path-3.1.0.tgz. Extracting by manifest.
+566 silly tarball no local data for d3-geo@https://registry.npmjs.org/d3-geo/-/d3-geo-3.1.1.tgz. Extracting by manifest.
+567 silly tarball no local data for d3-format@https://registry.npmjs.org/d3-format/-/d3-format-3.1.0.tgz. Extracting by manifest.
+568 silly tarball no local data for d3-force@https://registry.npmjs.org/d3-force/-/d3-force-3.0.0.tgz. Extracting by manifest.
+569 silly tarball no local data for d3-hierarchy@https://registry.npmjs.org/d3-hierarchy/-/d3-hierarchy-3.1.2.tgz. Extracting by manifest.
+570 silly tarball no local data for d3-fetch@https://registry.npmjs.org/d3-fetch/-/d3-fetch-3.0.1.tgz. Extracting by manifest.
+571 silly tarball no local data for d3-ease@https://registry.npmjs.org/d3-ease/-/d3-ease-3.0.1.tgz. Extracting by manifest.
+572 silly tarball no local data for d3-delaunay@https://registry.npmjs.org/d3-delaunay/-/d3-delaunay-6.0.4.tgz. Extracting by manifest.
+573 silly tarball no local data for d3-dsv@https://registry.npmjs.org/d3-dsv/-/d3-dsv-3.0.1.tgz. Extracting by manifest.
+574 silly tarball no local data for d3-interpolate@https://registry.npmjs.org/d3-interpolate/-/d3-interpolate-3.0.1.tgz. Extracting by manifest.
+575 silly tarball no local data for d3-dispatch@https://registry.npmjs.org/d3-dispatch/-/d3-dispatch-3.0.1.tgz. Extracting by manifest.
+576 silly tarball no local data for d3-chord@https://registry.npmjs.org/d3-chord/-/d3-chord-3.0.1.tgz. Extracting by manifest.
+577 silly tarball no local data for d3-drag@https://registry.npmjs.org/d3-drag/-/d3-drag-3.0.0.tgz. Extracting by manifest.
+578 silly tarball no local data for d3-contour@https://registry.npmjs.org/d3-contour/-/d3-contour-4.0.2.tgz. Extracting by manifest.
+579 silly tarball no local data for d3-brush@https://registry.npmjs.org/d3-brush/-/d3-brush-3.0.0.tgz. Extracting by manifest.
+580 silly tarball no local data for d3-color@https://registry.npmjs.org/d3-color/-/d3-color-3.1.0.tgz. Extracting by manifest.
+581 silly tarball no local data for express@https://registry.npmjs.org/express/-/express-4.19.2.tgz. Extracting by manifest.
+582 silly tarball no local data for vue@https://registry.npmjs.org/vue/-/vue-3.4.27.tgz. Extracting by manifest.
+583 silly tarball no local data for d3-axis@https://registry.npmjs.org/d3-axis/-/d3-axis-3.0.0.tgz. Extracting by manifest.
+584 silly tarball no local data for d3@https://registry.npmjs.org/d3/-/d3-7.9.0.tgz. Extracting by manifest.
+585 silly tarball no local data for d3-array@https://registry.npmjs.org/d3-array/-/d3-array-3.2.4.tgz. Extracting by manifest.
+586 silly tarball no local data for core-js@https://registry.npmjs.org/core-js/-/core-js-3.37.1.tgz. Extracting by manifest.
+587 silly tarball no local data for chart.js@https://registry.npmjs.org/chart.js/-/chart.js-4.4.3.tgz. Extracting by manifest.
+588 silly tarball no local data for luxon@https://registry.npmjs.org/luxon/-/luxon-3.4.4.tgz. Extracting by manifest.
+589 silly tarball no local data for escodegen@https://registry.npmjs.org/escodegen/-/escodegen-2.1.0.tgz. Extracting by manifest.
+590 silly tarball no local data for @kurkle/color@https://registry.npmjs.org/@kurkle/color/-/color-0.3.2.tgz. Extracting by manifest.
+591 silly tarball no local data for acorn@https://registry.npmjs.org/acorn/-/acorn-8.11.3.tgz. Extracting by manifest.
+592 silly tarball no local data for @flowfuse/node-red-dashboard@https://registry.npmjs.org/@flowfuse/node-red-dashboard/-/node-red-dashboard-1.11.0.tgz. Extracting by manifest.
+593 silly tarball no local data for chartjs-adapter-luxon@https://registry.npmjs.org/chartjs-adapter-luxon/-/chartjs-adapter-luxon-1.3.1.tgz. Extracting by manifest.
+594 silly tarball no local data for iconv-lite@https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.24.tgz. Extracting by manifest.
+595 silly tarball no local data for iconv-lite@https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.24.tgz. Extracting by manifest.
+596 silly tarball no local data for bytes@https://registry.npmjs.org/bytes/-/bytes-3.1.2.tgz. Extracting by manifest.
+597 silly tarball no local data for bytes@https://registry.npmjs.org/bytes/-/bytes-3.1.2.tgz. Extracting by manifest.
+598 silly tarball no local data for safe-buffer@https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz. Extracting by manifest.
+599 silly tarball no local data for safe-buffer@https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz. Extracting by manifest.
+600 silly tarball no local data for cookie@https://registry.npmjs.org/cookie/-/cookie-0.6.0.tgz. Extracting by manifest.
+601 http fetch GET 200 https://registry.npmjs.org/picocolors/-/picocolors-1.0.1.tgz 1133ms (cache miss)
+602 timing reifyNode:node_modules/picocolors Completed in 1290ms
+603 http fetch GET 200 https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz 1247ms (cache miss)
+604 timing reifyNode:node_modules/media-typer Completed in 1426ms
+605 http fetch GET 200 https://registry.npmjs.org/estree-walker/-/estree-walker-2.0.2.tgz 1558ms (cache miss)
+606 http fetch GET 200 https://registry.npmjs.org/@vue/shared/-/shared-3.4.27.tgz 1634ms (cache miss)
+607 http fetch GET 200 https://registry.npmjs.org/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.4.15.tgz 1649ms (cache miss)
+608 http fetch GET 200 https://registry.npmjs.org/nanoid/-/nanoid-3.3.7.tgz 1660ms (cache miss)
+609 http fetch GET 200 https://registry.npmjs.org/@vue/compiler-ssr/-/compiler-ssr-3.4.27.tgz 1658ms (cache miss)
+610 timing reifyNode:node_modules/@vue/compiler-ssr Completed in 1840ms
+611 timing reifyNode:node_modules/@jridgewell/sourcemap-codec Completed in 1905ms
+612 http fetch GET 200 https://registry.npmjs.org/has-symbols/-/has-symbols-1.0.3.tgz 1797ms (cache miss)
+613 http fetch GET 200 https://registry.npmjs.org/ipaddr.js/-/ipaddr.js-1.9.1.tgz 1794ms (cache miss)
+614 timing reifyNode:node_modules/ipaddr.js Completed in 1993ms
+615 http fetch GET 200 https://registry.npmjs.org/raw-body/-/raw-body-2.5.2.tgz 1795ms (cache miss)
+616 timing reifyNode:node_modules/raw-body Completed in 1998ms
+617 http fetch GET 200 https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz 1861ms (cache miss)
+618 timing reifyNode:node_modules/safer-buffer Completed in 2060ms
+619 timing reifyNode:node_modules/@vue/shared Completed in 2068ms
+620 http fetch GET 200 https://registry.npmjs.org/define-data-property/-/define-data-property-1.1.4.tgz 1876ms (cache miss)
+621 http fetch GET 200 https://registry.npmjs.org/function-bind/-/function-bind-1.1.2.tgz 1875ms (cache miss)
+622 http fetch GET 200 https://registry.npmjs.org/finalhandler/-/finalhandler-1.2.0.tgz 1856ms (cache miss)
+623 timing reifyNode:node_modules/finalhandler Completed in 2075ms
+624 http fetch GET 200 https://registry.npmjs.org/gopd/-/gopd-1.0.1.tgz 1954ms (cache miss)
+625 timing reifyNode:node_modules/gopd Completed in 2135ms
+626 http fetch GET 200 https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.2.4.tgz 1948ms (cache miss)
+627 timing reifyNode:node_modules/get-intrinsic Completed in 2146ms
+628 http fetch GET 200 https://registry.npmjs.org/type-is/-/type-is-1.6.18.tgz 1950ms (cache miss)
+629 timing reifyNode:node_modules/type-is Completed in 2154ms
+630 http fetch GET 200 https://registry.npmjs.org/methods/-/methods-1.1.2.tgz 1940ms (cache miss)
+631 timing reifyNode:node_modules/methods Completed in 2159ms
+632 http fetch GET 200 https://registry.npmjs.org/has-proto/-/has-proto-1.0.3.tgz 2142ms (cache miss)
+633 timing reifyNode:node_modules/has-proto Completed in 2327ms
+634 timing reifyNode:node_modules/define-data-property Completed in 2328ms
+635 http fetch GET 200 https://registry.npmjs.org/has-property-descriptors/-/has-property-descriptors-1.0.2.tgz 2147ms (cache miss)
+636 timing reifyNode:node_modules/has-property-descriptors Completed in 2329ms
+637 http fetch GET 200 https://registry.npmjs.org/hasown/-/hasown-2.0.2.tgz 2142ms (cache miss)
+638 timing reifyNode:node_modules/hasown Completed in 2330ms
+639 http fetch GET 200 https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.1.tgz 2125ms (cache miss)
+640 timing reifyNode:node_modules/utils-merge Completed in 2329ms
+641 http fetch GET 200 https://registry.npmjs.org/forwarded/-/forwarded-0.2.0.tgz 2130ms (cache miss)
+642 timing reifyNode:node_modules/forwarded Completed in 2333ms
+643 http fetch GET 200 https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz 2133ms (cache miss)
+644 timing reifyNode:node_modules/unpipe Completed in 2334ms
+645 http fetch GET 200 https://registry.npmjs.org/set-function-length/-/set-function-length-1.2.2.tgz 2141ms (cache miss)
+646 timing reifyNode:node_modules/set-function-length Completed in 2337ms
+647 http fetch GET 200 https://registry.npmjs.org/array-flatten/-/array-flatten-1.1.1.tgz 2117ms (cache miss)
+648 timing reifyNode:node_modules/array-flatten Completed in 2343ms
+649 http fetch GET 200 https://registry.npmjs.org/call-bind/-/call-bind-1.0.7.tgz 2184ms (cache miss)
+650 timing reifyNode:node_modules/call-bind Completed in 2395ms
+651 timing reifyNode:node_modules/function-bind Completed in 2396ms
+652 http fetch GET 200 https://registry.npmjs.org/side-channel/-/side-channel-1.0.6.tgz 2204ms (cache miss)
+653 timing reifyNode:node_modules/side-channel Completed in 2401ms
+654 http fetch GET 200 https://registry.npmjs.org/es-define-property/-/es-define-property-1.0.0.tgz 2197ms (cache miss)
+655 timing reifyNode:node_modules/es-define-property Completed in 2402ms
+656 http fetch GET 200 https://registry.npmjs.org/d3-random/-/d3-random-3.0.1.tgz 2164ms (cache miss)
+657 http fetch GET 200 https://registry.npmjs.org/internmap/-/internmap-2.0.3.tgz 2179ms (cache miss)
+658 timing reifyNode:node_modules/internmap Completed in 2413ms
+659 http fetch GET 200 https://registry.npmjs.org/cookie-signature/-/cookie-signature-1.0.6.tgz 2227ms (cache miss)
+660 timing reifyNode:node_modules/cookie-signature Completed in 2445ms
+661 http fetch GET 200 https://registry.npmjs.org/d3-time/-/d3-time-3.1.0.tgz 2204ms (cache miss)
+662 timing reifyNode:node_modules/has-symbols Completed in 2451ms
+663 http fetch GET 200 https://registry.npmjs.org/content-type/-/content-type-1.0.5.tgz 2231ms (cache miss)
+664 timing reifyNode:node_modules/content-type Completed in 2453ms
+665 http fetch GET 200 https://registry.npmjs.org/proxy-addr/-/proxy-addr-2.0.7.tgz 2246ms (cache miss)
+666 timing reifyNode:node_modules/proxy-addr Completed in 2462ms
+667 http fetch GET 200 https://registry.npmjs.org/body-parser/-/body-parser-1.20.2.tgz 2238ms (cache miss)
+668 http fetch GET 200 https://registry.npmjs.org/content-disposition/-/content-disposition-0.5.4.tgz 2244ms (cache miss)
+669 timing reifyNode:node_modules/content-disposition Completed in 2464ms
+670 http fetch GET 200 https://registry.npmjs.org/esutils/-/esutils-2.0.3.tgz 2242ms (cache miss)
+671 timing reifyNode:node_modules/esutils Completed in 2466ms
+672 http fetch GET 200 https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.0.tgz 2323ms (cache miss)
+673 http fetch GET 200 https://registry.npmjs.org/estraverse/-/estraverse-5.3.0.tgz 2267ms (cache miss)
+674 timing reifyNode:node_modules/estraverse Completed in 2491ms
+675 http fetch GET 200 https://registry.npmjs.org/d3-drag/-/d3-drag-3.0.0.tgz 2274ms (cache miss)
+676 http fetch GET 200 https://registry.npmjs.org/d3-contour/-/d3-contour-4.0.2.tgz 2278ms (cache miss)
+677 http fetch GET 200 https://registry.npmjs.org/merge-descriptors/-/merge-descriptors-1.0.1.tgz 2350ms (cache miss)
+678 timing reifyNode:node_modules/merge-descriptors Completed in 2565ms
+679 http fetch GET 200 https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-0.1.7.tgz 2352ms (cache miss)
+680 timing reifyNode:node_modules/path-to-regexp Completed in 2567ms
+681 http fetch GET 200 https://registry.npmjs.org/d3-brush/-/d3-brush-3.0.0.tgz 2299ms (cache miss)
+682 http fetch GET 200 https://registry.npmjs.org/d3-axis/-/d3-axis-3.0.0.tgz 2302ms (cache miss)
+683 http fetch GET 200 https://registry.npmjs.org/d3-timer/-/d3-timer-3.0.1.tgz 2368ms (cache miss)
+684 timing reifyNode:node_modules/d3-timer Completed in 2610ms
+685 timing reifyNode:node_modules/d3-axis Completed in 2625ms
+686 http fetch GET 200 https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz 2324ms (cache miss)
+687 timing reifyNode:node_modules/express/node_modules/safe-buffer Completed in 2633ms
+688 http fetch GET 200 https://registry.npmjs.org/d3-polygon/-/d3-polygon-3.0.1.tgz 2385ms (cache miss)
+689 timing reifyNode:node_modules/d3-polygon Completed in 2635ms
+690 http fetch GET 200 https://registry.npmjs.org/d3-quadtree/-/d3-quadtree-3.0.1.tgz 2386ms (cache miss)
+691 http fetch GET 200 https://registry.npmjs.org/d3-format/-/d3-format-3.1.0.tgz 2393ms (cache miss)
+692 timing reifyNode:node_modules/source-map-js Completed in 2653ms
+693 timing reifyNode:node_modules/estree-walker Completed in 2656ms
+694 http fetch GET 200 https://registry.npmjs.org/escodegen/-/escodegen-2.1.0.tgz 2372ms (cache miss)
+695 timing reifyNode:node_modules/escodegen Completed in 2663ms
+696 http fetch GET 200 https://registry.npmjs.org/delaunator/-/delaunator-5.0.1.tgz 2437ms (cache miss)
+697 timing reifyNode:node_modules/delaunator Completed in 2666ms
+698 http fetch GET 200 https://registry.npmjs.org/d3-path/-/d3-path-3.1.0.tgz 2431ms (cache miss)
+699 timing reifyNode:node_modules/d3-path Completed in 2682ms
+700 http fetch GET 200 https://registry.npmjs.org/d3-fetch/-/d3-fetch-3.0.1.tgz 2425ms (cache miss)
+701 http fetch GET 200 https://registry.npmjs.org/d3-chord/-/d3-chord-3.0.1.tgz 2421ms (cache miss)
+702 timing reifyNode:node_modules/d3-chord Completed in 2687ms
+703 http fetch GET 200 https://registry.npmjs.org/d3-ease/-/d3-ease-3.0.1.tgz 2433ms (cache miss)
+704 timing reifyNode:node_modules/d3-fetch Completed in 2694ms
+705 http fetch GET 200 https://registry.npmjs.org/d3-dispatch/-/d3-dispatch-3.0.1.tgz 2440ms (cache miss)
+706 timing reifyNode:node_modules/d3-dispatch Completed in 2705ms
+707 http fetch GET 200 https://registry.npmjs.org/d3-color/-/d3-color-3.1.0.tgz 2440ms (cache miss)
+708 http fetch GET 200 https://registry.npmjs.org/d3-zoom/-/d3-zoom-3.0.0.tgz 2479ms (cache miss)
+709 http fetch GET 200 https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz 2409ms (cache miss)
+710 timing reifyNode:node_modules/content-disposition/node_modules/safe-buffer Completed in 2720ms
+711 http fetch GET 200 https://registry.npmjs.org/bytes/-/bytes-3.1.2.tgz 2446ms (cache miss)
+712 timing reifyNode:node_modules/body-parser/node_modules/bytes Completed in 2752ms
+713 timing reifyNode:node_modules/body-parser Completed in 2753ms
+714 http fetch GET 200 https://registry.npmjs.org/chartjs-adapter-luxon/-/chartjs-adapter-luxon-1.3.1.tgz 2451ms (cache miss)
+715 timing reifyNode:node_modules/chartjs-adapter-luxon Completed in 2753ms
+716 http fetch GET 200 https://registry.npmjs.org/cookie/-/cookie-0.6.0.tgz 2445ms (cache miss)
+717 timing reifyNode:node_modules/express/node_modules/cookie Completed in 2763ms
+718 timing reifyNode:node_modules/d3-drag Completed in 2772ms
+719 timing reifyNode:node_modules/d3-zoom Completed in 2781ms
+720 http fetch GET 200 https://registry.npmjs.org/bytes/-/bytes-3.1.2.tgz 2487ms (cache miss)
+721 timing reifyNode:node_modules/raw-body/node_modules/bytes Completed in 2792ms
+722 http fetch GET 200 https://registry.npmjs.org/es-errors/-/es-errors-1.3.0.tgz 2600ms (cache miss)
+723 timing reifyNode:node_modules/d3-time Completed in 2817ms
+724 http fetch GET 200 https://registry.npmjs.org/d3-dsv/-/d3-dsv-3.0.1.tgz 2560ms (cache miss)
+725 timing reifyNode:node_modules/nanoid Completed in 2825ms
+726 http fetch GET 200 https://registry.npmjs.org/commander/-/commander-7.2.0.tgz 2596ms (cache miss)
+727 timing reifyNode:node_modules/commander Completed in 2827ms
+728 timing reifyNode:node_modules/d3-color Completed in 2834ms
+729 timing reifyNode:node_modules/d3-dsv Completed in 2843ms
+730 http fetch GET 200 https://registry.npmjs.org/d3-delaunay/-/d3-delaunay-6.0.4.tgz 2583ms (cache miss)
+731 timing reifyNode:node_modules/d3-delaunay Completed in 2844ms
+732 timing reifyNode:node_modules/d3-brush Completed in 2877ms
+733 http fetch GET 200 https://registry.npmjs.org/@vue/reactivity/-/reactivity-3.4.27.tgz 2743ms (cache miss)
+734 timing reifyNode:node_modules/es-errors Completed in 2926ms
+735 timing reifyNode:node_modules/d3-contour Completed in 2949ms
+736 http fetch GET 200 https://registry.npmjs.org/@kurkle/color/-/color-0.3.2.tgz 2672ms (cache miss)
+737 timing reifyNode:node_modules/d3-ease Completed in 3013ms
+738 timing reifyNode:node_modules/@vue/reactivity Completed in 3027ms
+739 http fetch GET 200 https://registry.npmjs.org/esprima/-/esprima-4.0.1.tgz 2803ms (cache miss)
+740 http fetch GET 200 https://registry.npmjs.org/d3-force/-/d3-force-3.0.0.tgz 2814ms (cache miss)
+741 timing reifyNode:node_modules/@kurkle/color Completed in 3079ms
+742 timing reifyNode:node_modules/esprima Completed in 3197ms
+743 http fetch GET 200 https://registry.npmjs.org/rw/-/rw-1.3.3.tgz 3002ms (cache miss)
+744 timing reifyNode:node_modules/d3-quadtree Completed in 3247ms
+745 timing reifyNode:node_modules/d3-force Completed in 3266ms
+746 timing reifyNode:node_modules/d3-random Completed in 3371ms
+747 timing reifyNode:node_modules/rw Completed in 3440ms
+748 http fetch GET 200 https://registry.npmjs.org/magic-string/-/magic-string-0.30.10.tgz 3335ms (cache miss)
+749 http fetch GET 200 https://registry.npmjs.org/qs/-/qs-6.11.0.tgz 3291ms (cache miss)
+750 timing reifyNode:node_modules/magic-string Completed in 3564ms
+751 timing reifyNode:node_modules/qs Completed in 3660ms
+752 http fetch GET 200 https://registry.npmjs.org/d3-interpolate/-/d3-interpolate-3.0.1.tgz 3532ms (cache miss)
+753 http fetch GET 200 https://registry.npmjs.org/@vue/server-renderer/-/server-renderer-3.4.27.tgz 3710ms (cache miss)
+754 timing reifyNode:node_modules/@vue/server-renderer Completed in 3885ms
+755 http fetch GET 200 https://registry.npmjs.org/d3-scale/-/d3-scale-4.0.2.tgz 3686ms (cache miss)
+756 timing reifyNode:node_modules/d3-interpolate Completed in 3945ms
+757 http fetch GET 200 https://registry.npmjs.org/object-inspect/-/object-inspect-1.13.1.tgz 3734ms (cache miss)
+758 http fetch GET 200 https://registry.npmjs.org/robust-predicates/-/robust-predicates-3.0.2.tgz 3724ms (cache miss)
+759 timing reifyNode:node_modules/robust-predicates Completed in 4003ms
+760 timing reifyNode:node_modules/d3-scale Completed in 4038ms
+761 timing reifyNode:node_modules/object-inspect Completed in 4045ms
+762 http fetch GET 200 https://registry.npmjs.org/d3-transition/-/d3-transition-3.0.1.tgz 3806ms (cache miss)
+763 timing reifyNode:node_modules/d3-transition Completed in 4141ms
+764 http fetch GET 200 https://registry.npmjs.org/@vue/compiler-dom/-/compiler-dom-3.4.27.tgz 4148ms (cache miss)
+765 http fetch GET 200 https://registry.npmjs.org/acorn/-/acorn-8.11.3.tgz 4039ms (cache miss)
+766 http fetch GET 200 https://registry.npmjs.org/d3-hierarchy/-/d3-hierarchy-3.1.2.tgz 4093ms (cache miss)
+767 http fetch GET 200 https://registry.npmjs.org/express/-/express-4.19.2.tgz 4082ms (cache miss)
+768 timing reifyNode:node_modules/express Completed in 4353ms
+769 timing reifyNode:node_modules/@vue/compiler-dom Completed in 4355ms
+770 http fetch GET 200 https://registry.npmjs.org/d3-time-format/-/d3-time-format-4.1.0.tgz 4135ms (cache miss)
+771 timing reifyNode:node_modules/acorn Completed in 4389ms
+772 timing reifyNode:node_modules/d3-hierarchy Completed in 4418ms
+773 timing reifyNode:node_modules/d3-time-format Completed in 4479ms
+774 http fetch GET 200 https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.24.tgz 4281ms (cache miss)
+775 http fetch GET 200 https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.24.tgz 4297ms (cache miss)
+776 timing reifyNode:node_modules/body-parser/node_modules/iconv-lite Completed in 4639ms
+777 timing reifyNode:node_modules/raw-body/node_modules/iconv-lite Completed in 4681ms
+778 http fetch GET 200 https://registry.npmjs.org/postcss/-/postcss-8.4.38.tgz 4653ms (cache miss)
+779 http fetch GET 200 https://registry.npmjs.org/@vue/compiler-core/-/compiler-core-3.4.27.tgz 4654ms (cache miss)
+780 timing reifyNode:node_modules/@vue/compiler-core Completed in 4831ms
+781 http fetch GET 200 https://registry.npmjs.org/d3-selection/-/d3-selection-3.0.0.tgz 4638ms (cache miss)
+782 http fetch GET 200 https://registry.npmjs.org/d3-scale-chromatic/-/d3-scale-chromatic-3.1.0.tgz 4638ms (cache miss)
+783 timing reifyNode:node_modules/postcss Completed in 4890ms
+784 http fetch GET 200 https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.6.3.tgz 4675ms (cache miss)
+785 http fetch GET 200 https://registry.npmjs.org/d3/-/d3-7.9.0.tgz 4640ms (cache miss)
+786 timing reifyNode:node_modules/d3 Completed in 4914ms
+787 timing reifyNode:node_modules/d3-scale-chromatic Completed in 4945ms
+788 timing reifyNode:node_modules/d3-selection Completed in 4959ms
+789 http fetch GET 200 https://registry.npmjs.org/d3-array/-/d3-array-3.2.4.tgz 4695ms (cache miss)
+790 timing reifyNode:node_modules/iconv-lite Completed in 4986ms
+791 timing reifyNode:node_modules/d3-array Completed in 5010ms
+792 http fetch GET 200 https://registry.npmjs.org/csstype/-/csstype-3.1.3.tgz 4888ms (cache miss)
+793 timing reifyNode:node_modules/csstype Completed in 5053ms
+794 http fetch GET 200 https://registry.npmjs.org/@vue/runtime-dom/-/runtime-dom-3.4.27.tgz 4870ms (cache miss)
+795 timing reifyNode:node_modules/@vue/runtime-dom Completed in 5054ms
+796 http fetch GET 200 https://registry.npmjs.org/d3-shape/-/d3-shape-3.2.0.tgz 4823ms (cache miss)
+797 timing reifyNode:node_modules/d3-shape Completed in 5091ms
+798 http fetch GET 200 https://registry.npmjs.org/@vue/runtime-core/-/runtime-core-3.4.27.tgz 4930ms (cache miss)
+799 timing reifyNode:node_modules/@vue/runtime-core Completed in 5102ms
+800 timing reifyNode:node_modules/d3-format Completed in 5113ms
+801 http fetch GET 200 https://registry.npmjs.org/d3-geo/-/d3-geo-3.1.1.tgz 4863ms (cache miss)
+802 http fetch GET 200 https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz 4895ms (cache miss)
+803 timing reifyNode:node_modules/source-map Completed in 5116ms
+804 timing reifyNode:node_modules/d3-geo Completed in 5134ms
+805 http fetch GET 200 https://registry.npmjs.org/entities/-/entities-4.5.0.tgz 5081ms (cache miss)
+806 timing reifyNode:node_modules/entities Completed in 5258ms
+807 http fetch GET 200 https://registry.npmjs.org/@babel/parser/-/parser-7.24.6.tgz 5140ms (cache miss)
+808 timing reifyNode:node_modules/@babel/parser Completed in 5327ms
+809 http fetch GET 200 https://registry.npmjs.org/@vue/compiler-sfc/-/compiler-sfc-3.4.27.tgz 5356ms (cache miss)
+810 timing reifyNode:node_modules/@vue/compiler-sfc Completed in 5527ms
+811 http fetch GET 200 https://registry.npmjs.org/vue/-/vue-3.4.27.tgz 5390ms (cache miss)
+812 timing reifyNode:node_modules/vue Completed in 5678ms
+813 http fetch GET 200 https://registry.npmjs.org/luxon/-/luxon-3.4.4.tgz 6002ms (cache miss)
+814 timing reifyNode:node_modules/luxon Completed in 6290ms
+815 http fetch GET 200 https://registry.npmjs.org/chart.js/-/chart.js-4.4.3.tgz 6446ms (cache miss)
+816 timing reifyNode:node_modules/chart.js Completed in 6754ms
+817 http fetch GET 200 https://registry.npmjs.org/@flowfuse/node-red-dashboard/-/node-red-dashboard-1.11.0.tgz 7518ms (cache miss)
+818 timing reifyNode:node_modules/@flowfuse/node-red-dashboard Completed in 7818ms
+819 http fetch GET 200 https://registry.npmjs.org/core-js/-/core-js-3.37.1.tgz 16332ms (cache miss)
+820 timing reifyNode:node_modules/core-js Completed in 16629ms
+821 timing reify:unpack Completed in 16633ms
+822 timing reify:unretire Completed in 0ms
+823 timing build:queue Completed in 75ms
+824 timing build:link:node_modules/acorn Completed in 37ms
+825 timing build:link:node_modules/@babel/parser Completed in 38ms
+826 timing build:link:node_modules/d3-dsv Completed in 38ms
+827 timing build:link:node_modules/escodegen Completed in 37ms
+828 timing build:link:node_modules/esprima Completed in 37ms
+829 timing build:link:node_modules/nanoid Completed in 39ms
+830 timing build:link Completed in 41ms
+831 info run core-js@3.37.1 postinstall node_modules/core-js node -e "try{require('./postinstall')}catch(e){}"
+832 info run core-js@3.37.1 postinstall { code: 0, signal: null }
+833 timing build:run:postinstall:node_modules/core-js Completed in 136ms
+834 timing build:run:postinstall Completed in 137ms
+835 timing build:deps Completed in 254ms
+836 timing build Completed in 255ms
+837 timing reify:build Completed in 255ms
+838 timing reify:trash Completed in 0ms
+839 timing reify:save Completed in 90ms
+840 timing reify Completed in 20444ms
+841 silly ADD node_modules/picocolors
+842 silly ADD node_modules/nanoid
+843 silly ADD node_modules/@jridgewell/sourcemap-codec
+844 silly ADD node_modules/@vue/reactivity
+845 silly ADD node_modules/csstype
+846 silly ADD node_modules/@vue/runtime-core
+847 silly ADD node_modules/postcss
+848 silly ADD node_modules/magic-string
+849 silly ADD node_modules/@vue/compiler-ssr
+850 silly ADD node_modules/source-map-js
+851 silly ADD node_modules/estree-walker
+852 silly ADD node_modules/entities
+853 silly ADD node_modules/@babel/parser
+854 silly ADD node_modules/@vue/compiler-core
+855 silly ADD node_modules/@vue/shared
+856 silly ADD node_modules/@vue/server-renderer
+857 silly ADD node_modules/@vue/runtime-dom
+858 silly ADD node_modules/@vue/compiler-sfc
+859 silly ADD node_modules/@vue/compiler-dom
+860 silly ADD node_modules/media-typer
+861 silly ADD node_modules/has-property-descriptors
+862 silly ADD node_modules/gopd
+863 silly ADD node_modules/define-data-property
+864 silly ADD node_modules/hasown
+865 silly ADD node_modules/has-symbols
+866 silly ADD node_modules/has-proto
+867 silly ADD node_modules/set-function-length
+868 silly ADD node_modules/function-bind
+869 silly ADD node_modules/es-define-property
+870 silly ADD node_modules/object-inspect
+871 silly ADD node_modules/get-intrinsic
+872 silly ADD node_modules/es-errors
+873 silly ADD node_modules/call-bind
+874 silly ADD node_modules/side-channel
+875 silly ADD node_modules/ipaddr.js
+876 silly ADD node_modules/forwarded
+877 silly ADD node_modules/safer-buffer
+878 silly ADD node_modules/unpipe
+879 silly ADD node_modules/raw-body
+880 silly ADD node_modules/raw-body/node_modules/iconv-lite
+881 silly ADD node_modules/raw-body/node_modules/bytes
+882 silly ADD node_modules/utils-merge
+883 silly ADD node_modules/type-is
+884 silly ADD node_modules/qs
+885 silly ADD node_modules/proxy-addr
+886 silly ADD node_modules/path-to-regexp
+887 silly ADD node_modules/methods
+888 silly ADD node_modules/merge-descriptors
+889 silly ADD node_modules/finalhandler
+890 silly ADD node_modules/cookie-signature
+891 silly ADD node_modules/content-type
+892 silly ADD node_modules/content-disposition
+893 silly ADD node_modules/content-disposition/node_modules/safe-buffer
+894 silly ADD node_modules/body-parser
+895 silly ADD node_modules/body-parser/node_modules/iconv-lite
+896 silly ADD node_modules/body-parser/node_modules/bytes
+897 silly ADD node_modules/array-flatten
+898 silly ADD node_modules/source-map
+899 silly ADD node_modules/esutils
+900 silly ADD node_modules/estraverse
+901 silly ADD node_modules/esprima
+902 silly ADD node_modules/robust-predicates
+903 silly ADD node_modules/rw
+904 silly ADD node_modules/iconv-lite
+905 silly ADD node_modules/commander
+906 silly ADD node_modules/delaunator
+907 silly ADD node_modules/internmap
+908 silly ADD node_modules/d3-zoom
+909 silly ADD node_modules/d3-transition
+910 silly ADD node_modules/d3-timer
+911 silly ADD node_modules/d3-time-format
+912 silly ADD node_modules/d3-time
+913 silly ADD node_modules/d3-shape
+914 silly ADD node_modules/d3-selection
+915 silly ADD node_modules/d3-scale-chromatic
+916 silly ADD node_modules/d3-scale
+917 silly ADD node_modules/d3-random
+918 silly ADD node_modules/d3-quadtree
+919 silly ADD node_modules/d3-polygon
+920 silly ADD node_modules/d3-path
+921 silly ADD node_modules/d3-interpolate
+922 silly ADD node_modules/d3-hierarchy
+923 silly ADD node_modules/d3-geo
+924 silly ADD node_modules/d3-format
+925 silly ADD node_modules/d3-force
+926 silly ADD node_modules/d3-fetch
+927 silly ADD node_modules/d3-ease
+928 silly ADD node_modules/d3-dsv
+929 silly ADD node_modules/d3-drag
+930 silly ADD node_modules/d3-dispatch
+931 silly ADD node_modules/d3-delaunay
+932 silly ADD node_modules/d3-contour
+933 silly ADD node_modules/d3-color
+934 silly ADD node_modules/d3-chord
+935 silly ADD node_modules/d3-brush
+936 silly ADD node_modules/d3-axis
+937 silly ADD node_modules/d3-array
+938 silly ADD node_modules/@kurkle/color
+939 silly ADD node_modules/vue
+940 silly ADD node_modules/express
+941 silly ADD node_modules/express/node_modules/safe-buffer
+942 silly ADD node_modules/express/node_modules/cookie
+943 silly ADD node_modules/escodegen
+944 silly ADD node_modules/d3
+945 silly ADD node_modules/core-js
+946 silly ADD node_modules/luxon
+947 silly ADD node_modules/chart.js
+948 silly ADD node_modules/chartjs-adapter-luxon
+949 silly ADD node_modules/acorn
+950 silly ADD node_modules/@flowfuse/node-red-dashboard
+951 timing command:install Completed in 20465ms
+952 verbose exit 0
+953 timing npm Completed in 20596ms
+954 info ok
