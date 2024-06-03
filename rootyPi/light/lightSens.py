@@ -2,30 +2,29 @@ from pathlib import Path
 import threading
 import paho.mqtt.client as PahoMQTT
 import time
+import random
 from queue import Queue
 import datetime
-from datetime import datetime
 import json
 import requests
 
 P = Path(__file__).parent.absolute()
 SETTINGS = P / 'settings.json'
 
-class LampSimulator:
-    def __init__(self, simId,  baseTopic, plantCode):
-        self.simId = simId
+class LightSens:
+    def __init__(self, sensorId, baseTopic, plantCode):#baseTopic = "rootyPi/userId/plantId/"
+        self.sensorId = sensorId
+        self.sunLight = 0
+        self.artificialLight = 0
+        self.currentState = 0
         self.active = True
-        self.isAuto = True
-        self.isOn = True
-        self.maxIntensity = 1000 #lux?
-        self.percentIntensity = 100
-        self.pubTopic = baseTopic + "/lampLight"
-        self.subTopic = baseTopic + "lightShift/+" #check with Simone
+        self.pubTopic = baseTopic + "/light"
+        self.subTopic = baseTopic + "/+"
+        self.aliveBn = "updateCatalogDevice"
         self.plantCode = plantCode
         self.aliveTopic = baseTopic + "/alive"
-        self.aliveBn = "updateCatalogDevice"
-        self.myPub = MyPublisher(self.simId + "Pub", self.pubTopic)
-        self.mySub = MySubscriber(self.simId + "Sub", self.subTopic)
+        self.myPub = MyPublisher(self.sensorId + "Pub", self.pubTopic)
+        self.mySub = MySubscriber(self.sensorId + "Sub1", self.subTopic)
         self.myPub.start()
         self.mySub.start()
         
@@ -37,7 +36,39 @@ class LampSimulator:
     def setActiveTrue(self):
         self.active = True
         
-
+    
+        
+    
+def update_sensors(sensors):
+    try:
+        with open(SETTINGS, "r") as fs:                
+            settings = json.loads(fs.read())            
+    except Exception:
+        print("Problem in loading settings")
+    url = settings["registry_url"] + "/plants"
+    response = requests.get(url)
+    plants = json.loads(response.text)
+    for plant in plants:
+        sensId = plant["plantCode"]
+        sensId
+        found = 0
+        for sens in sensors:
+            if sens.sensorId == sensId:
+                found = 1
+        if found == 0:
+            baseTopic = "RootyPy/" + plant["userId"] + "/" + plant["plantCode"]
+            sens = LightSens(sensId, baseTopic, plant["plantCode"])
+            sensors.append(sens)
+    for sens in sensors:
+        found = 0
+        for plant in plants:
+            
+            sensId = plant["plantCode"]
+            if sens.sensorId == sensId:
+                found = 1
+        if found == 0:
+            sensors.remove(sens)
+    
 class MyPublisher:
     def __init__(self, clientID, topic):
         self.clientID = clientID
@@ -46,6 +77,7 @@ class MyPublisher:
         self._paho_mqtt = PahoMQTT.Client(self.clientID, False) 
 		# register the callback
         self._paho_mqtt.on_connect = self.myOnConnect
+
         try:
             with open(SETTINGS, "r") as fs:                
                 self.settings = json.loads(fs.read())            
@@ -53,6 +85,7 @@ class MyPublisher:
             print("Problem in loading settings")
         self.messageBroker = self.settings["messageBroker"]
         self.port = self.settings["brokerPort"]
+		#self.messageBroker = '192.168.1.5'
 
     def start (self):
 		#manage connection to broker
@@ -79,6 +112,7 @@ class MySubscriber:
 		# register the callback
         self._paho_mqtt.on_connect = self.myOnConnect
         self._paho_mqtt.on_message = self.myOnMessageReceived
+        self.topic = topic
         try:
             with open(SETTINGS, "r") as fs:                
                 self.settings = json.loads(fs.read())            
@@ -86,7 +120,7 @@ class MySubscriber:
             print("Problem in loading settings")
         self.messageBroker = self.settings["messageBroker"]
         self.port = self.settings["brokerPort"]
-        self.topic = topic
+		#self.messageBroker = '192.168.1.5'
 
     def start (self):
 		#manage connection to broker
@@ -105,40 +139,11 @@ class MySubscriber:
 
     def myOnMessageReceived (self, paho_mqtt , userdata, msg):
 		# A new message is received
-        self.q.put(msg)
-        print ("Topic:'" + msg.topic+"', QoS: '"+str(msg.qos)+"' Message: '"+str(msg.payload) + "'")
+        if msg.topic.split("/")[3] in ["lampLight", "sunlight"]:
+            self.q.put(msg)
+            print ("Topic:'" + msg.topic+"', QoS: '"+str(msg.qos)+"' Message: '"+str(msg.payload) + "'")
 
-
-def update_simulators(simulators):
-    try:
-        with open(SETTINGS, "r") as fs:                
-            settings = json.loads(fs.read())            
-    except Exception:
-        print("Problem in loading settings")
-    url = settings["registry_url"] + "/plants"
-    response = requests.get(url)
-    plants = json.loads(response.text)
-    for plant in plants:
-        simId = plant["plantCode"]
-        simId
-        found = 0
-        for sim in simulators:
-            if sim.simId == simId:
-                found = 1
-        if found == 0:
-            baseTopic = "RootyPy/" + plant["userId"] + "/" + plant["plantCode"]
-            sim = LampSimulator(simId, baseTopic, plant["plantCode"])
-            simulators.append(sim)
-    for sim in simulators:
-        found = 0
-        for plant in plants:            
-            sensId = plant["plantCode"]
-            if sim.simId == sensId:
-                found = 1
-        if found == 0:
-            simulators.remove(sim)
-
-class AllPubs(threading.Thread):
+class AllSens(threading.Thread):
 
     def __init__(self, ThreadID, name):
         """Initialise thread widh ID and name."""
@@ -146,36 +151,46 @@ class AllPubs(threading.Thread):
         self.ThreadID = ThreadID
         self.name = name
         #load all sensors
-        self.simulators = []
+        self.sensors = []
 
     def run(self):
         """Run thread."""
         while True:
-            update_simulators(self.simulators)
-            print(len(self.simulators))
-            for sim in self.simulators:
-                if not sim.mySub.q.empty():
-                    msg = sim.mySub.q.get()
+            update_sensors(self.sensors)
+            print(len(self.sensors))
+            for sens in self.sensors:
+                if not sens.mySub.q.empty():
+                    msg = sens.mySub.q.get()
                     if msg is None:
                         continue
                     else:
-                        mess = json.loads(msg.payload)
-                        sim.percentIntensity = mess["e"][0]["v"]
-                event = {"n": "lampLight", "u": "lux", "t": str(time.time()), 
-                        "v": float(sim.maxIntensity*sim.percentIntensity/100)}
-                out = {"bn": sim.pubTopic,"e":[event]}
+                        mess = json.loads(msg.payload.decode("utf-8"))
+                        event = mess["e"][0]
+                        if msg.topic.split("/")[3] == "lampLight":
+                            print("-------lampLight")
+                            if isinstance(event["v"], int):
+                                sens.artificialLight = event["v"]
+                        elif msg.topic.split("/")[3] == "sunlight":
+                            print("-----------sunlight")
+                            if isinstance(event["v"], int):
+                                sens.sunLight = event["v"]                       
+                sens.currentState = sens.artificialLight + sens.sunLight
+                print(f"current state {sens.currentState}")
+                event = {"n": "light", "u": "lux", "t": str(time.time()), "v": float(sens.currentState)}
+                out = {"bn": sens.pubTopic,"e":[event]}
                 print(out)
-                sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
-                eventAlive = {"n": sim.plantCode + "/lampLight", "u": "IP", "t": str(time.time()), "v": ""}
-                outAlive = {"bn": sim.aliveBn,"e":[eventAlive]}
-                print(outAlive)
-                print(sim.aliveTopic)
-                sim.myPub.myPublish(json.dumps(outAlive), sim.aliveTopic)
+                sens.myPub.myPublish(json.dumps(out), sens.pubTopic)
+                eventAlive = {"n": sens.plantCode+"/light", "u": "IP", "t": str(time.time()), "v": ""}
+                outAlive = {"bn": sens.aliveBn ,"e":[eventAlive]}
+                print("++++++++++++")
+                print("++++++++++++")
+                print( outAlive)
+                sens.myPub.myPublish(json.dumps(outAlive), sens.aliveTopic)
                 time.sleep(2)
             time.sleep(10)
 
 if __name__ == '__main__':
-
-    thredPub = AllPubs(1, "AllPubs")
+    
+    thredPub = AllSens(3, "AllPubs")
     print("Starting all publishers")
     thredPub.start()
