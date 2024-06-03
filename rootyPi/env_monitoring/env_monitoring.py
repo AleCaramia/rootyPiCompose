@@ -352,10 +352,10 @@ if __name__ == "__main__":
         # print("> Starting thread_server...")
         # thread_server.start()
 
-        tFunction = thredFunction(settings)
-        thread_function = threading.Thread(target=tFunction.RunThred())
-        print("> Starting thread_function...")
-        thread_function.start()
+    tFunction = thredFunction(settings)
+    thread_function = threading.Thread(target=tFunction.RunThred())
+    print("> Starting thread_function...")
+    thread_function.start()
 
         # while True:
         #     time.sleep(3)
