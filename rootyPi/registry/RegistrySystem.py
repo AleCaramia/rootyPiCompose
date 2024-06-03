@@ -119,10 +119,15 @@ class Catalog(object):
                         "userId": plant_json["userId"],
                         "plantId": plant_json["plantId"],
                         "plantCode": plant_json["plantCode"],
-                        "type": plant_json["type"]
+                        "type": plant_json["type"],
+                        "state": "auto",
+                        "auto_init": "08:00",
+                        "auto_end": "20:00",
+                        "manual_init": "00:00",
+                        "manual_end": "00:00"
                     }
                     user["plants"].append(plant_json["plantCode"])
-                    self.catalog["plants"].append(plant_json)
+                    self.catalog["plants"].append(plant_res)
                     self.write_catalog()
                     return "done"
         if found == 0:
@@ -321,6 +326,43 @@ class Webserver(object):
                 return json.dumps(response)
             elif out == "Invalid plant code":
                 response = {"status": "NOT_OK", "code": 400, "message": "Invalid plant code"}
+                return json.dumps(response)
+    def PUT(self, *uri, **params):
+        if uri[0] == 'updateInterval':
+            body = json.loads(cherrypy.request.body.read())  # Read body data
+            cat = Catalog()
+            print(json.dumps(body))
+            plantCode = body["plantCode"]
+            state = body["state"]
+            init = body["init"]
+            end = body["end"]
+            found = False
+            output = ""
+            for plant in cat.catalog["plants"]:
+                if plant["plantCode"] == plantCode:
+                    found = True
+                    if state == "auto":
+                        plant["auto_init"] = init
+                        plant["auto_end"] = end
+                        self.write_catalog()
+                    elif state == "manual":
+                        plant["manual_init"] = init
+                        plant["manual_end"] = end
+                        cat.write_catalog()
+                    else:
+                        output = "Invalid state"
+            if not found:   
+                response = {"status": "NOT_OK", "code": 400, "message": "Invalid plant code"}
+            elif output != "":
+                response = {"status": "NOT_OK", "code": 400, "message": output}  
+            else:
+                response = {"status": "OK", "code": 200, "message": "Data updated successfully"}
+            return json.dumps(response)
+            
+            
+            
+
+            
     def DELETE(self, *uri, **params):
         if uri[0] == 'rmu':
             cat = Catalog()

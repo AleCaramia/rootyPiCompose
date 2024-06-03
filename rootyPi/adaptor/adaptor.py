@@ -222,8 +222,8 @@ class MQTTreciver(threading.Thread):
         with open(SETTINGS, 'r') as file:
             data = json.load(file)
         self.topic = data["base_topic"]
-        self.broker = data["broker"]
-        self.mqtt_port = int(data["port"])
+        self.broker = data["messageBroker"]
+        self.mqtt_port = int(data["brokerPort"])
         self.client = InfluxDBClient(url=data["url_db"], token=data["influx_token"])
         self.write_api = self.client.write_api(write_options=SYNCHRONOUS)
 
@@ -238,9 +238,71 @@ class MQTTreciver(threading.Thread):
         while True:
             time.sleep(1)
 
+class MyPublisher:
+    def __init__(self, clientID, topic):
+        self.clientID = clientID
+        self.topic = topic
+		# create an instance of paho.mqtt.client
+        self._paho_mqtt = PahoMQTT.Client(self.clientID, False) 
+		# register the callback
+        self._paho_mqtt.on_connect = self.myOnConnect
+        try:
+            with open(SETTINGS, "r") as fs:                
+                self.settings = json.loads(fs.read())            
+        except Exception:
+            print("Problem in loading settings")
+        
+        self.messageBroker = self.settings["messageBroker"]
+        self.port = self.settings["brokerPort"]
+
+    def start (self):
+		#manage connection to broker
+        self._paho_mqtt.connect(self.messageBroker, self.port)
+        self._paho_mqtt.loop_start()
+
+    def stop (self):
+        self._paho_mqtt.loop_stop()
+        self._paho_mqtt.disconnect()
+
+    def myPublish(self, message, topic):
+		# publish a message with a certain topic
+        self._paho_mqtt.publish(topic, message, 2)
+
+    def myOnConnect (self, paho_mqtt, userdata, flags, rc):
+        print ("Connected to %s with result code: %d" % (self.messageBroker, rc))
+
+class AliveThread(threading.Thread):
+
+    def __init__(self, ThreadID, name):
+        """Initialise thread widh ID and name."""
+        threading.Thread.__init__(self)
+        self.ThreadID = ThreadID
+        self.name = name        
+        try:
+            with open(SETTINGS, "r") as fs:                
+                self.settings = json.loads(fs.read())            
+        except Exception:
+            print("Problem in loading settings")
+        self.topic = self.settings["alive_topic"]
+        self.url = self.settings["adaptor_url"]
+        self.pub = MyPublisher("pubAlive", self.topic)
+        self.pub.start()
+
+
+    def run(self):
+        """Run thread."""        
+        while True:
+            print("sending alive message...")
+            msg = {"bn": "updateCatalogService", "e":[{"n": "adaptor", "t": time.time(), "u": "URL", "v": self.url}]}
+            self.pub.myPublish(json.dumps(msg), self.topic)
+            time.sleep(10)
+
 if __name__ == '__main__':
     adaptor = Adaptor()
     adaptor.start()
     
-    reciver = MQTTreciver(1, "mqttReciver")
+    alive = AliveThread(1, "aliveThread")
+    alive.run()
+    
+    reciver = MQTTreciver(2, "mqttReciver")
     reciver.run()
