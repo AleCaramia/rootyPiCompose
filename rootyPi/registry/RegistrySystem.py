@@ -222,7 +222,7 @@ class Catalog(object):
         removable = []
         for counter, s in enumerate(self.catalog['services']):
             #print(counter, d)
-            if time.time() - s['lastUpdate'] > MAXDELAY_SERVICE:
+            if time.time() - float(s['lastUpdate']) > MAXDELAY_SERVICE:
                 print("Removing... %s" % (s['serviceID']))
                 removable.append(counter)
         for index in sorted(removable, reverse=True):
