@@ -105,9 +105,10 @@ services:
   env_monitoring:
     build: env_monitoring
     volumes:
-      - env_monitoring-storage:/var/lib/adaptor:rw
+      - env_monitoring-storage:/var/lib/env_monitoring:rw
     links:
-      - influxdb
+      - registry
+      - adaptor
     depends_on:
       - registry
       - adaptor

@@ -181,20 +181,20 @@ class Catalog(object):
         """
         self.load_file()
         found = 0
-        for serivice in self.catalog['services']:
-            if serivice['seriviceID'] == serviceJson["n"]:
+        for service in self.catalog['services']:
+            if service['serviceID'] == serviceJson["n"]:
                 found = 1
-                print("Updating %s timestamp." % serivice['seriviceID'])
-                serivice['lastUpdate'] = serviceJson["t"]    
+                print("Updating %s timestamp." % service['serviceID'])
+                service['lastUpdate'] = serviceJson["t"]    
         if not found:# Insert again the device
             print("not found")
-            serivice_json = {
-                "seriviceID": serviceJson["n"],
+            service_json = {
+                "serviceID": serviceJson["n"],
                 "netType": serviceJson["u"],
                 "route": serviceJson["v"],
                 "lastUpdate": serviceJson["t"]
             }
-            self.catalog["services"].append(serivice_json)
+            self.catalog["services"].append(service_json)
         self.write_catalog()
 
     
@@ -484,7 +484,7 @@ def main():
     thread1 = First(1, "CherryPy")
     thread2 = Second(2, "Updater")
     thread3 = Third(3, "RemoverDevices")
-    thread4 = Third(4, "RemoverServices")
+    thread4 = Fourth(4, "RemoverServices")
 
     print("> Starting CherryPy...")
     thread1.start()

@@ -21,6 +21,7 @@ class EnvMonitoring(object):
         
         ###
         self.url_registry=settings['url_registry']
+        self.url_adaptor=settings['url_adaptor']
 
 
         # self.envTime=env_time
@@ -63,15 +64,28 @@ class EnvMonitoring(object):
                 plantId=plant['plantId']
                 userId=plant['userId']
                 plant_code=plant["plantCode"]
-                auto_time_options=plant['autoOptions']
+                
 
                 max_lux_lamp=self.retriveMaxLuxLamp(plant_code,models)
                 #######################################
-                lamp_intensity=plant['lampIntensity']
+                # lamp_intensity=plant['lampIntensity']
 
                 # time_options=json.loads((req.get(f"http://127.0.0.1:8080/GetEnvTime?user={userId}&plant={plantId}")).text)
-                start_time=auto_time_options['start_time']
-                end_time=auto_time_options['end_time']
+                # start_time=auto_time_options['start_time']
+                # end_time=auto_time_options['end_time']
+                if "autoOptions" in plant:
+                    if plant['autoOptions']:
+                        auto_time_options=plant['autoOptions']
+                        start_time=auto_time_options['start_time']
+                        end_time=auto_time_options['end_time']
+                    else:
+                        auto_time_options=self.default_time
+                        start_time=auto_time_options['start']
+                        end_time=auto_time_options['stop']
+                else:
+                    auto_time_options=self.default_time
+                    start_time=auto_time_options['start']
+                    end_time=auto_time_options['stop']
                 #added time
                 current_time = datetime.now().time()
                 current_datetime = datetime.combine(datetime.today(), current_time)
@@ -83,7 +97,7 @@ class EnvMonitoring(object):
                 time_difference = end_datetime - start_datetime
                 suncycle = round(time_difference.total_seconds() / 3600)
 
-                lux_to_add,dli_recived_past_hour=self.PlantLuxEstimation(url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp,lamp_intensity)
+                lux_to_add,dli_recived_past_hour=self.PlantLuxEstimation(url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp)
                 current_msg=self.__message.copy()
                 
                 current_topic=f"{self.base_topic}/{userId}/{plant_code}/lux_to_give/automatic"
@@ -115,15 +129,18 @@ class EnvMonitoring(object):
     
     def RequestsToRegistry(self):
         #Devo farla al registry
-        plants=json.loads((req.get(f"{self.url_registry}/plants")).text)
+        response=req.get(f"{self.url_registry}/plants")
+  
+        plants=json.loads(response.text)
         models=json.loads((req.get(f"{self.url_registry}/models")).text)
         active_services=json.loads(req.get(f"{self.url_registry}/services").text)
-        for service in active_services:
-            if service['name']=="adaptor":
-                url_adptor=service['url']
-
+        # for service in active_services:
+        #     if service['name']=="adaptor":
+        #         url_adptor=service['url']
+        url_adaptor=self.url_adaptor
         # users_plant= self.temp_users
-        return plants,url_adptor,models
+        return plants,url_adaptor,models
+    
     def retriveMaxLuxLamp(self,plant_code,models):
         vase_type=plant_code[:2]
         for model in models:
@@ -132,7 +149,7 @@ class EnvMonitoring(object):
                 break
         return max_lux_lamp
 
-    def PlantLuxEstimation(self,url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp,lamp_intensity):               
+    def PlantLuxEstimation(self,url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp):               
         
 
         # Devo fare una request per sapere la misurazione della pianta (nome misurazione place holder)
@@ -147,15 +164,17 @@ class EnvMonitoring(object):
     
         return lux_to_add,dli_recived_past_hour
 
-    def PlantSpecificGetReq(self,url_adptor,userId,plant_code,hours_passed):
-        mesurements_past_hour=json.loads(req.get(f"{url_adptor}/getData/{userId}/{plant_code}?measurament=light&duration=1"))
-        lamp_intensity_past_hour=json.loads(req.get(f"{url_adptor}/getData/{userId}/{plant_code}?measurament=lightShift&duration=1"))
+    def PlantSpecificGetReq(self,url_adaptor,userId,plant_code,hours_passed):
+        #print(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=light&duration=1").text)
+        
+        mesurements_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=light&duration=1"))
+        lamp_intensity_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=lightShift&duration=1"))
         # mesurements_past_hour=self.temp_mesure['light']
         #me lo sono inventato io "http://localhost:8080/getStatus/{userId}/{plantId}?status=DI COSA RICHIEDO LO STATUS&duration=DI QUANDO"
         # perc_intensity_lamp=json.loads(req.get(f"http://localhost:8080/getStatus/{userId}/{plantId}?status=light_intensity&duration=1")) #da definire output
         # perc_intensity_lamp=self.temp_light_status['v']
     ################################################################################
-        DLI_daily_record=json.loads(req.get(f"{url_adptor}/getData/{userId}/{plant_code}?measurament=DLI&duration={hours_passed}"))
+        DLI_daily_record=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=DLI&duration={hours_passed}"))
         # DLI_daily_record=self.temp_mesure['DLI']
         #qua devo gestire il caso di inizio giornata-> no dli record
     ###################################################################################
@@ -319,7 +338,8 @@ class thredFunction(object):
 #########################################################################################################################################
 if __name__ == "__main__":
 
-    try:
+    # try:
+        time.sleep(5)
         # settings,response=start_env_monitoring()
         settings=json.load(open("configEnv.json",'r'))
         Alive = Iamalive(settings)
@@ -339,8 +359,8 @@ if __name__ == "__main__":
 
         # while True:
         #     time.sleep(3)
-    except:
-        pass
+    # except:
+    #     pass
 
 
  

@@ -15,7 +15,8 @@
     {
       "userId": "user1",
       "plantId": "plant1",
-      "plantCode": "AB123"
+      "plantCode": "AB123",
+      "plantType": "Evergreen"
     }
   ],
   "devices": [],
