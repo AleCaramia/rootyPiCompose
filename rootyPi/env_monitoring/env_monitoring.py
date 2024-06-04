@@ -60,8 +60,9 @@ class EnvMonitoring(object):
         
         for plant in plants:
                 
-                plant_type=plant['plantType']
+                plant_type=plant['type']
                 plantId=plant['plantId']
+                #print(plantId)
                 userId=plant['userId']
                 plant_code=plant["plantCode"]
                 
@@ -73,20 +74,24 @@ class EnvMonitoring(object):
                 # time_options=json.loads((req.get(f"http://127.0.0.1:8080/GetEnvTime?user={userId}&plant={plantId}")).text)
                 # start_time=auto_time_options['start_time']
                 # end_time=auto_time_options['end_time']
-                if "autoOptions" in plant:
-                    if plant['autoOptions']:
-                        auto_time_options=plant['autoOptions']
-                        start_time=auto_time_options['start_time']
-                        end_time=auto_time_options['end_time']
-                    else:
-                        auto_time_options=self.default_time
-                        start_time=auto_time_options['start']
-                        end_time=auto_time_options['stop']
-                else:
-                    auto_time_options=self.default_time
-                    start_time=auto_time_options['start']
-                    end_time=auto_time_options['stop']
-                #added time
+                # if "autoOptions" in plant:
+                #     if plant['autoOptions']:
+                #         auto_time_options=plant['autoOptions']
+                #         start_time=auto_time_options['auto_init']
+                #         end_time=auto_time_options['end_time']
+                #     else:
+                #         auto_time_options=self.default_time
+                #         start_time=auto_time_options['start']
+                #         end_time=auto_time_options['stop']
+                # else:
+                #     auto_time_options=self.default_time
+                #     start_time=auto_time_options['start']
+                #     end_time=auto_time_options['stop']
+                # #added time
+                # auto_time_options=plant['autoOptions']
+                start_time=plant['auto_init']
+                end_time=plant['auto_end']
+
                 current_time = datetime.now().time()
                 current_datetime = datetime.combine(datetime.today(), current_time)
                 start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
@@ -167,14 +172,14 @@ class EnvMonitoring(object):
     def PlantSpecificGetReq(self,url_adaptor,userId,plant_code,hours_passed):
         #print(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=light&duration=1").text)
         
-        mesurements_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=light&duration=1"))
-        lamp_intensity_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=lightShift&duration=1"))
+        mesurements_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=light&duration=1").text)
+        lamp_intensity_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=lightShift&duration=1").text)
         # mesurements_past_hour=self.temp_mesure['light']
         #me lo sono inventato io "http://localhost:8080/getStatus/{userId}/{plantId}?status=DI COSA RICHIEDO LO STATUS&duration=DI QUANDO"
         # perc_intensity_lamp=json.loads(req.get(f"http://localhost:8080/getStatus/{userId}/{plantId}?status=light_intensity&duration=1")) #da definire output
         # perc_intensity_lamp=self.temp_light_status['v']
     ################################################################################
-        DLI_daily_record=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=DLI&duration={hours_passed}"))
+        DLI_daily_record=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=DLI&duration={hours_passed}").text)
         # DLI_daily_record=self.temp_mesure['DLI']
         #qua devo gestire il caso di inizio giornata-> no dli record
     ###################################################################################

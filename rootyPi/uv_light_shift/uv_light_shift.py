@@ -330,24 +330,10 @@ class Thread2(threading.Thread):
         self.shift = light_shift(config)
         self.shift.start_mqtt()
 
-class Thread1(threading.Thread):
-    """Thread to run iamalive."""
-
-    def __init__(self, ThreadID, name,config):
-        threading.Thread.__init__(self)
-        self.ThreadID = ThreadID
-        self.name = name
-        self.iamalive = Iamalive(config)
-        self.iamalive.start_mqtt()
-
-    def run(self):
-        self.iamalive.published()
-    
-
 class Iamalive(object):
     "I am alive"
 
-    def __init__(self ,config):
+    def __init__(self , config):
         # threading.Thread.__init__(self)
 
         # mqtt attributes
@@ -357,11 +343,11 @@ class Iamalive(object):
         self.sub_topic = config["sub_topic_Iamalive"] # rooty_py/userX/plantX/function
         self.pub_topic = config["pub_topic_Iamalive"]
         self.client = mqtt.Client(self.clientID, True)
-        self.client.on_connect = self.myconnect
-        self.message = {"bn": "Iamalive message",\
-                        "e":\
-                        [{ "n": "UV_ligth_shift", "u": None, "t": time.time(), "v":"ligth_shift" }]}
         self.time = time.time()
+        self.client.on_connect = self.myconnect
+        self.message = {"bn": "updateCatalogService",\
+                        "e":\
+                        [{ "n": "UV_ligth_shift", "u": "", "t": self.time, "v":"ligth_shift" }]}
     
     def start_mqtt(self):
         self.client.connect(self.broker,self.port)
@@ -374,38 +360,54 @@ class Iamalive(object):
     def myconnect(self,paho_mqtt, userdata, flags, rc):
        print(f"Iamalive: Connected to {self.broker} with result code {rc} \n subtopic {self.sub_topic}, pubtopic {self.pub_topic}")
 
-    def published(self):
+    def publish(self):
+        self.message["e"][0]["t"]= time.time()
+        __message=json.dumps(self.message)
+        print(__message)
+        print(self.pub_topic, self.broker, self.port)
+        self.client.publish(topic=self.pub_topic,payload=__message,qos=2)
+        # print("I am alive message sent")
+
+class AliveThread(threading.Thread):
+    def __init__(self, threadId, name, config):
+        threading.Thread.__init__(self)
+        self.threadId = threadId
+        self.name = name
+        self.alive = Iamalive(config)
+        
+
+
+    def run(self):
+        self.alive.start_mqtt()
         while True:
-            
-            __message=json.dumps(self.message)
-            self.client.publish(topic=self.pub_topic,payload=__message,qos=2)
-            # print("I am alive message sent")
-            time.sleep(30)
-    
+            self.alive.publish()  
+            time.sleep(5)  
 
 if __name__=="__main__":
-    print("> Starting UV light shift...")
+
+
+    
     config = json.load(open("config_UV_ligth.json","r"))
     # lamp = json.load(open("EnviromentMonitoring/lamp.json","r"))
     # configIamalive = json.load(open("UV_ligth/Iamalive.json","r"))
+    
 
     # thread1 = Iamalive(1, "Iamalive",config)
     # print("> Starting I am alive...")
     # thread_Alive = threading.Thread(target=thread1.start_mqtt)
     # thread_Alive.start()
-    thread1 = Thread1(1,"Iamalive",config)
-    print("> Starting Iamalive...")
-    thread1.run()
     # thread1.join()  # Wait for thread1 to finish
     
     # thread2 = Thread1(2, "CherryPy",lamp)
     # print("> Starting CherryPy...")
     # thread2.start()
 
-    # thread2 = Thread2(2, "Mqtt",config)
-    # print("> Starting light shift...")
-    # thread2.start()
+    thread3 = Thread2(3, "Mqtt",config)
+    print("> Starting light shift...")
+    thread3.start()
 
-    while True:
-        time.sleep(10)
+    thread1 = AliveThread(2, "aliveThread", config)
+    thread1.run()
+
+    
 
