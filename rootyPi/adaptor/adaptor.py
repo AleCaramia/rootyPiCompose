@@ -183,7 +183,6 @@ class MySubscriber:
             print ("Connected to %s with result code: %d" % (self.messageBroker, rc))
         def checkUserPlantPresence(self, userId, plantCode):
             self.update_users()
-            print(self.users)
             for user in self.users:
                 if user["userId"] == userId:
                     for plant in user["plants"]:
@@ -232,7 +231,7 @@ class MQTTreciver(threading.Thread):
         global time_flag
         print(self.topic)
         # Start subscriber.
-        sub = MySubscriber("J", self.topic, self.broker, self.mqtt_port, self.write_api)
+        sub = MySubscriber("123321", self.topic, self.broker, self.mqtt_port, self.write_api)
         sub.start()
 
         while True:
@@ -301,8 +300,8 @@ if __name__ == '__main__':
     adaptor = Adaptor()
     adaptor.start()
     
-    alive = AliveThread(1, "aliveThread")
-    alive.run()
-    
     reciver = MQTTreciver(2, "mqttReciver")
     reciver.run()
+    
+    alive = AliveThread(1, "aliveThread")
+    alive.run()

@@ -1,23 +1,7 @@
 {
   "users": [
-    {
-      "userId": "user1",
-      "password": "user1",
-      "plants": []
-    },
-    {
-      "userId": "user2",
-      "password": "sdadsa",
-      "plants": []
-    }
   ],
   "plants": [
-    {
-      "userId": "user1",
-      "plantId": "plant1",
-      "plantCode": "AB123",
-      "plantType": "Evergreen"
-    }
   ],
   "devices": [],
   "services": [],
