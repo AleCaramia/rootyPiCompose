@@ -75,6 +75,7 @@ class Catalog(object):
             user_json = {
                 "userId": user_json["userId"],
                 "password": user_json["password"],
+                "chatID": user_json["chatID"],
                 "plants": []
             }
             self.catalog["users"].append(user_json)
@@ -466,7 +467,7 @@ class Second(threading.Thread):
         """Run thread."""
         cat = Catalog()
         cat.load_file()
-        sub = MySubscriber("Sub1", self.topic, self.broker, self.mqtt_port)
+        sub = MySubscriber("1", self.topic, self.broker, self.mqtt_port)
         sub.loop_flag = 1
         sub.start()
 

@@ -79,6 +79,7 @@
         function postAddUser(columnNumber) {
             const userId = document.getElementById(`input1_col${columnNumber}`).value;
             const password = document.getElementById(`input2_col${columnNumber}`).value;
+            const chatID = null;
 
 
             // Example POST request using Fetch API
@@ -88,7 +89,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ userId, password })
+                body: JSON.stringify({ userId, password , chatID})
             })
             .then(response => {
                 if (response.ok) {
