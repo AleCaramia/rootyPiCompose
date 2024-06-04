@@ -330,10 +330,24 @@ class Thread2(threading.Thread):
         self.shift = light_shift(config)
         self.shift.start_mqtt()
 
+class Thread1(threading.Thread):
+    """Thread to run iamalive."""
+
+    def __init__(self, ThreadID, name,config):
+        threading.Thread.__init__(self)
+        self.ThreadID = ThreadID
+        self.name = name
+        self.iamalive = Iamalive(config)
+        self.iamalive.start_mqtt()
+
+    def run(self):
+        self.iamalive.published()
+    
+
 class Iamalive(object):
     "I am alive"
 
-    def __init__(self , ThreadID, name,config):
+    def __init__(self ,config):
         # threading.Thread.__init__(self)
 
         # mqtt attributes
@@ -355,7 +369,6 @@ class Iamalive(object):
         # Avvia il metodo self.control_state() come thread
         # control_thread = threading.Thread(target=self.control_state)
         # control_thread.start()
-        self.published()
 
 
     def myconnect(self,paho_mqtt, userdata, flags, rc):
@@ -376,19 +389,22 @@ if __name__=="__main__":
     # lamp = json.load(open("EnviromentMonitoring/lamp.json","r"))
     # configIamalive = json.load(open("UV_ligth/Iamalive.json","r"))
 
-    thread1 = Iamalive(1, "Iamalive",config)
-    print("> Starting I am alive...")
-    thread_Alive = threading.Thread(target=thread1.start_mqtt)
-    thread_Alive.start()
+    # thread1 = Iamalive(1, "Iamalive",config)
+    # print("> Starting I am alive...")
+    # thread_Alive = threading.Thread(target=thread1.start_mqtt)
+    # thread_Alive.start()
+    thread1 = Thread1(1,"Iamalive",config)
+    print("> Starting Iamalive...")
+    thread1.run()
     # thread1.join()  # Wait for thread1 to finish
     
     # thread2 = Thread1(2, "CherryPy",lamp)
     # print("> Starting CherryPy...")
     # thread2.start()
 
-    thread3 = Thread2(3, "Mqtt",config)
-    print("> Starting light shift...")
-    thread3.start()
+    # thread2 = Thread2(2, "Mqtt",config)
+    # print("> Starting light shift...")
+    # thread2.start()
 
     while True:
         time.sleep(10)

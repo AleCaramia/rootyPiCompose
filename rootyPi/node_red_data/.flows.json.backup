@@ -810,26 +810,6 @@
         "className": ""
     },
     {
-        "id": "fc7a8e28f0948af0",
-        "type": "ui_spacer",
-        "z": "b66b92d26529c7fa",
-        "name": "spacer",
-        "group": "6d7fed1744c73108",
-        "order": 3,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "b8d9d5d6e24cfcaf",
-        "type": "ui_spacer",
-        "z": "b66b92d26529c7fa",
-        "name": "spacer",
-        "group": "6d7fed1744c73108",
-        "order": 5,
-        "width": 1,
-        "height": 1
-    },
-    {
         "id": "dcaa7817229e050d",
         "type": "ui_spacer",
         "z": "b66b92d26529c7fa",
@@ -929,87 +909,7 @@
         "order": 3
     },
     {
-        "id": "2c1c089c7c5a46ae",
-        "type": "ui_spacer",
-        "z": "6c9fffb498ae62dd",
-        "name": "spacer",
-        "group": "c846bf76c8606a05",
-        "order": 4,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "0d292544976431c0",
-        "type": "ui_spacer",
-        "z": "6c9fffb498ae62dd",
-        "name": "spacer",
-        "group": "c846bf76c8606a05",
-        "order": 6,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "30f14bdf8b9bee6a",
-        "type": "ui_spacer",
-        "z": "6c9fffb498ae62dd",
-        "name": "spacer",
-        "group": "c846bf76c8606a05",
-        "order": 7,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "5f0c21026a7e4969",
-        "type": "ui_spacer",
-        "z": "6c9fffb498ae62dd",
-        "name": "spacer",
-        "group": "c846bf76c8606a05",
-        "order": 9,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "8a0c55eca0c58575",
-        "type": "ui_spacer",
-        "z": "6c9fffb498ae62dd",
-        "name": "spacer",
-        "group": "c846bf76c8606a05",
-        "order": 10,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "ca9e37f2db981e6e",
-        "type": "ui_spacer",
-        "z": "6c9fffb498ae62dd",
-        "name": "spacer",
-        "group": "c846bf76c8606a05",
-        "order": 12,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "e1ef69807be75698",
-        "type": "ui_spacer",
-        "z": "6c9fffb498ae62dd",
-        "name": "spacer",
-        "group": "c846bf76c8606a05",
-        "order": 13,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "0aead5ee4def96b5",
-        "type": "ui_spacer",
-        "z": "6c9fffb498ae62dd",
-        "name": "spacer",
-        "group": "c846bf76c8606a05",
-        "order": 15,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "521a0568d0920834",
+        "id": "c15452ddfca90cb2",
         "type": "ui_spacer",
         "z": "6c9fffb498ae62dd",
         "name": "spacer",
@@ -1019,7 +919,7 @@
         "height": 1
     },
     {
-        "id": "b3bf2cd11a08163b",
+        "id": "a3fbed01812b4bda",
         "type": "ui_spacer",
         "z": "6c9fffb498ae62dd",
         "name": "spacer",
@@ -1029,7 +929,7 @@
         "height": 1
     },
     {
-        "id": "db49ff6d91a43f41",
+        "id": "a30632257d98a8e4",
         "type": "ui_spacer",
         "z": "6c9fffb498ae62dd",
         "name": "spacer",
@@ -1039,7 +939,7 @@
         "height": 1
     },
     {
-        "id": "592b3d75d44b26a0",
+        "id": "572be765045252b3",
         "type": "ui_spacer",
         "z": "6c9fffb498ae62dd",
         "name": "spacer",
@@ -1049,7 +949,7 @@
         "height": 1
     },
     {
-        "id": "e1fba2cc6c283f96",
+        "id": "5b7227d037e3b0f3",
         "type": "ui_spacer",
         "z": "6c9fffb498ae62dd",
         "name": "spacer",
@@ -1059,7 +959,7 @@
         "height": 1
     },
     {
-        "id": "4d3dca68042b0259",
+        "id": "541a6711ad52f59f",
         "type": "ui_spacer",
         "z": "6c9fffb498ae62dd",
         "name": "spacer",
@@ -1069,7 +969,7 @@
         "height": 1
     },
     {
-        "id": "e31cc8f0eff1c00a",
+        "id": "e8b9ecaebae20128",
         "type": "ui_spacer",
         "z": "6c9fffb498ae62dd",
         "name": "spacer",
@@ -1079,13 +979,33 @@
         "height": 1
     },
     {
-        "id": "1ae37c0c13e15392",
+        "id": "8b6499f94a978874",
         "type": "ui_spacer",
         "z": "6c9fffb498ae62dd",
         "name": "spacer",
         "group": "8fda65c920cfe174",
         "order": 11,
         "width": 2,
+        "height": 1
+    },
+    {
+        "id": "a4b862ae519dc90e",
+        "type": "ui_spacer",
+        "z": "a3da6d9a2fc34851",
+        "name": "spacer",
+        "group": "6d7fed1744c73108",
+        "order": 3,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "e34f1ffcdd6cf9a4",
+        "type": "ui_spacer",
+        "z": "a3da6d9a2fc34851",
+        "name": "spacer",
+        "group": "6d7fed1744c73108",
+        "order": 5,
+        "width": 1,
         "height": 1
     },
     {
@@ -2167,13 +2087,13 @@
         "height": 0,
         "name": "",
         "label": "New to Rootypy?",
-        "format": "",
+        "format": "New to Rootypy?",
         "layout": "col-center",
         "className": "",
         "style": true,
         "font": "",
         "fontSize": "24",
-        "color": "#ffffff",
+        "color": "#000000",
         "x": 130,
         "y": 380,
         "wires": []
@@ -3135,8 +3055,8 @@
         "g": "6c34da6f3065cbbd",
         "name": "Esc",
         "group": "c846bf76c8606a05",
-        "order": 14,
-        "width": 3,
+        "order": 7,
+        "width": 5,
         "height": 1,
         "passthru": false,
         "label": "Log out",
@@ -3412,8 +3332,8 @@
         "g": "6c34da6f3065cbbd",
         "name": "Add new plant",
         "group": "c846bf76c8606a05",
-        "order": 5,
-        "width": 3,
+        "order": 4,
+        "width": 5,
         "height": 1,
         "passthru": false,
         "label": "Add new plant",
@@ -3470,8 +3390,8 @@
         "g": "6c34da6f3065cbbd",
         "name": "Delete plant",
         "group": "c846bf76c8606a05",
-        "order": 8,
-        "width": 3,
+        "order": 5,
+        "width": 5,
         "height": 1,
         "passthru": false,
         "label": "Delete plant",
@@ -4801,8 +4721,8 @@
         "g": "69fde56228e705a2",
         "name": "Delete account",
         "group": "c846bf76c8606a05",
-        "order": 11,
-        "width": 3,
+        "order": 6,
+        "width": 5,
         "height": 1,
         "passthru": false,
         "label": "Delete account",
