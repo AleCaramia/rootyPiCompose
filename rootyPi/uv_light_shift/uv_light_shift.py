@@ -343,11 +343,11 @@ class Iamalive(object):
         self.sub_topic = config["sub_topic_Iamalive"] # rooty_py/userX/plantX/function
         self.pub_topic = config["pub_topic_Iamalive"]
         self.client = mqtt.Client(self.clientID, True)
+        self.time = time.time()
         self.client.on_connect = self.myconnect
         self.message = {"bn": "updateCatalogService",\
                         "e":\
-                        [{ "n": "UV_ligth_shift", "u": "", "t": time.time(), "v":"ligth_shift" }]}
-        self.time = time.time()
+                        [{ "n": "UV_ligth_shift", "u": "", "t": self.time, "v":"ligth_shift" }]}
     
     def start_mqtt(self):
         self.client.connect(self.broker,self.port)
@@ -361,6 +361,7 @@ class Iamalive(object):
        print(f"Iamalive: Connected to {self.broker} with result code {rc} \n subtopic {self.sub_topic}, pubtopic {self.pub_topic}")
 
     def publish(self):
+        self.message["e"][0]["t"]= time.time()
         __message=json.dumps(self.message)
         print(__message)
         print(self.pub_topic, self.broker, self.port)
@@ -380,7 +381,7 @@ class AliveThread(threading.Thread):
         self.alive.start_mqtt()
         while True:
             self.alive.publish()  
-            time.sleep(30)  
+            time.sleep(5)  
 
 if __name__=="__main__":
 
