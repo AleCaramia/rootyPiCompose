@@ -1,18 +1,7 @@
 {
   "users": [
-    {
-      "userId": "user1",
-      "password": "user1",
-      "plants": []
-    },
-    {
-      "userId": "user2",
-      "password": "sdadsa",
-      "plants": []
-    }
   ],
   "plants": [
-
   ],
   "devices": [],
   "services": [],
