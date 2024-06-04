@@ -126,8 +126,7 @@ services:
     depends_on:
       - registry
       - adaptor
-    ports:
-      - 8088:8088
+
     networks:
       net:
         ipv4_address: 192.68.0.32

@@ -333,7 +333,7 @@ class Thread2(threading.Thread):
 class Iamalive(object):
     "I am alive"
 
-    def __init__(self , ThreadID, name,config):
+    def __init__(self , config):
         # threading.Thread.__init__(self)
 
         # mqtt attributes
@@ -344,9 +344,9 @@ class Iamalive(object):
         self.pub_topic = config["pub_topic_Iamalive"]
         self.client = mqtt.Client(self.clientID, True)
         self.client.on_connect = self.myconnect
-        self.message = {"bn": "Iamalive message",\
+        self.message = {"bn": "updateCatalogService",\
                         "e":\
-                        [{ "n": "UV_ligth_shift", "u": None, "t": time.time(), "v":"ligth_shift" }]}
+                        [{ "n": "UV_ligth_shift", "u": "", "t": time.time(), "v":"ligth_shift" }]}
         self.time = time.time()
     
     def start_mqtt(self):
@@ -355,31 +355,46 @@ class Iamalive(object):
         # Avvia il metodo self.control_state() come thread
         # control_thread = threading.Thread(target=self.control_state)
         # control_thread.start()
-        self.published()
 
 
     def myconnect(self,paho_mqtt, userdata, flags, rc):
        print(f"Iamalive: Connected to {self.broker} with result code {rc} \n subtopic {self.sub_topic}, pubtopic {self.pub_topic}")
 
-    def published(self):
+    def publish(self):
+        __message=json.dumps(self.message)
+        print(__message)
+        print(self.pub_topic, self.broker, self.port)
+        self.client.publish(topic=self.pub_topic,payload=__message,qos=2)
+        # print("I am alive message sent")
+
+class AliveThread(threading.Thread):
+    def __init__(self, threadId, name, config):
+        threading.Thread.__init__(self)
+        self.threadId = threadId
+        self.name = name
+        self.alive = Iamalive(config)
+        
+
+
+    def run(self):
+        self.alive.start_mqtt()
         while True:
-            
-            __message=json.dumps(self.message)
-            self.client.publish(topic=self.pub_topic,payload=__message,qos=2)
-            # print("I am alive message sent")
-            time.sleep(30)
-    
+            self.alive.publish()  
+            time.sleep(30)  
 
 if __name__=="__main__":
-    print("> Starting UV light shift...")
+
+
+    
     config = json.load(open("config_UV_ligth.json","r"))
     # lamp = json.load(open("EnviromentMonitoring/lamp.json","r"))
     # configIamalive = json.load(open("UV_ligth/Iamalive.json","r"))
+    
 
-    thread1 = Iamalive(1, "Iamalive",config)
-    print("> Starting I am alive...")
-    thread_Alive = threading.Thread(target=thread1.start_mqtt)
-    thread_Alive.start()
+    # thread1 = Iamalive(1, "Iamalive",config)
+    # print("> Starting I am alive...")
+    # thread_Alive = threading.Thread(target=thread1.start_mqtt)
+    # thread_Alive.start()
     # thread1.join()  # Wait for thread1 to finish
     
     # thread2 = Thread1(2, "CherryPy",lamp)
@@ -390,6 +405,8 @@ if __name__=="__main__":
     print("> Starting light shift...")
     thread3.start()
 
-    while True:
-        time.sleep(10)
+    thread1 = AliveThread(2, "aliveThread", config)
+    thread1.run()
+
+    
 
