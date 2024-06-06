@@ -189,8 +189,11 @@ class AllSens(threading.Thread):
                 time.sleep(2)
             time.sleep(10)
 
-if __name__ == '__main__':
-    
+def main():
     thredPub = AllSens(3, "AllPubs")
     print("Starting all publishers")
     thredPub.start()
+
+if __name__ == '__main__':
+    main()
+    

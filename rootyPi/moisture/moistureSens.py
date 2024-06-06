@@ -180,7 +180,10 @@ class AllPubs(threading.Thread):
                 time.sleep(2)
             time.sleep(10)
 
-if __name__ == '__main__':
-
+def main():
     thredPub = AllPubs(2, "AllPubs")
     thredPub.start()
+
+if __name__ == '__main__':
+    main()
+    
