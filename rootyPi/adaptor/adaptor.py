@@ -46,15 +46,17 @@ class Adaptor(object):
         input = requests.get(url)
         self.users = json.loads(input._content)
     def checkUserPresent(self, userId):
+        self.loadUsers()
         for user in self.users:
             if user["userId"] == userId:
                 return True
         return False
-    def checkPlantPresent(self,userId, plantId):
+    def checkPlantPresent(self,userId, plantCode):
+        self.loadUsers()
         for user in self.users:
             if user["userId"] == userId:
                 for plant in user["plants"]:
-                    if plant["plantId"] == plantId:
+                    if plant == plantCode:
                         return True
         return False
                 
@@ -103,7 +105,7 @@ class Adaptor(object):
                                     #out = out + (f"Time: {row.get_time().strftime("%m/%d/%Y, %H:%M:%S")}, Value: {row.get_value()}\n")
                             return json.dumps(out)
                     else:
-                        raise cherrypy.HTTPError("400", "Invalid plantId")                    
+                        raise cherrypy.HTTPError("400", "Invalid plantCode")                    
                 else:
                     raise cherrypy.HTTPError("400", "Invalid User")
             else:
