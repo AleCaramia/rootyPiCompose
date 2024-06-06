@@ -131,14 +131,11 @@ class AllPubs(threading.Thread):
                 time.sleep(2)
             time.sleep(10)
 
-def main():
+if __name__ == '__main__':
+
     #thredSub = AllSubs(1, "AllSubs")
     thredPub = AllPubs(1, "AllPubs")
     #print("Starting all subscribers")
     #thredSub.start()
     print("Starting all publishers")
     thredPub.start()
-
-if __name__ == '__main__':
-    main()
-    
