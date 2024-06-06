@@ -122,7 +122,7 @@ def update_sensors(sensors):
     response = requests.get(url)
     plants = json.loads(response.text)
     for plant in plants:
-        sensId = plant["plantCode"] 
+        sensId = plant["plantCode"]
         sensId
         found = 0
         for sens in sensors:
@@ -180,10 +180,7 @@ class AllPubs(threading.Thread):
                 time.sleep(2)
             time.sleep(10)
 
-def main():
+if __name__ == '__main__':
+
     thredPub = AllPubs(2, "AllPubs")
     thredPub.start()
-
-if __name__ == '__main__':
-    main()
-    

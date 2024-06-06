@@ -166,14 +166,12 @@ class AllSens(threading.Thread):
                     else:
                         mess = json.loads(msg.payload.decode("utf-8"))
                         event = mess["e"][0]
-                        if msg.topic.split("/")[3] == "lampLight":
-                            print("-------lampLight")
-                            if isinstance(event["v"], int):
-                                sens.artificialLight = event["v"]
-                        elif msg.topic.split("/")[3] == "sunlight":
-                            print("-----------sunlight")
-                            if isinstance(event["v"], int):
-                                sens.sunLight = event["v"]                       
+                        if msg.topic.split("/")[3] == "lampLight" and not  mess["bn"].startswith("update"):
+                            #print("-------lampLight")
+                            sens.artificialLight = float(event["v"])
+                        elif msg.topic.split("/")[3] == "sunlight" and not  mess["bn"].startswith("update"):
+                            #print("-----------sunlight")
+                            sens.sunLight = float(event["v"])                       
                 sens.currentState = sens.artificialLight + sens.sunLight
                 print(f"current state {sens.currentState}")
                 event = {"n": "light", "u": "lux", "t": str(time.time()), "v": float(sens.currentState)}
@@ -189,11 +187,8 @@ class AllSens(threading.Thread):
                 time.sleep(2)
             time.sleep(10)
 
-def main():
+if __name__ == '__main__':
+    
     thredPub = AllSens(3, "AllPubs")
     print("Starting all publishers")
     thredPub.start()
-
-if __name__ == '__main__':
-    main()
-    

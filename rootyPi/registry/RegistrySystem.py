@@ -467,7 +467,7 @@ class Second(threading.Thread):
         """Run thread."""
         cat = Catalog()
         cat.load_file()
-        sub = MySubscriber("registry", self.topic, self.broker, self.mqtt_port)
+        sub = MySubscriber("1", self.topic, self.broker, self.mqtt_port)
         sub.loop_flag = 1
         sub.start()
 
