@@ -34,9 +34,9 @@ class EnvMonitoring(object):
         self._paho_mqtt=PahoMQTT.Client(self.clientID, True)
         self._paho_mqtt.on_connect=self.MyOnConnect
         #"{'n': 'light_deficit', 'unit': 'lux', 't': 1715156806.582416, 'v': 1383.6867064141877}"
-        self.__message={"bn":"", 'e':[{'n':'light_deficit','unit':"lux",'t':'','v':None }
+        self.__message={"bn":"", 'e':[{'n':'light_deficit','u':"lux",'t':'','v':None }
                                                  ]}
-        self.dli_rec_message={"bn":"", 'e':[{'n':'DLI','unit':"DLI",'t':'','v':None }
+        self.dli_rec_message={"bn":"", 'e':[{'n':'DLI','u':"DLI",'t':'','v':None }
                                                  ]}
 
         # self.maxLuxLamp= 20 #place holder
@@ -115,7 +115,7 @@ class EnvMonitoring(object):
                 dli_mess=self.dli_rec_message.copy()
                 dli_mess['e'][0]['t']=time.time()
                 dli_mess['e'][0]['v']=dli_recived_past_hour
-                dli_mess['bn']=topicDLI.copy()
+                dli_mess['bn']=topicDLI
                 dli_mess=json.dumps(dli_mess)
                 self._paho_mqtt.publish(topic=topicDLI,payload=dli_mess,qos=2)
                 #req.post("-------------",dli_recived_past_hour)
@@ -163,7 +163,7 @@ class EnvMonitoring(object):
         #ipotizzando siano lux al secondo e siano in un vettore
         # lux_past_hour=self.LuxPastHour(mesurements_past_hour)
         lux_past_hour,mean_lamp_intensity,dli_given_today=self.LuxPastHour(mesurements_past_hour,lamp_intensity_past_hour,DLI_daily_record)  
-        current_plant_goal=self.goals(plant_type)
+        current_plant_goal=self.goals[plant_type]
 
         lux_to_add,dli_recived_past_hour=self.LuxDeficitCalculation(current_plant_goal,suncycle,lux_past_hour,mean_lamp_intensity,dli_given_today,hours_passed,max_lux_lamp)
     
@@ -189,13 +189,19 @@ class EnvMonitoring(object):
         lux_past_hour_v=[]
         lamp_past_hour_v=[]
         dli_given_today=0
-        for mesure in mesurments_past_hour:
-            lux_past_hour_v.append(mesure['v'])
-        lux_past_hour=np.mean(lux_past_hour_v)
+        if len(mesurments_past_hour)>0:
+            for mesure in mesurments_past_hour:
+                lux_past_hour_v.append(mesure['v'])
+            lux_past_hour=np.mean(lux_past_hour_v)
+        else:
+            lux_past_hour=0
 
-        for intensity in lamp_intensity_past_hour:
-            lamp_past_hour_v.append(intensity['v'])
-        mean_light_intensity=np.mean(lamp_past_hour_v)
+        if len(lamp_intensity_past_hour)>0:
+            for intensity in lamp_intensity_past_hour:
+                lamp_past_hour_v.append(intensity['v'])
+            mean_light_intensity=np.mean(lamp_past_hour_v)
+        else:
+            mean_light_intensity=0
 
         if len(DLI_daily_record)>0:
             for dli in DLI_daily_record:
@@ -216,12 +222,13 @@ class EnvMonitoring(object):
     #maxLuxLamp: How many lux can emit the SPECIFIC LAMP
 
         PPFDlamp=max_lux_lamp*(mean_lamp_intensity/100)*0.0135 #the factor depends on kind of lamp
-        #print(PPFDlamp)
+        print(f'PPFDlamp:{PPFDlamp}')
         PPFDsun=(registered_Lux_hour-(max_lux_lamp*mean_lamp_intensity/100))*0.0185
-        #print(PPFDsun)
+        print(f"PPFDsun: {PPFDsun}")
         PPFDtot=PPFDsun+PPFDlamp
         DLIsun_hour=PPFDsun*0.0036
         DLIrecived_hour=PPFDtot*0.0036
+        print(f"DLIrecived_hour: {PPFDsun}")
 #################################################################
         #NUOVA VERSIONE DEL CALCOLO: Adesso calcolo il deficit nella giornata fin ora       
         DLIhgoal=DLI_goal/sun_cycle
@@ -251,7 +258,7 @@ class Iamalive(object):
         self.base_topic=settings['basetopic']
         self.port=settings['port']
         self.broker=settings['broker']
-        self.clientID=settings['ID']
+        self.clientID=settings['ID']+"alive"
 
         self.topic = f"{self.base_topic}/{self.clientID}"       
         # self.pub_topic = self.clientID
@@ -296,28 +303,28 @@ class AliveThread(threading.Thread):
             time.sleep(5)  
 
 ################################################################################################################################################
-class thredFunction(object): 
-    def __init__(self,settings):
-        
+class thredFunction(threading.Thread): 
+    def __init__(self,ThreadID,name,settings):
+        threading.Thread.__init__(self)
+        self.ThreadID = ThreadID
+        self.name = name
+        self.settings=settings
         # self.env_time="EnviromentMonitoring\envTime.json"
-        
-        self.function = EnvMonitoring(settings)
+        # DEVO METTERE CHE NON PARTE SE L'orario corrente NON VA BENE
+    def run(self):
+        self.function = EnvMonitoring(self.settings)
         self.function.start()
-        
-            # DEVO METTERE CHE NON PARTE SE L'orario corrente NON VA BENE
-    def RunThred(self):
-        
-        try:
-            while True:
+        # try:
+        while True:
                 # current_time = datetime.now().time()
                 # if current_time>self.start_time:
-                    self.function.MyPublish()        
-                    time.sleep(15)
+            self.function.MyPublish()        
+            time.sleep(15)
                 # else:
                 #     time.sleep(15)
                 
-        except KeyboardInterrupt:
-                self.function.stop()
+        # except KeyboardInterrupt:
+        #         self.function.stop()
 
 ##############################################################################################################################################à
 # class ThreadServer(object):
@@ -353,14 +360,14 @@ class thredFunction(object):
 
     
 #########################################################################################################################################
-if __name__ == "__main__":
 
+def main():
     # try:
         time.sleep(5)
         # settings,response=start_env_monitoring()
         settings=json.load(open("configEnv.json",'r'))
-        thread1 = AliveThread(2, "aliveThread", settings)
-        thread1.run()
+        thread2 = AliveThread(2, "aliveThread", settings)
+        thread2.start()
         # Alive = Iamalive(settings)
         # thread_Alive = threading.Thread(target=Alive.start_mqtt)
         print("> Starting I am alive...")
@@ -371,16 +378,17 @@ if __name__ == "__main__":
         # print("> Starting thread_server...")
         # thread_server.start()
 
-        tFunction = thredFunction(settings)
-        thread_function = threading.Thread(target=tFunction.RunThred())
+        thread1 = thredFunction(1,'Function',settings)
+        #thread_function = threading.Thread(target=tFunction.RunThred())
         print("> Starting thread_function...")
-        thread_function.start()
+        thread1.start()
 
         # while True:
         #     time.sleep(3)
     # except:
     #     pass
 
-
+if __name__ == "__main__":
+    main()
  
 
