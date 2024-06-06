@@ -270,18 +270,30 @@ class Iamalive(object):
         # Avvia il metodo self.control_state() come thread
         # control_thread = threading.Thread(target=self.control_state)
         # control_thread.start()
-        self.publish()
+        # self.publish()
     
     def myconnect(self,paho_mqtt, userdata, flags, rc):
        print(f"AlIVE: Connected to {self.broker} with result code {rc} \n subtopic {None}, pubtopic {self.topic}")
 
-    def publish(self):
+    def publish(self):           
+        __message=json.dumps(self.message)
+        print(__message)
+        self.client.publish(topic=self.topic,payload=__message,qos=2)
+    
+class AliveThread(threading.Thread):
+    def __init__(self, threadId, name, config):
+        threading.Thread.__init__(self)
+        self.threadId = threadId
+        self.name = name
+        self.alive = Iamalive(config)
+        
+
+
+    def run(self):
+        self.alive.start_mqtt()
         while True:
-            
-            __message=json.dumps(self.message)
-            print(__message)
-            self.client.publish(topic=self.topic,payload=__message,qos=2)
-            time.sleep(30)    
+            self.alive.publish()  
+            time.sleep(5)  
 
 ################################################################################################################################################
 class thredFunction(object): 
@@ -347,10 +359,12 @@ if __name__ == "__main__":
         time.sleep(5)
         # settings,response=start_env_monitoring()
         settings=json.load(open("configEnv.json",'r'))
-        Alive = Iamalive(settings)
-        thread_Alive = threading.Thread(target=Alive.start_mqtt)
+        thread1 = AliveThread(2, "aliveThread", settings)
+        thread1.run()
+        # Alive = Iamalive(settings)
+        # thread_Alive = threading.Thread(target=Alive.start_mqtt)
         print("> Starting I am alive...")
-        thread_Alive.start()
+        # thread_Alive.start()
         
         # webserver= ThreadServer()
         # thread_server = threading.Thread(target=webserver.start())

@@ -88,7 +88,7 @@ services:
       net:
         ipv4_address: 192.68.0.31
   node-red:
-    image: nodered/node-red:latest
+    build: node-red
     environment:
       - TZ=Europe/Amsterdam
     ports:

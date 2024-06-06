@@ -1,0 +1,8 @@
+{
+    "settings":{
+        "light":{
+            "devices":["lightSensor","lampLight"],
+            "services":["EnvMonitoring","UV_light_shift"]
+        }
+    }
+}
