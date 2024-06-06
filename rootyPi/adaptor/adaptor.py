@@ -233,7 +233,7 @@ class MQTTreciver(threading.Thread):
         global time_flag
         print(self.topic)
         # Start subscriber.
-        sub = MySubscriber("123321", self.topic, self.broker, self.mqtt_port, self.write_api)
+        sub = MySubscriber("adaptor_sub", self.topic, self.broker, self.mqtt_port, self.write_api)
         sub.start()
 
         while True:
@@ -286,7 +286,7 @@ class AliveThread(threading.Thread):
             print("Problem in loading settings")
         self.topic = self.settings["alive_topic"]
         self.url = self.settings["adaptor_url"]
-        self.pub = MyPublisher("pubAlive", self.topic)
+        self.pub = MyPublisher("adaptor_alive", self.topic)
         self.pub.start()
 
 
