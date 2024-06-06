@@ -119,7 +119,7 @@ def update_simulators(simulators):
     response = requests.get(url)
     plants = json.loads(response.text)
     for plant in plants:
-        simId = plant["plantCode"]
+        simId = plant["plantCode"] + "_lampLight"
         simId
         found = 0
         for sim in simulators:

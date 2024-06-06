@@ -122,7 +122,7 @@ def update_sensors(sensors):
     response = requests.get(url)
     plants = json.loads(response.text)
     for plant in plants:
-        sensId = plant["plantCode"]
+        sensId = plant["plantCode"] + "_moisture"
         sensId
         found = 0
         for sens in sensors:
