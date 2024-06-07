@@ -40,7 +40,7 @@ class LampSimulator:
 
 class MyPublisher:
     def __init__(self, clientID, topic):
-        self.clientID = clientID
+        self.clientID = clientID  + "lamp"
         self.topic = topic
 		# create an instance of paho.mqtt.client
         self._paho_mqtt = PahoMQTT.Client(self.clientID, False) 

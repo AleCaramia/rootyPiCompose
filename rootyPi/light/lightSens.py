@@ -71,7 +71,7 @@ def update_sensors(sensors):
     
 class MyPublisher:
     def __init__(self, clientID, topic):
-        self.clientID = clientID
+        self.clientID = clientID  + "light"
         self.topic = topic
 		# create an instance of paho.mqtt.client
         self._paho_mqtt = PahoMQTT.Client(self.clientID, False) 

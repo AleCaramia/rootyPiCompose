@@ -5,6 +5,9 @@ services:
     image: influxdb:latest
     volumes:
       - influxdb-storage:/var/lib/influxdb2:rw
+    # environment:
+    #  - DOCKER_INFLUXDB_INIT_USERNAME=AleCaramia
+    #  - DOCKER_INFLUXDB_INIT_PASSWORD=programmingforIOT
     env_file:
       - .env
     entrypoint: ["./entrypoint.sh"]
@@ -56,6 +59,7 @@ services:
     links:
       - registry
     depends_on:
+      - adaptor
       - registry
     networks:
       net:
@@ -65,6 +69,7 @@ services:
     links:
       - registry
     depends_on:
+      - adaptor
       - registry
     networks:
       net:
@@ -74,6 +79,7 @@ services:
     links:
       - registry
     depends_on:
+      - adaptor
       - registry
     networks:
       net:
@@ -83,6 +89,7 @@ services:
     links:
       - registry
     depends_on:
+      - adaptor
       - registry
     networks:
       net:
@@ -121,12 +128,13 @@ services:
     build: uv_light_shift
     volumes:
       - uv_light_shift-storage:/var/lib/uv_light_shift:rw
-    # links:
-    #   - influxdb
+    links:
+      - registry
+      - adaptor
     depends_on:
       - registry
       - adaptor
-
+    
     networks:
       net:
         ipv4_address: 192.68.0.32

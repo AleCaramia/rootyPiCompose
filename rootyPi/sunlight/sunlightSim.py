@@ -41,7 +41,7 @@ class SunlightSimulator:
 
 class MyPublisher:
     def __init__(self, clientID, topic):
-        self.clientID = clientID
+        self.clientID = clientID + "sunlight"
         self.topic = topic
 		# create an instance of paho.mqtt.client
         self._paho_mqtt = PahoMQTT.Client(self.clientID, False) 
@@ -92,7 +92,7 @@ def update_simulators(simulators):
                 found = 1
         if found == 0:
             baseTopic = "RootyPy/" + plant["userId"] + "/" + plant["plantCode"]
-            sim = SunlightSimulator(sensId, baseTopic, plant["plantCode"])
+            sim = SunlightSimulator(sensId , baseTopic, plant["plantCode"])
             simulators.append(sim)
     for sim in simulators:
         found = 0
