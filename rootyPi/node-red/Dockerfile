@@ -5,7 +5,7 @@ FROM nodered/node-red:latest
 WORKDIR /usr/src/node-red
 
 # Copy settings file to the container
-COPY settings.json /data/settings.json
+COPY settings.json /data/config.json
 
 # Copy flows credentials file to the container
 COPY flows.json /data/flows.json

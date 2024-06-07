@@ -100,7 +100,8 @@ services:
       net:
         ipv4_address: 192.68.0.28
     volumes:
-      - node-red-data:/data
+      - node-red-data:/var/lib/node-red
+  
     
   env_monitoring:
     build: env_monitoring
