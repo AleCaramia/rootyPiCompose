@@ -1,6 +1,6 @@
 {
-    "ID_light_shift": "100",
-    "ID_Iamalive": "111",
+    "ID_light_shift": "lightShift",
+    "ID_Iamalive": "lightShift_alive",
     "ID3": "dev3",
     "broker": "mqtt.eclipseprojects.io",
     "port": 1883,
