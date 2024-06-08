@@ -160,8 +160,8 @@ class light_shift(object):
             req_lamp = requests.get(self.url_devices)
             req_lamp.raise_for_status()  # Verifica lo stato della risposta
             self.lamp = json.loads(req_lamp.text)
-            req_plants.raise_for_status()  # Verifica lo stato della risposta
             req_plants = requests.get(self.url_plants)
+            req_plants.raise_for_status()  # Verifica lo stato della risposta
             self.plants = json.loads(req_plants.text)
             # print("lamp: ",self.lamp)
             # print("Plants: ",self.plants)
