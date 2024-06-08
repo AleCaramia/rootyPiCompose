@@ -65,30 +65,9 @@ class EnvMonitoring(object):
                 #print(plantId)
                 userId=plant['userId']
                 plant_code=plant["plantCode"]
-                
 
                 max_lux_lamp=self.retriveMaxLuxLamp(plant_code,models)
-                #######################################
-                # lamp_intensity=plant['lampIntensity']
 
-                # time_options=json.loads((req.get(f"http://127.0.0.1:8080/GetEnvTime?user={userId}&plant={plantId}")).text)
-                # start_time=auto_time_options['start_time']
-                # end_time=auto_time_options['end_time']
-                # if "autoOptions" in plant:
-                #     if plant['autoOptions']:
-                #         auto_time_options=plant['autoOptions']
-                #         start_time=auto_time_options['auto_init']
-                #         end_time=auto_time_options['end_time']
-                #     else:
-                #         auto_time_options=self.default_time
-                #         start_time=auto_time_options['start']
-                #         end_time=auto_time_options['stop']
-                # else:
-                #     auto_time_options=self.default_time
-                #     start_time=auto_time_options['start']
-                #     end_time=auto_time_options['stop']
-                # #added time
-                # auto_time_options=plant['autoOptions']
                 start_time=plant['auto_init']
                 end_time=plant['auto_end']
 
@@ -96,7 +75,7 @@ class EnvMonitoring(object):
                 current_datetime = datetime.combine(datetime.today(), current_time)
                 start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
                 time_difference = current_datetime - start_datetime
-                hours_passed = round(time_difference.total_seconds() / 3600)
+                hours_passed = min(round(time_difference.total_seconds() / 3600),1)
 
                 end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
                 time_difference = end_datetime - start_datetime
@@ -143,9 +122,10 @@ class EnvMonitoring(object):
         #     if service['name']=="adaptor":
         #         url_adptor=service['url']
         url_adaptor=self.url_adaptor
+
         # users_plant= self.temp_users
         return plants,url_adaptor,models
-    
+        
     def retriveMaxLuxLamp(self,plant_code,models):
         vase_type=plant_code[:2]
         for model in models:
@@ -178,6 +158,7 @@ class EnvMonitoring(object):
         #me lo sono inventato io "http://localhost:8080/getStatus/{userId}/{plantId}?status=DI COSA RICHIEDO LO STATUS&duration=DI QUANDO"
         # perc_intensity_lamp=json.loads(req.get(f"http://localhost:8080/getStatus/{userId}/{plantId}?status=light_intensity&duration=1")) #da definire output
         # perc_intensity_lamp=self.temp_light_status['v']
+        print(hours_passed)
     ################################################################################
         DLI_daily_record=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=DLI&duration={hours_passed}").text)
         # DLI_daily_record=self.temp_mesure['DLI']
