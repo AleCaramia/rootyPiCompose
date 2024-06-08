@@ -1,8 +1,12 @@
 {
-    "ID": "devRootypy2",
+    "ID": "telegram_bot",
     "broker": "mqtt.eclipseprojects.io",
     "port": 1883,
     "report_sending_interval": 500,
     "user_check_interval" : 10,
-    "user_inactivity_timer" : 600
+    "user_inactivity_timer" : 600,
+    "url_registry" : "http://192.68.0.24:8081",
+    "url_report_generator" : "http://192.68.0.33:8097",
+    "iamalive_topic":"RootyPy/microservices/TelegramBot",
+    "update_time":5
 }
