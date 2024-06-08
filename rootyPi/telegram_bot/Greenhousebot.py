@@ -15,7 +15,7 @@ from io import BytesIO
 
 
 class GreenHouseBot:
-    def __init__(self, token,config_bot,configiamalive):
+    def __init__(self, token,config_bot):
         # Local token
         self.watertanklevel = 100
         self.tokenBot = token
@@ -24,11 +24,10 @@ class GreenHouseBot:
         self.interval = 1
         self.headers =  {'content-type': 'application/json; charset=UTF-8'}
         self.uservariables = {}
-        # self.registry_url = json_config_bot['url_adaptor']
-        self.registry_url = "http://192.68.0.24:8081"
-        self.report_generator_url = 'http://192.68.0.33:8097'
-        # self.url_env_monitoring = json_config_bot['url_env_monitoring']
-        self.configiamalive = configiamalive
+        self.registry_url = json_config_bot['url_registry']
+        self.report_generator_url = json_config_bot['url_report_generator']
+        self.registry_url = "http://127.0.0.1:8080"
+        self.report_generator_url = 'http://127.0.0.1:8081'
         self.ClientID =  json_config_bot['ID']
         self.broker = json_config_bot['broker']
         self.port = json_config_bot['port']
@@ -36,6 +35,8 @@ class GreenHouseBot:
         self.paho_mqtt = pahoMQTT.Client(self.ClientID,True)
         self.countdown = json_config_bot['user_inactivity_timer']                            #Value untill the user status diz is deleted to reduce the weight on the server
         self.user_check_interval = json_config_bot['user_check_interval']
+        self.iamalive_topic = json_config_bot["iamalive_topic"]
+        self.update_time = json_config_bot["update_time"]
         #Dictionaries with the function to perform after a certain specification which will be written in query_list[1]
         diz_plant = {'inventory':self.choose_plant,'add':self.add_planttoken,'back':self.manage_plant,'create':self.choose_plant_type,'change':self.change_plant_name,'choose':self.remove_old_name_add_new}  #managing plants
         diz_actions = { 'water':self.water_plant, 'ledlight':self.led_management,'reportmenu':self.set_frequency_or_generate}   #actions to take care of the plant
@@ -48,7 +49,7 @@ class GreenHouseBot:
         self.paho_mqtt.loop_start()
 
         MessageLoop(self.bot, {'chat': self.on_chat_message,'callback_query': self.on_callback_query}).run_as_thread() 
-        iamalive = Iamalive(self.configiamalive)
+        iamalive = Iamalive(self.iamalive_topic,self.update_time,self.ClientID,self.port,self.broker)
         user_checker = Active_user_checker(self.user_check_interval)
 
         
@@ -223,16 +224,16 @@ class GreenHouseBot:
         self.update_message_to_remove(msg_id,chat_ID)
 
     def get_plant_for_chatID(self, chatID):
-                
-        #plant_list = []
-        r = requests.get(self.registry_url+'/users',headers = self.headers)
-        print(f'GET request sent at {self.registry_url}/users')
+
+        plant_list = []     
+        userid = self.get_username_for_chat_ID(chatID)
+        r = requests.get(self.registry_url+'/plants',headers = self.headers)
+        print(f'GET request sent at {self.registry_url}/plants')
         output =json.loads(r.text)
         for diz in output:
-            if int(diz['chatID']) == chatID:
-                plant_list = diz['plants']
-                #for plant in diz['plants']:
-                    #plant_list.append(plant['plantId'])
+            if diz['userId'] == userid:
+                plant_list.append(diz['plantId'])
+
         
         return plant_list
 
@@ -346,7 +347,13 @@ class GreenHouseBot:
         r = requests.post(self.registry_url+'/addp',headers=self.headers,json = body)
         print(f'post request sent at {self.registry_url}/addp')
         output = json.loads(r.text)
+        self.manage_invalid_request(chat_ID,output)
         self.choose_plant(chat_ID)
+
+    def manage_invalid_request(self,chat_ID,req_output):
+        if req_output['code'] != 200:
+            msg_id = self.bot.sendMessage(chat_ID,f'{req_output['message']}')['message_id']
+            self.update_message_to_remove(msg_id,chat_ID)
 
     def add_user_first_time(self,chat_ID):
         body = {'userId' : self.uservariables[chat_ID]['name'],'password':self.uservariables[chat_ID]['pwd'],'chatID':chat_ID}
@@ -354,6 +361,7 @@ class GreenHouseBot:
         r = requests.post(self.registry_url+'/addu',headers=self.headers,json = body)
         print(f'POST request sent at \'{self.registry_url}/addu')
         output = json.loads(r.text)
+        self.manage_invalid_request(chat_ID,output)
 
     def get_username_for_chat_ID(self,chat_ID):
 
@@ -374,6 +382,7 @@ class GreenHouseBot:
         r = requests.post(self.registry_url+'/addu',headers=self.headers,json = body)
         print(f'POST request sent at \'{self.registry_url}/addu')
         output = json.loads(r.text)
+        self.manage_invalid_request(chat_ID,output)
 
     def choose_plant_type(self,chat_ID,plantname):
 
@@ -416,18 +425,8 @@ class GreenHouseBot:
         print(f'waiting for name from {chat_ID}')
 
     def eval_username(self,chat_ID,message):
-        r = requests.get(self.registry_url+'/users',headers = self.headers)
-        print(f'GET request sent at {self.registry_url}/users')
-        output = json.loads(r.text)
-        set_names = set()
-        for user in output:
-            set_names.add(user['userId'])  
-        print(set_names)
-        if message.strip() in set_names:
-            msg_id = self.bot.sendMessage(chat_ID,text =f'{message} already exists')['message_id']
-            self.remove_previous_messages(chat_ID)
-            self.update_message_to_remove(msg_id,chat_ID)
-        elif '&' in message.strip() or ';' in message.strip():
+ 
+        if '&' in message.strip() or ';' in message.strip():
             msg_id = self.bot.sendMessage(chat_ID,text =f'{message} is a invalid name contains \'&\' or \';\' ')['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
@@ -589,6 +588,7 @@ class GreenHouseBot:
         body = {"plantCode":plant_code,'new_name':newname}
         r = requests.put(self.registry_url+'/modifyPlant',headers=self.headers,json = body)
         output = json.loads(r.text)
+        self.manage_invalid_request(chat_ID,output)
         self.choose_plant(chat_ID)
         msg_id = self.bot.sendMessage(chat_ID, text=f'You changed name to {oldname} into {newname}')['message_id']
         self.remove_previous_messages(chat_ID)
@@ -834,6 +834,7 @@ class GreenHouseBot:
             body = {"plantCode":plant_code,'state':state,'init':init,'end':end}
             r = requests.put(self.registry_url+'/updateInterval',headers=self.headers,json = body)
             output = json.loads(r.text)
+            self.manage_invalid_request(chat_ID,output)
             mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":float(self.uservariables[chat_ID]['ledpercentage']) },{"n": "final_time", "u": "s", "t": time.time(), "v": end } ]}
             self.publish(f'RootyPy/{self.get_username_for_chat_ID(chat_ID)}/{self.uservariables[chat_ID]['selected_plant']}/lux_to_give/manual',json.dumps(mex_mqtt))
             print('SENT MESSAGE')
@@ -855,6 +856,7 @@ class GreenHouseBot:
         body = {"plantCode":plant_code,'state':state,'init':init,'end':end}
         r = requests.put(self.registry_url+'/updateInterval',headers=self.headers,json = body)
         output = json.loads(r.text)
+        self.manage_invalid_request(chat_ID,output)
         mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":0.0 },{"n": "final_time", "u": "s", "t": time.time(), "v":end} ]}
         self.publish(f'RootyPy/{self.get_username_for_chat_ID(chat_ID)}/{self.uservariables[chat_ID]['selected_plant']}/lux_to_give/manual',json.dumps(mex_mqtt))
         print(f'SENT MESSAGE to RootyPy/{self.get_username_for_chat_ID(chat_ID)}/{self.uservariables[chat_ID]['selected_plant']}/lux_to_give/manual')
@@ -911,21 +913,19 @@ class GreenHouseBot:
 
 class Iamalive():
 
-    def __init__(self ,config_path):
+    def __init__(self ,topic,update_time,id,port,broker):
 
-        json_config =  json.load(open(config_path,'r'))
+
         # mqtt attributes
-        self.clientID = json_config["ID"]
-        self.broker = json_config["broker"]
-        self.port = json_config["port"]
-        self.sub_topic = json_config["sub_topic"] # Rootypy/microservices/telegrambott/alive_message
-        self.pub_topic = json_config["pub_topic"]
-        self.update_time = json_config["update_time"]
+        self.clientID = id
+        self.port = port
+        self.broker = broker
+        self.pub_topic =topic
         self.paho_mqtt = pahoMQTT.Client(self.clientID,True)
         self.paho_mqtt.on_connect = self.myconnect_live
-        self.message = {"bn": "updateCatalogService","e":[{ "n": "telegram_bot", "u": "", "t": time.time(), "v":"telegram_bot" }]}
+        self.message = {"bn": "updateCatalogService","e":[{ "n": f"{id}", "u": "", "t": time.time(), "v":f"{id}" }]}
         self.starting_time = time.time()
-        self.interval = json_config["update_time"]
+        self.interval = update_time
         print('i am alive initialized')
         self.start_mqtt()
 
@@ -945,7 +945,7 @@ class Iamalive():
             self.message["e"][0]["t"]= time.time()
 
             self.publish()
-            print(f'{self.interval} seconds passed sending i am alive message at {self.pub_topic}')
+            #print(f'{self.interval} seconds passed sending i am alive message at {self.pub_topic}')
             self.starting_time = actual_time
 
     def publish(self):
@@ -986,7 +986,6 @@ if __name__ == "__main__":
 
     token = '6395900412:AAHo8suUwcEqRP1-onAvlhkoK-OaB1X7Tew'
 
-    configIamalive ="Iamalive.json"
-    config_bot = "telegram_bot_config.json"
+    config_bot = "C:\\Users\\Lenovo\\rootyPiCompose\\rootyPi\\telegram_bot\\telegram_bot_config.json"
 
-    sb=GreenHouseBot(token,config_bot,configIamalive)
+    sb=GreenHouseBot(token,config_bot)
