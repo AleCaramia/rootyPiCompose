@@ -9,5 +9,5 @@
     "adaptor_url": "http://192.68.0.25:8080",
     "registry_url": "http://192.68.0.24:8081",
     "services4db": ["moisture", "sunlight", "lampLight", "light", "lightShift", "DLI"],
-    "alive_topic": "RootyPy/adaptor"
+    "alive_topic": "RootyPy/microservices/Adaptor"
 }
