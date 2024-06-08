@@ -80,7 +80,7 @@ class Adaptor(object):
         #http://localhost:8080/getData/user1/plant1?measurament=humidity&duration=1 
         if len(uri)!=0:
             if uri[0] == "getData":
-                print(1)
+                # print(1)
                 if self.checkUserPresent(uri[1]):
                     if self.checkPlantPresent(uri[1],uri[2]): 
                         if params["measurament"] in self.possServices:
@@ -100,7 +100,7 @@ class Adaptor(object):
                                 for row in table.records:
                                     line = {"t": row.get_time().strftime("%m/%d/%Y, %H:%M:%S"), "v": row.get_value()}
                                     #print(line)
-                                    print(type(row.get_time()))
+                                    # print(type(row.get_time()))
                                     out.append(line)
                                     #out = out + (f"Time: {row.get_time().strftime("%m/%d/%Y, %H:%M:%S")}, Value: {row.get_value()}\n")
                             return json.dumps(out)
