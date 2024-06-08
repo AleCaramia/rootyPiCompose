@@ -139,6 +139,20 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.32
+
+  telegram_bot:
+    build: telegram_bot
+    volumes:
+      - telegram_bot-storage:/var/lib/telegram_bot:rw
+    links:
+      - registry
+      - adaptor
+    depends_on:
+      - registry
+      - adaptor
+    networks:
+      net:
+        ipv4_address: 192.68.0.11
 volumes:
   grafana-storage:
   influxdb-storage:
@@ -147,6 +161,7 @@ volumes:
   node-red-data:
   env_monitoring-storage:
   uv_light_shift-storage:
+  telegram_bot-storage:
 networks:
   net:
     ipam: 

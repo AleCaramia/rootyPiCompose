@@ -1,0 +1,8 @@
+{
+    "ID": "devRootypy2",
+    "broker": "mqtt.eclipseprojects.io",
+    "port": 1883,
+    "report_sending_interval": 500,
+    "user_check_interval" : 10,
+    "user_inactivity_timer" : 600
+}
