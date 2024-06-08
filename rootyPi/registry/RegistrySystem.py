@@ -345,7 +345,7 @@ class Webserver(object):
                     if state == "auto":
                         plant["auto_init"] = init
                         plant["auto_end"] = end
-                        self.write_catalog()
+                        cat.write_catalog()
                     elif state == "manual":
                         plant["manual_init"] = init
                         plant["manual_end"] = end
@@ -359,7 +359,65 @@ class Webserver(object):
             else:
                 response = {"status": "OK", "code": 200, "message": "Data updated successfully"}
             return json.dumps(response)
-            
+        elif uri[0] == 'modifyPlant':
+            body = json.loads(cherrypy.request.body.read())  # Read body data
+            cat = Catalog()
+            print(json.dumps(body))
+            plantCode = body["plantCode"]
+            newplantId = body["new_name"]
+            found = False
+            output = ""
+            for plant in cat.catalog["plants"]:
+                print(plant)
+                if plant["plantCode"] == plantCode:
+                    found = True
+                    index = self.catalog["plants"].index(plant)
+                    oldname = plant["plantId"]
+                    cat.catalog['plants'][index]['plantId'] = newplantId 
+                    owner = plant['userId']
+            for user in cat.catalog['users']:
+                if user['userId'] == owner:
+                    index = user['plants'].index(oldname)
+                    user['plants'][index] = newplantId
+            cat.write_catalog()
+            if not found:   
+                response = {"status": "NOT_OK", "code": 400, "message": "Invalid plant code"}
+            else:
+                response = {"status": "OK", "code": 200, "message": "Data updated successfully"}
+            return json.dumps(response)
+        elif uri[0] == 'setreportfrequency':
+            body = json.loads(cherrypy.request.body.read())  # Read body data
+            cat = Catalog()
+            userid = body['userId']
+            plantid = body['plantId']
+            reportf = body['report_frequency']
+            found = False
+            print(json.dumps(body))
+            for plant in cat.catalog['plants']:
+                if plant['userId'] == userid and plant['plantId'] == plantid:
+                    found = True
+                    plant['report_frequency'] = reportf
+                    cat.write_catalog()
+            if found:
+                response = {"status": "OK", "code": 200, "message": "Data updated successfully"}
+            else:
+                response = {"status": "NOT_OK", "code": 400, "message": "Invalid plant code"}        
+
+            return json.dumps(response) 
+        elif uri[0] == "transferuser":
+            body = json.loads(cherrypy.request.body.read())
+            cat = Catalog()
+            found = False
+            for user in cat.catalog['users']:
+              if user['userId'] == body['userId']:
+                  found = True
+                  user['chatID'] = body['chatID']
+                  cat.write_catalog()
+            if found:
+                response = {"status": "OK", "code": 200, "message": "Data updated successfully"}
+            else:
+                response = {"status": "NOT_OK", "code": 400, "message": "Invalid plant code"}   
+            return json.dumps(response)
             
             
 
