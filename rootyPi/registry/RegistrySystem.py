@@ -125,7 +125,8 @@ class Catalog(object):
                         "auto_init": "08:00",
                         "auto_end": "20:00",
                         "manual_init": "00:00",
-                        "manual_end": "00:00"
+                        "manual_end": "00:00",
+                        "report_frequency": "daily"
                     }
                     user["plants"].append(plant_json["plantCode"])
                     self.catalog["plants"].append(plant_res)
