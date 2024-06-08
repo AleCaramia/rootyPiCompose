@@ -1,7 +1,8 @@
 {
     "settings":{
+        "url_registry":"http://192.68.0.24:8081",
         "light":{
-            "devices":["lightSensor","lampLight"],
+            "devices":["light","lampLight"],
             "services":["EnvMonitoring","UV_light_shift"]
         }
     }

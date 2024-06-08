@@ -6233,7 +6233,8 @@
         "y": 220,
         "wires": [
             [
-                "bbb81c33a62b65ef"
+                "bbb81c33a62b65ef",
+                "0ded46267b99c174"
             ]
         ]
     },
@@ -6346,13 +6347,14 @@
         "type": "python3-function",
         "z": "420e20ab72977e1d",
         "name": "Check if service is online",
-        "func": "msg['status']='off'\nfor services in msg['services']:\n    if services['seriviceID']==msg['payload']:\n        msg['status']='on'\nreturn msg",
+        "func": "msg['status']='off'\nfor services in msg['services']:\n    if services['serviceID']==msg['payload']:\n        msg['status']='on'\nreturn msg",
         "outputs": 1,
         "x": 1110,
         "y": 220,
         "wires": [
             [
-                "937b152e971d1213"
+                "937b152e971d1213",
+                "04fc72112481032f"
             ]
         ]
     },
@@ -6381,7 +6383,7 @@
         "type": "python3-function",
         "z": "420e20ab72977e1d",
         "name": "services",
-        "func": "msg['payload']=msg['payload']['light']['services']\nreturn msg",
+        "func": "msg['payload']=msg['payload']['settings']['light']['services']\nreturn msg",
         "outputs": 1,
         "x": 500,
         "y": 220,
@@ -6790,8 +6792,7 @@
         "z": "420e20ab72977e1d",
         "name": "To online services",
         "links": [
-            "f64e64a2ef64c852",
-            "dc3f3f19f9e872e3"
+            "f64e64a2ef64c852"
         ],
         "x": 115,
         "y": 220,
@@ -6968,7 +6969,7 @@
         "type": "python3-function",
         "z": "420e20ab72977e1d",
         "name": "devices",
-        "func": "msg['payload']=msg['payload']['light']['devices']\nreturn msg",
+        "func": "msg['payload']=msg['payload']['settings']['light']['devices']\nreturn msg",
         "outputs": 1,
         "x": 500,
         "y": 520,
@@ -7102,7 +7103,7 @@
         "y": 440,
         "wires": [
             [
-                "9ecad4a435eae51c"
+                "2660ea63f92c3cb6"
             ],
             [
                 "bd3774ef9a0b0d9a",
@@ -7132,7 +7133,7 @@
         "name": "Functionality enabler",
         "func": "msg['enabled']=True\nreturn msg",
         "outputs": 1,
-        "x": 1800,
+        "x": 1860,
         "y": 400,
         "wires": [
             [
@@ -7229,9 +7230,8 @@
         "mode": "link",
         "links": [
             "1b8963dbd7cf30e6",
-            "e2c4b6bab80d9e92",
-            "12ac50748fb9d90b",
-            "bee063f204d9a0e1"
+            "bee063f204d9a0e1",
+            "e2c4b6bab80d9e92"
         ],
         "x": 2025,
         "y": 400,
@@ -7338,8 +7338,8 @@
         "links": [
             "dc3f3f19f9e872e3"
         ],
-        "x": 2305,
-        "y": 280,
+        "x": 2145,
+        "y": 400,
         "wires": [
             [
                 "89d8170855e00a85",
@@ -7363,6 +7363,96 @@
         "x": 1280,
         "y": 440,
         "wires": []
+    },
+    {
+        "id": "0ded46267b99c174",
+        "type": "debug",
+        "z": "420e20ab72977e1d",
+        "name": "debug 31",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "5e0a464632b4d942",
+        "type": "inject",
+        "z": "420e20ab72977e1d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 100,
+        "wires": [
+            [
+                "7d07b94c9d52c8c8"
+            ]
+        ]
+    },
+    {
+        "id": "04fc72112481032f",
+        "type": "debug",
+        "z": "420e20ab72977e1d",
+        "name": "debug 32",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1320,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "2660ea63f92c3cb6",
+        "type": "change",
+        "z": "420e20ab72977e1d",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "settings.settings",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1650,
+        "y": 380,
+        "wires": [
+            [
+                "9ecad4a435eae51c"
+            ]
+        ]
     },
     {
         "id": "1314dcec3ebab8b8",
@@ -7651,7 +7741,7 @@
         "type": "file in",
         "z": "8fa8102ddd6213f9",
         "name": "Read config",
-        "filename": "./data/Config_node_red.json",
+        "filename": "/data/config.json",
         "filenameType": "str",
         "format": "utf8",
         "chunk": false,
