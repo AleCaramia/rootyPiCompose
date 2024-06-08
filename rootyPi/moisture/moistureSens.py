@@ -38,7 +38,7 @@ class MoistureSens:
 
 class MyPublisher:
     def __init__(self, clientID, topic):
-        self.clientID = clientID
+        self.clientID = clientID  + "moisture"
         self.topic = topic
 		# create an instance of paho.mqtt.client
         self._paho_mqtt = PahoMQTT.Client(self.clientID, False) 
@@ -68,11 +68,12 @@ class MyPublisher:
 
     def myOnConnect (self, paho_mqtt, userdata, flags, rc):
         print ("Connected to %s with result code: %d" % (self.messageBroker, rc))
+        print("Client ID: ",self.clientID)
 
 class MySubscriber:
 	
     def __init__(self, clientID, topic):
-        self.clientID = clientID
+        self.clientID = clientID 
         self.q = Queue()
         # create an instance of paho.mqtt.client
         self._paho_mqtt = PahoMQTT.Client(clientID, False) 

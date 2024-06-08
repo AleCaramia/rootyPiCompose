@@ -105,7 +105,7 @@ class light_shift(object):
                     self.intensity = float(self.intensity)
             else: 
                 self.intensity = 0
-
+            
             if last_part == "automatic" and self.state == 0:
                 self.pub_topic = "RootyPy/"+topic_parts[1]+"/"+topic_parts[2]+"/lightShift/automatic"
                 lamp["e"][0]["v"] = self.intensity*100/self.max_lux
@@ -144,7 +144,7 @@ class light_shift(object):
         else: print(f"No lamp found for the {self.current_user} and {self.current_plant}")
 
     def myconnect(self,paho_mqtt, userdata, flags, rc):
-       print(f"ligth shift: Connected to {self.broker} with result code {rc} \n subtopic {self.sub_topic}, pubtopic {self.pub_topic}")
+       print(f"light shift: Connected to {self.broker} with result code {rc} \n subtopic {self.sub_topic}, pubtopic {self.pub_topic}")
 
     def publish(self, lamp):
        lamp=json.dumps(lamp)
@@ -152,31 +152,53 @@ class light_shift(object):
 
     
     def CodeRequest(self):
-        self.code_db=json.loads(requests.get(self.url_models)) 
-        # self.code_db = json.load(open("UV_ligth/code_db.json",'r'))
+        self.code_db=json.loads((requests.get(self.url_models)).text) 
+        # self.code_db = json.load(open("UV_light/code_db.json",'r'))
 
     def GetLamp(self):
-        self.lamp = json.loads(requests.get(self.url_devices)) 
-        self.plants = json.loads(requests.get(self.url_plants))
-        # self.lamp = json.load(open("UV_ligth/devices.json",'r'))
-        # self.plants = json.load(open("UV_ligth/temp_plants.json",'r'))
-        for lamp in self.lamp:
-            ID = lamp["deviceID"]
-            ID_split = ID.split("/")
-            plantcode = ID_split[0]
-            type = ID_split[1]
-            for plant in self.plants:
-                if plant['plantCode'] == plantcode and self.current_user == plant['userId'] and \
-                    self.current_plant == plant['plantId'] and type == "lampLight":
-                    return True
+        try:
+            req_lamp = requests.get(self.url_devices)
+            req_lamp.raise_for_status()  # Verifica lo stato della risposta
+            self.lamp = json.loads(req_lamp.text)
+            req_plants.raise_for_status()  # Verifica lo stato della risposta
+            req_plants = requests.get(self.url_plants)
+            self.plants = json.loads(req_plants.text)
+            # print("lamp: ",self.lamp)
+            # print("Plants: ",self.plants)
+            
+
+            # self.lamp = json.load(open("UV_light/devices.json",'r'))
+            # self.plants = json.load(open("UV_light/temp_plants.json",'r'))
+            for lamp in self.lamp:
+                ID = lamp["deviceID"]
+                ID_split = ID.split("/")
+                plantcode = ID_split[0]
+                type = ID_split[1]
+                # print(plant['plantCode'])
+                # print("type: ", type,"plantcode: ", plantcode)
+                # print("self.current_user: ", self.current_user,"self.current_plant: ", self.current_plant)
+
+                for plant in self.plants:
+                    # print("INplantcode: ",plant['plantCode'],"IN userID: ", plant['userId'])
+                    # print(f"{plant['plantCode']} == {plantcode}\n{self.current_user} == {plant['userId']}\
+                    #       \n{type} == {"lampLight"}\n")
+
+                    
+                    if plant['plantCode'] == plantcode and self.current_user == plant['userId'] and \
+                        type == "lampLight":
+                        print(f"Find a lamp for user {self.current_user} and plant {plantcode}")
+                        return True
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed: {e}")
+            return False
 
 
     def get_plant_jar(self):
-        self.plants = json.loads(requests.get(self.url_plants)) 
-        # self.plants = json.load(open("UV_ligth/temp_plants.json",'r'))
+        self.plants = json.loads(requests.get(self.url_plants).text) 
+        # self.plants = json.load(open("UV_light/temp_plants.json",'r'))
         for plant in self.plants:
             if plant['userId'] == self.current_user:
-                if plant['plantId'] == self.current_plant:
+                if plant['plantCode'] == self.current_plant:
                     current_code = plant['plantCode']
                     current_model = current_code[0:2]
                     self.CodeRequest()
@@ -241,7 +263,7 @@ class Iamalive(object):
         self.client.on_connect = self.myconnect
         self.message = {"bn": "updateCatalogService",\
                         "e":\
-                        [{ "n": "UV_ligth_shift", "u": "", "t": self.time, "v":"ligth_shift" }]}
+                        [{ "n": "UV_light_shift", "u": "", "t": self.time, "v":"light_shift" }]}
     
     def start_mqtt(self):
         self.client.connect(self.broker,self.port)
@@ -277,12 +299,13 @@ class AliveThread(threading.Thread):
 
 if __name__=="__main__":
 
-    config = json.load(open("config_UV_ligth.json","r"))
-
-    thread3 = Thread2(3, "Mqtt",config)
+    config = json.load(open("config_UV_light.json","r"))
+    
     print("> Starting light shift...")
+    thread3 = Thread2(3, "Mqtt",config)
     thread3.start()
 
+    print("> Starting IamAlive...")
     thread1 = AliveThread(2, "aliveThread", config)
     thread1.run()
 

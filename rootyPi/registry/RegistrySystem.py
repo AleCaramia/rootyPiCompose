@@ -11,8 +11,8 @@ P = Path(__file__).parent.absolute()
 CATALOG = P / 'catalog.json'
 SETTINGS = P / 'settings.json'
 INDEX = P / 'index.html'
-MAXDELAY_DEVICE = 30
-MAXDELAY_SERVICE = 30
+MAXDELAY_DEVICE = 60
+MAXDELAY_SERVICE = 60
 
 
 class Catalog(object):
@@ -467,7 +467,7 @@ class Second(threading.Thread):
         """Run thread."""
         cat = Catalog()
         cat.load_file()
-        sub = MySubscriber("1", self.topic, self.broker, self.mqtt_port)
+        sub = MySubscriber("registry_sub", self.topic, self.broker, self.mqtt_port)
         sub.loop_flag = 1
         sub.start()
 
