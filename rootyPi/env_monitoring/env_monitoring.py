@@ -75,7 +75,7 @@ class EnvMonitoring(object):
                 current_datetime = datetime.combine(datetime.today(), current_time)
                 start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
                 time_difference = current_datetime - start_datetime
-                hours_passed = min(round(time_difference.total_seconds() / 3600),1)
+                hours_passed = max(round(time_difference.total_seconds() / 3600),1)
 
                 end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
                 time_difference = end_datetime - start_datetime
