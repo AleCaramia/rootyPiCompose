@@ -596,11 +596,11 @@ class GreenHouseBot:
         time.sleep(2)
         self.choose_plant(chat_ID)
 
-    def get_plant_code_from_plant_name(self,userid,oldname):
+    def get_plant_code_from_plant_name(self,userid,plantname):
         r = requests.get(self.registry_url+'/plants',headers=self.headers)
         output = json.loads(r.text)
         for diz in output:
-            if diz['userId'] == userid:
+            if diz['userId'] == userid and diz[plantId] == plantname:
                 return diz['plantCode']
 
 #----------------------------------------------- removes messages from bot --------------------------------------
