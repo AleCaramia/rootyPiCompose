@@ -26,8 +26,8 @@ class GreenHouseBot:
         self.uservariables = {}
         self.registry_url = json_config_bot['url_registry']
         self.report_generator_url = json_config_bot['url_report_generator']
-        self.registry_url = "http://127.0.0.1:8080"
-        self.report_generator_url = 'http://127.0.0.1:8081'
+        #self.registry_url = "http://127.0.0.1:8080"
+        #self.report_generator_url = 'http://127.0.0.1:8081'
         self.ClientID =  json_config_bot['ID']
         self.broker = json_config_bot['broker']
         self.port = json_config_bot['port']
@@ -41,7 +41,7 @@ class GreenHouseBot:
         diz_plant = {'inventory':self.choose_plant,'add':self.add_planttoken,'back':self.manage_plant,'create':self.choose_plant_type,'change':self.change_plant_name,'choose':self.remove_old_name_add_new}  #managing plants
         diz_actions = { 'water':self.water_plant, 'ledlight':self.led_management,'reportmenu':self.set_frequency_or_generate}   #actions to take care of the plant
         diz_led = {  'setpercentage':self.set_led_percentage,'setmanualmodduration':self.set_led_manual_mode_duration,'switch':self.led_switch,'off':self.instant_switch_off,'change':self.led_change}      # control the led light
-        diz_newuser = {'confirmname':self.add_passwd,'newname':self.add_user,'confirmpwd':self.confirm_pwd,'confirmtoken':self.add_plant,'newpsw':self.add_passwd,'newtkn':self.add_planttoken,'newplantname':self.add_plant,'sign_up':self.add_user,'transferaccount':self.transfer_usern}
+        diz_newuser = {'confirmname':self.add_passwd,'newname':self.add_user,'confirmpwd':self.confirm_pwd,'confirmtoken':self.add_plant,'newpsw':self.add_passwd,'newtkn':self.add_planttoken,'newplantname':self.add_plant,'sign_up':self.add_user,'transferaccount':self.transfer_usern,'back':self. new_user_management}
         diz_removeplant = {'choose':self.remove_plant,'plantname':self.confirmed_remove_plant}
         diz_report = {'generate':self.generate_instant_report,'settings':self.set_report_frequency}
         self.diz = { 'actions':diz_actions , 'led':diz_led,'plant':diz_plant,'removeplant':diz_removeplant,'newuser':diz_newuser,'report':diz_report}     #dictionary with dictionaries
@@ -55,7 +55,8 @@ class GreenHouseBot:
         
         self.paho_mqtt.on_message = self.on_message
 
-        # self.paho_mqtt.subscribe('RootyPy/microservices/report_generator/#',2)
+        self.paho_mqtt.subscribe('RootyPy/microservices/report_generator/#',2)
+        self.paho_mqtt.subscribe('RootyPy/microservices/tank_alert/#',2)
         while True:
             time.sleep(5)
             iamalive.check_and_publish()
@@ -326,7 +327,7 @@ class GreenHouseBot:
             msg_id = self.bot.sendMessage(chat_ID,text =f'{mex} already exists')['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
-        elif '&' in mex.strip() or ';' in mex.strip():
+        elif any(char in mex.strip() for char in '&;:",/\'{}[]'):
             msg_id = self.bot.sendMessage(chat_ID,text =f'{mex} is a invalid name contains \'&\' or \';\' ')['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
@@ -386,7 +387,7 @@ class GreenHouseBot:
 
     def choose_plant_type(self,chat_ID,plantname):
 
-        buttons = [[InlineKeyboardButton(text='evergreen', callback_data=f'plant_type&evergreen&{plantname}'), InlineKeyboardButton(text='succulent', callback_data=f'plant_type&succulent&{plantname}'),InlineKeyboardButton(text=f'🔙', callback_data='plant_type&back')]]
+        buttons = [[InlineKeyboardButton(text='evergreen', callback_data=f'plant_type&evergreen&{plantname}'), InlineKeyboardButton(text='succulent', callback_data=f'plant_type&succulent&{plantname}'), InlineKeyboardButton(text='tropical', callback_data=f'plant_type&tropical&{plantname}'),InlineKeyboardButton(text='flower', callback_data=f'plant_type&flower&{plantname}'),InlineKeyboardButton(text=f'🔙', callback_data='plant_type&back')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID,text =f'choose plant type:',reply_markup=keyboard)['message_id']
         self.remove_previous_messages(chat_ID)
@@ -422,11 +423,13 @@ class GreenHouseBot:
         self.update_message_to_remove(msg_id,chat_ID)
         #self.uservariables[chat_ID]['first'] = True
         self.uservariables[chat_ID]['chatstatus'] = 'listeningforuser'
+        buttons = [[InlineKeyboardButton(text=f'back', callback_data='newuser&back')]]
+        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         print(f'waiting for name from {chat_ID}')
 
     def eval_username(self,chat_ID,message):
  
-        if '&' in message.strip() or ';' in message.strip():
+        if any(char in message.strip() for char in '&;:",/\'{}[]'):
             msg_id = self.bot.sendMessage(chat_ID,text =f'{message} is a invalid name contains \'&\' or \';\' ')['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
@@ -444,11 +447,13 @@ class GreenHouseBot:
         msg_id = self.bot.sendMessage(chat_ID, text='Choose a password')['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
+        buttons = [[InlineKeyboardButton(text=f'back', callback_data='newuser&back')]]
+        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         self.uservariables[chat_ID]['chatstatus'] = 'listeningforpwd'
         print(f'waiting for password from {chat_ID}')
 
-    def eval_pwd(self,chat_ID,message):
-        if '&' in message.strip() or ';' in message.strip():
+    def eval_pwd(self,chat_ID,message): 
+        if any(char in message.strip() for char in '&;:",/\'{}[]'):
             msg_id = self.bot.sendMessage(chat_ID,text =f'{message} is a invalid name contains \'&\' or \';\' ')['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
@@ -596,11 +601,11 @@ class GreenHouseBot:
         time.sleep(2)
         self.choose_plant(chat_ID)
 
-    def get_plant_code_from_plant_name(self,userid,oldname):
+    def get_plant_code_from_plant_name(self,userid,plantname):
         r = requests.get(self.registry_url+'/plants',headers=self.headers)
         output = json.loads(r.text)
         for diz in output:
-            if diz['userId'] == userid:
+            if diz['userId'] == userid and diz['plantId'] == plantname:
                 return diz['plantCode']
 
 #----------------------------------------------- removes messages from bot --------------------------------------
@@ -878,37 +883,59 @@ class GreenHouseBot:
     def on_message(self, client, userdata, msg):
         payload = msg.payload
         print(f"Received message on topic {msg.topic}")
+        if 'RootyPy/microservices/report_generator' in msg.topic:
+            user = msg.topic.split('/')[2]
+            plant = msg.topic.split('/')[3]
+            # If the payload is an image, display it
+            try:
+                # Decode the JSON payload
+                payload_dict = json.loads(payload.decode('utf-8'))
+                if user == 'user1':
+                    chat_ID = 6094158662
+                else:
+                    chat_ID = 6094158662
+                
+                # Extract the base64-encoded image and decode it
+                image_base64 = payload_dict['image']
+                image_data = base64.b64decode(image_base64)
+                
+                # Extract the message
+                message = payload_dict['message']
+                print(f"Message: {message}")
 
-        user = msg.topic.split('/')[2]
-        plant = msg.topic.split('/')[3]
-        # If the payload is an image, display it
-        try:
-            # Decode the JSON payload
-            payload_dict = json.loads(payload.decode('utf-8'))
-            if user == 'user1':
-                chat_ID = 6094158662
-            else:
-                chat_ID = 6094158662
-            
-            # Extract the base64-encoded image and decode it
-            image_base64 = payload_dict['image']
-            image_data = base64.b64decode(image_base64)
-            
-            # Extract the message
-            message = payload_dict['message']
-            print(f"Message: {message}")
+                # Load the image into a BytesIO stream
+                image = Image.open(BytesIO(image_data))
+                bio = BytesIO()
+                image.save(bio, format='PNG')
+                bio.seek(0)
 
-            # Load the image into a BytesIO stream
-            image = Image.open(BytesIO(image_data))
-            bio = BytesIO()
-            image.save(bio, format='PNG')
-            bio.seek(0)
+                # Send the image using the bot
+                self.bot.sendPhoto(chat_ID, bio, caption=message)
 
-            # Send the image using the bot
-            self.bot.sendPhoto(chat_ID, bio, caption=message)
+            except Exception as e:
+                print(f"Error processing message: {e}")
+        elif 'RootyPy/microservices/tank_alert' in msg.topic:
+            user = msg.topic.split('/')[2]
+            plant = msg.topic.split('/')[3]
+            try:
+                chat_ID = self.get_chatID_for_username(user)
+                self.bot.sendMessage(chat_ID,text = f'watchout tank almost empty for {plant}')   
+            except Exception as e:
+                print(f"Error processing message: {e}")
 
-        except Exception as e:
-            print(f"Error processing message: {e}")
+    def get_chatID_for_username(self,userid):
+
+        r = requests.get(self.registry_url+'/users',headers = self.headers)
+        print(f'GET request sent at \'{self.registry_url}/users')
+        output = json.loads(r.text)
+        for diz in output:
+
+            if int(diz['userId']) == userid:
+
+                usern =diz['userId']
+
+        return usern
+
 
 
 class Iamalive():
@@ -986,6 +1013,6 @@ if __name__ == "__main__":
 
     token = '6395900412:AAHo8suUwcEqRP1-onAvlhkoK-OaB1X7Tew'
 
-    config_bot = "C:\\Users\\Lenovo\\rootyPiCompose\\rootyPi\\telegram_bot\\telegram_bot_config.json"
+    config_bot = "telegram_bot_config.json"
 
     sb=GreenHouseBot(token,config_bot)
