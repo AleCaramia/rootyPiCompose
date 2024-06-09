@@ -24,10 +24,10 @@ class GreenHouseBot:
         self.interval = 1
         self.headers =  {'content-type': 'application/json; charset=UTF-8'}
         self.uservariables = {}
-        #self.registry_url = json_config_bot['url_registry']
-        #self.report_generator_url = json_config_bot['url_report_generator']
-        self.registry_url = "http://127.0.0.1:8080"
-        self.report_generator_url = 'http://127.0.0.1:8081'
+        self.registry_url = json_config_bot['url_registry']
+        self.report_generator_url = json_config_bot['url_report_generator']
+        #self.registry_url = "http://127.0.0.1:8080"
+        #self.report_generator_url = 'http://127.0.0.1:8081'
         self.ClientID =  json_config_bot['ID']
         self.broker = json_config_bot['broker']
         self.port = json_config_bot['port']
@@ -55,7 +55,8 @@ class GreenHouseBot:
         
         self.paho_mqtt.on_message = self.on_message
 
-        # self.paho_mqtt.subscribe('RootyPy/microservices/report_generator/#',2)
+        self.paho_mqtt.subscribe('RootyPy/microservices/report_generator/#',2)
+        self.paho_mqtt.subscribe('RootyPy/microservices/tank_alert/#',2)
         while True:
             time.sleep(5)
             iamalive.check_and_publish()
@@ -326,7 +327,7 @@ class GreenHouseBot:
             msg_id = self.bot.sendMessage(chat_ID,text =f'{mex} already exists')['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
-        elif '&' in mex.strip() or ';' in mex.strip():
+        elif any(char in mex.strip() for char in '&;:",/\'{}[]'):
             msg_id = self.bot.sendMessage(chat_ID,text =f'{mex} is a invalid name contains \'&\' or \';\' ')['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
@@ -428,7 +429,7 @@ class GreenHouseBot:
 
     def eval_username(self,chat_ID,message):
  
-        if '&' in message.strip() or ';' in message.strip():
+        if any(char in message.strip() for char in '&;:",/\'{}[]'):
             msg_id = self.bot.sendMessage(chat_ID,text =f'{message} is a invalid name contains \'&\' or \';\' ')['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
@@ -451,8 +452,8 @@ class GreenHouseBot:
         self.uservariables[chat_ID]['chatstatus'] = 'listeningforpwd'
         print(f'waiting for password from {chat_ID}')
 
-    def eval_pwd(self,chat_ID,message):
-        if '&' in message.strip() or ';' in message.strip():
+    def eval_pwd(self,chat_ID,message): 
+        if any(char in message.strip() for char in '&;:",/\'{}[]'):
             msg_id = self.bot.sendMessage(chat_ID,text =f'{message} is a invalid name contains \'&\' or \';\' ')['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
@@ -604,7 +605,7 @@ class GreenHouseBot:
         r = requests.get(self.registry_url+'/plants',headers=self.headers)
         output = json.loads(r.text)
         for diz in output:
-            if diz['userId'] == userid and diz[plantId] == plantname:
+            if diz['userId'] == userid and diz['plantId'] == plantname:
                 return diz['plantCode']
 
 #----------------------------------------------- removes messages from bot --------------------------------------
@@ -882,37 +883,59 @@ class GreenHouseBot:
     def on_message(self, client, userdata, msg):
         payload = msg.payload
         print(f"Received message on topic {msg.topic}")
+        if 'RootyPy/microservices/report_generator' in msg.topic:
+            user = msg.topic.split('/')[2]
+            plant = msg.topic.split('/')[3]
+            # If the payload is an image, display it
+            try:
+                # Decode the JSON payload
+                payload_dict = json.loads(payload.decode('utf-8'))
+                if user == 'user1':
+                    chat_ID = 6094158662
+                else:
+                    chat_ID = 6094158662
+                
+                # Extract the base64-encoded image and decode it
+                image_base64 = payload_dict['image']
+                image_data = base64.b64decode(image_base64)
+                
+                # Extract the message
+                message = payload_dict['message']
+                print(f"Message: {message}")
 
-        user = msg.topic.split('/')[2]
-        plant = msg.topic.split('/')[3]
-        # If the payload is an image, display it
-        try:
-            # Decode the JSON payload
-            payload_dict = json.loads(payload.decode('utf-8'))
-            if user == 'user1':
-                chat_ID = 6094158662
-            else:
-                chat_ID = 6094158662
-            
-            # Extract the base64-encoded image and decode it
-            image_base64 = payload_dict['image']
-            image_data = base64.b64decode(image_base64)
-            
-            # Extract the message
-            message = payload_dict['message']
-            print(f"Message: {message}")
+                # Load the image into a BytesIO stream
+                image = Image.open(BytesIO(image_data))
+                bio = BytesIO()
+                image.save(bio, format='PNG')
+                bio.seek(0)
 
-            # Load the image into a BytesIO stream
-            image = Image.open(BytesIO(image_data))
-            bio = BytesIO()
-            image.save(bio, format='PNG')
-            bio.seek(0)
+                # Send the image using the bot
+                self.bot.sendPhoto(chat_ID, bio, caption=message)
 
-            # Send the image using the bot
-            self.bot.sendPhoto(chat_ID, bio, caption=message)
+            except Exception as e:
+                print(f"Error processing message: {e}")
+        elif 'RootyPy/microservices/tank_alert' in msg.topic:
+            user = msg.topic.split('/')[2]
+            plant = msg.topic.split('/')[3]
+            try:
+                chat_ID = self.get_chatID_for_username(user)
+                self.bot.sendMessage(chat_ID,text = f'watchout tank almost empty for {plant}')   
+            except Exception as e:
+                print(f"Error processing message: {e}")
 
-        except Exception as e:
-            print(f"Error processing message: {e}")
+    def get_chatID_for_username(self,userid):
+
+        r = requests.get(self.registry_url+'/users',headers = self.headers)
+        print(f'GET request sent at \'{self.registry_url}/users')
+        output = json.loads(r.text)
+        for diz in output:
+
+            if int(diz['userId']) == userid:
+
+                usern =diz['userId']
+
+        return usern
+
 
 
 class Iamalive():
