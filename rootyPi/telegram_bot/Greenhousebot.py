@@ -386,7 +386,7 @@ class GreenHouseBot:
 
     def choose_plant_type(self,chat_ID,plantname):
 
-        buttons = [[InlineKeyboardButton(text='evergreen', callback_data=f'plant_type&evergreen&{plantname}'), InlineKeyboardButton(text='succulent', callback_data=f'plant_type&succulent&{plantname}'),InlineKeyboardButton(text=f'🔙', callback_data='plant_type&back')]]
+        buttons = [[InlineKeyboardButton(text='evergreen', callback_data=f'plant_type&evergreen&{plantname}'), InlineKeyboardButton(text='succulent', callback_data=f'plant_type&succulent&{plantname}'), InlineKeyboardButton(text='tropical', callback_data=f'plant_type&tropical&{plantname}'),InlineKeyboardButton(text='flower', callback_data=f'plant_type&flower&{plantname}'),InlineKeyboardButton(text=f'🔙', callback_data='plant_type&back')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID,text =f'choose plant type:',reply_markup=keyboard)['message_id']
         self.remove_previous_messages(chat_ID)
