@@ -24,8 +24,8 @@ class GreenHouseBot:
         self.interval = 1
         self.headers =  {'content-type': 'application/json; charset=UTF-8'}
         self.uservariables = {}
-        self.registry_url = json_config_bot['url_registry']
-        self.report_generator_url = json_config_bot['url_report_generator']
+        #self.registry_url = json_config_bot['url_registry']
+        #self.report_generator_url = json_config_bot['url_report_generator']
         self.registry_url = "http://127.0.0.1:8080"
         self.report_generator_url = 'http://127.0.0.1:8081'
         self.ClientID =  json_config_bot['ID']
@@ -990,6 +990,6 @@ if __name__ == "__main__":
 
     token = '6395900412:AAHo8suUwcEqRP1-onAvlhkoK-OaB1X7Tew'
 
-    config_bot = "C:\\Users\\Lenovo\\rootyPiCompose\\rootyPi\\telegram_bot\\telegram_bot_config.json"
+    config_bot = "telegram_bot_config.json"
 
     sb=GreenHouseBot(token,config_bot)
