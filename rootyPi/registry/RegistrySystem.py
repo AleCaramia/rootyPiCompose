@@ -344,10 +344,12 @@ class Webserver(object):
                 if plant["plantCode"] == plantCode:
                     found = True
                     if state == "auto":
+                        plant['state']="auto"
                         plant["auto_init"] = init
                         plant["auto_end"] = end
                         cat.write_catalog()
                     elif state == "manual":
+                        plant['state']="manual"
                         plant["manual_init"] = init
                         plant["manual_end"] = end
                         cat.write_catalog()

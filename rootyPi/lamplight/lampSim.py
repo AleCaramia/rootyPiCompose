@@ -12,12 +12,12 @@ P = Path(__file__).parent.absolute()
 SETTINGS = P / 'settings.json'
 
 class LampSimulator:
-    def __init__(self, simId,  baseTopic, plantCode):
+    def __init__(self, simId,  baseTopic, plantCode,models):
         self.simId = simId
         self.active = True
         self.isAuto = True
         self.isOn = True
-        self.maxIntensity = 1000 #lux?
+        self.maxIntensity = self.getMaxLux(models,plantCode) #lux?
         self.percentIntensity = 100
         self.pubTopic = baseTopic + "/lampLight"
         self.subTopic = baseTopic + "lightShift/+" #check with Simone
@@ -28,7 +28,20 @@ class LampSimulator:
         self.mySub = MySubscriber(self.simId + "Sub", self.subTopic)
         self.myPub.start()
         self.mySub.start()
-        
+
+    def getMaxLux(self,models,plantCode):
+        code=plantCode[0:2]
+        found=0
+        for model in models:
+            if model['model_code']==code:
+                maxIntensity=model["max_lux"]
+                found=1
+                break
+
+        if found==0:
+            maxIntensity=900
+        return maxIntensity
+
     def stop(self):
         self.mySub.stop()
         self.myPub.stop()
@@ -118,6 +131,10 @@ def update_simulators(simulators):
     url = settings["registry_url"] + "/plants"
     response = requests.get(url)
     plants = json.loads(response.text)
+
+    req_models = requests.get(settings["registry_url"] + "/models")
+    models = json.loads(req_models.text)
+
     for plant in plants:
         simId = plant["plantCode"]
         simId
@@ -127,7 +144,7 @@ def update_simulators(simulators):
                 found = 1
         if found == 0:
             baseTopic = "RootyPy/" + plant["userId"] + "/" + plant["plantCode"]
-            sim = LampSimulator(simId, baseTopic, plant["plantCode"])
+            sim = LampSimulator(simId, baseTopic, plant["plantCode"],models)
             simulators.append(sim)
     for sim in simulators:
         found = 0

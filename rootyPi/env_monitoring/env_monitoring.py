@@ -209,7 +209,7 @@ class EnvMonitoring(object):
         PPFDtot=PPFDsun+PPFDlamp
         DLIsun_hour=PPFDsun*0.0036
         DLIrecived_hour=PPFDtot*0.0036
-        print(f"DLIrecived_hour: {PPFDsun}")
+        print(f"DLIrecived_hour: {DLIrecived_hour}")
 #################################################################
         #NUOVA VERSIONE DEL CALCOLO: Adesso calcolo il deficit nella giornata fin ora       
         DLIhgoal=DLI_goal/sun_cycle
