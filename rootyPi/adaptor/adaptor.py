@@ -227,6 +227,8 @@ class MQTTreciver(threading.Thread):
         self.mqtt_port = int(data["brokerPort"])
         self.client = InfluxDBClient(url=data["url_db"], token=data["influx_token"])
         self.write_api = self.client.write_api(write_options=SYNCHRONOUS)
+        self.alive_topic = data["alive_topic"]
+        self.url = data["adaptor_url"]
 
     def run(self):
         """Run thread."""
@@ -234,10 +236,17 @@ class MQTTreciver(threading.Thread):
         print(self.topic)
         # Start subscriber.
         sub = MySubscriber("123321", self.topic, self.broker, self.mqtt_port, self.write_api)
+        print("Starting subscriber")
         sub.start()
+        self.pub = MyPublisher("322228", self.alive_topic)
+        print("Starting publisher")
+        self.pub.start()  
 
         while True:
-            time.sleep(1)
+            print("sending alive message...")
+            msg = {"bn": "updateCatalogService", "e":[{"n": "adaptor", "t": time.time(), "u": "URL", "v": self.url}]}
+            self.pub.myPublish(json.dumps(msg), self.alive_topic)
+            time.sleep(10)
 
 class MyPublisher:
     def __init__(self, clientID, topic):
@@ -286,12 +295,13 @@ class AliveThread(threading.Thread):
             print("Problem in loading settings")
         self.topic = self.settings["alive_topic"]
         self.url = self.settings["adaptor_url"]
-        self.pub = MyPublisher("pubAlive", self.topic)
-        self.pub.start()
+        
 
 
     def run(self):
-        """Run thread."""        
+        """Run thread."""    
+        self.pub = MyPublisher("322228", self.topic)
+        self.pub.start()    
         while True:
             print("sending alive message...")
             msg = {"bn": "updateCatalogService", "e":[{"n": "adaptor", "t": time.time(), "u": "URL", "v": self.url}]}
@@ -305,5 +315,5 @@ if __name__ == '__main__':
     reciver = MQTTreciver(2, "mqttReciver")
     reciver.run()
     
-    alive = AliveThread(1, "aliveThread")
-    alive.run()
+    #alive = AliveThread(1, "aliveThread")
+    #alive.run()
