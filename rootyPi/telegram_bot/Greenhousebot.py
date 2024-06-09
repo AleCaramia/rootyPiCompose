@@ -41,7 +41,7 @@ class GreenHouseBot:
         diz_plant = {'inventory':self.choose_plant,'add':self.add_planttoken,'back':self.manage_plant,'create':self.choose_plant_type,'change':self.change_plant_name,'choose':self.remove_old_name_add_new}  #managing plants
         diz_actions = { 'water':self.water_plant, 'ledlight':self.led_management,'reportmenu':self.set_frequency_or_generate}   #actions to take care of the plant
         diz_led = {  'setpercentage':self.set_led_percentage,'setmanualmodduration':self.set_led_manual_mode_duration,'switch':self.led_switch,'off':self.instant_switch_off,'change':self.led_change}      # control the led light
-        diz_newuser = {'confirmname':self.add_passwd,'newname':self.add_user,'confirmpwd':self.confirm_pwd,'confirmtoken':self.add_plant,'newpsw':self.add_passwd,'newtkn':self.add_planttoken,'newplantname':self.add_plant,'sign_up':self.add_user,'transferaccount':self.transfer_usern}
+        diz_newuser = {'confirmname':self.add_passwd,'newname':self.add_user,'confirmpwd':self.confirm_pwd,'confirmtoken':self.add_plant,'newpsw':self.add_passwd,'newtkn':self.add_planttoken,'newplantname':self.add_plant,'sign_up':self.add_user,'transferaccount':self.transfer_usern,'back':self. new_user_management}
         diz_removeplant = {'choose':self.remove_plant,'plantname':self.confirmed_remove_plant}
         diz_report = {'generate':self.generate_instant_report,'settings':self.set_report_frequency}
         self.diz = { 'actions':diz_actions , 'led':diz_led,'plant':diz_plant,'removeplant':diz_removeplant,'newuser':diz_newuser,'report':diz_report}     #dictionary with dictionaries
@@ -422,6 +422,8 @@ class GreenHouseBot:
         self.update_message_to_remove(msg_id,chat_ID)
         #self.uservariables[chat_ID]['first'] = True
         self.uservariables[chat_ID]['chatstatus'] = 'listeningforuser'
+        buttons = [[InlineKeyboardButton(text=f'back', callback_data='newuser&back')]]
+        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         print(f'waiting for name from {chat_ID}')
 
     def eval_username(self,chat_ID,message):
@@ -444,6 +446,8 @@ class GreenHouseBot:
         msg_id = self.bot.sendMessage(chat_ID, text='Choose a password')['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
+        buttons = [[InlineKeyboardButton(text=f'back', callback_data='newuser&back')]]
+        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         self.uservariables[chat_ID]['chatstatus'] = 'listeningforpwd'
         print(f'waiting for password from {chat_ID}')
 
