@@ -153,6 +153,36 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.11
+
+  MoistureMonitoring:
+    build: MoistureMonitoring
+    volumes:
+      - MoistureMonitoring-storage:/var/lib/MoistureMonitoring:rw
+    links:
+      - registry
+      - adaptor
+    depends_on:
+      - registry
+      - adaptor
+    
+    networks:
+      net:
+        ipv4_address: 192.68.0.82
+
+  water_irrigator:
+    build: water_irrigator
+    volumes:
+      - water_irrigator-storage:/var/lib/water_irrigator:rw
+    links:
+      - registry
+      - adaptor
+    depends_on:
+      - registry
+      - adaptor
+    
+    networks:
+      net:
+        ipv4_address: 192.68.0.20
 volumes:
   grafana-storage:
   influxdb-storage:
@@ -162,6 +192,8 @@ volumes:
   env_monitoring-storage:
   uv_light_shift-storage:
   telegram_bot-storage:
+  MoistureMonitoring-storage:
+  water_irrigator-storage:
 networks:
   net:
     ipam: 

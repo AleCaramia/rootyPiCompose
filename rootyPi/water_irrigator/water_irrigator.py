@@ -1,13 +1,10 @@
+import threading
 import paho.mqtt.client as mqtt
 import json
-import numpy as np
 import time
-import datetime
-import threading
 import requests
 
-class light_shift(object):
-
+class water_pump(object):
     def __init__(self , config):
         threading.Thread.__init__(self)
         self.manual_init_hour = None
@@ -16,13 +13,12 @@ class light_shift(object):
         self.current_user = None
         self.current_plant = None
         self.list_of_manual_plant = [] 
-        self.max_lux = None # 
-        # mqtt attributes
-        self.clientID = config["ID_light_shift"]
+        self.max_flow = None # 
+        self.clientID = config["ID_water_pump"]
         self.broker = config["broker"]
         self.port = config["port"]
-        self.sub_topic = config["sub_topics_light_shift"] # rooty_py/userX/plantX/function
-        self.pub_topic = config["pub_topic_light_shift"]
+        self.sub_topic = config["sub_topics_water_pump"] 
+        self.pub_topic = config["pub_topic_water_pump"]
         self.client = mqtt.Client(self.clientID, True)
         self.client.on_connect = self.myconnect
         self.client.on_message = self.mymessage
@@ -31,19 +27,16 @@ class light_shift(object):
         self.url_plants = config["url_plants"]
         self.url_models = config["url_models"]
         self.url_devices = config["url_devices"]
-        
 
     def start_mqtt(self):
         self.client.connect(self.broker,self.port)
         self.client.loop_start()
-        # Avvia il metodo self.control_state() come thread
         control_thread = threading.Thread(target=self.control_state)
         control_thread.start()
         for topic in self.sub_topic:
             self.client.subscribe(topic, 2)
 
     def control_state(self):
-
         while True:
             for j,user in enumerate(self.list_of_manual_plant):
                 if time.time() >= user["e"][3]["v"] and \
@@ -54,14 +47,12 @@ class light_shift(object):
                     del self.list_of_manual_plant[j]
             print("\nDict:\n" + str(self.list_of_manual_plant) + "\n")
             time.sleep(2)
-            
 
     def mymessage(self,paho_mqtt,userdata,msg):
-        
         mess = json.loads(msg.payload)
-        lamp = { "bn": "None","e": [
+        pump = { "bn": "None","e": [
         {
-            "n": "current_intensity",
+            "n": "mass flow rate",
             "u": "percentage",
             "t": "None",
             "v": "None"
@@ -78,97 +69,90 @@ class light_shift(object):
             "t": "None",
             "v": "None"
         }
-    ]
-}
+    ]}
         topic = msg.topic
-        topic_parts = topic.split("/")  # Dividi il topic usando il carattere "/"
-        last_part = topic_parts[-1]  # Ottieni l'ultima parte del topic
+        topic_parts = topic.split("/")  
+        last_part = topic_parts[-1]  
         self.current_user = topic_parts[1]
         self.current_plant = topic_parts[2]
         self.state = 0
-
-        self.getlamp = self.GetLamp()
-        if self.getlamp == True:
+        self.getpump = self.GetPump()
+        if self.getpump == True:
             self.get_plant_jar()
-
             for user in self.list_of_manual_plant:
                 if user["e"][1]['v'] == self.current_plant and user["e"][0]["v"] == self.current_user:
                     self.state = 1 
-            
-            self.intensity = mess['e'][0]['v']
-            # print(mess)
-            if float(self.intensity) > 0:
-                if float(self.intensity) >= self.max_lux:
-                    self.intensity = self.max_lux
+            self.flow = mess['e'][0]['v']
+            if float(self.flow) > 0:
+                if float(self.flow) >= self.max_flow:
+                    self.flow = self.max_flow
                 else:
-                    self.intensity = float(self.intensity)
+                    self.flow = float(self.flow)
             else: 
-                self.intensity = 0
-            
+                self.flow = 0
             if last_part == "automatic" and self.state == 0:
-                self.pub_topic = "RootyPy/"+topic_parts[1]+"/"+topic_parts[2]+"/lightShift/automatic"
-                lamp["e"][0]["v"] = self.intensity*100/self.max_lux
-                lamp["e"][1]["v"] = 0
-                lamp["e"][2]["v"] = 0
-                lamp["e"][0]["t"] = time.time()
-                lamp["e"][1]["t"] = time.time()
-                lamp["e"][2]["t"] = time.time()
-                lamp["bn"] = "lamp_state"
-                print("\nState of the lamp :" + str(lamp) + "\nstate = " +str(self.state) +\
-                    "\n" + str(self.pub_topic)+ "\nmax lux: " + str(self.max_lux)) # + "\ncode: "  + str(self.code_db)
-                self.publish(lamp)
-                
-
+                self.pub_topic = "RootyPy/"+topic_parts[1]+"/"+topic_parts[2]+"/waterPump/automatic"
+                pump["e"][0]["v"] = self.flow*100/self.max_flow
+                pump["e"][1]["v"] = 0
+                pump["e"][2]["v"] = 0
+                pump["e"][0]["t"] = time.time()
+                pump["e"][1]["t"] = time.time()
+                pump["e"][2]["t"] = time.time()
+                pump["bn"] = "pump_state"
+                print("\nState of the pump :" + str(pump) + "\nstate = " +str(self.state) +\
+                    "\n" + str(self.pub_topic)+ "\nmax flow: " + str(self.max_flow))
+                self.publish(pump)
             elif last_part == "manual":
-
                 self.manual_init_hour = mess["e"][1]["t"]
                 self.manual_final_hour = mess["e"][1]["v"]
-                lamp["e"][0]["v"] = self.intensity
-                lamp["e"][1]["v"] = self.manual_init_hour
-                lamp["e"][2]["v"] = self.manual_final_hour
-                lamp["e"][0]["t"] = time.time()
-                lamp["e"][1]["t"] = time.time()
-                lamp["e"][2]["t"] = time.time()
-                lamp["bn"] = "lamp_state"
-                self.check_manuals(lamp)
-                
-                
-                self.pub_topic = "RootyPy/"+topic_parts[1]+"/"+topic_parts[2]+"/lightShift/manual"
-                print("\nState of the lamp :" + str(lamp) + "\nstate = " +str(self.state) +\
-                    "\n" + str(self.pub_topic) + "\nmax lux: " + str(self.max_lux))#"\ncode: " + str(self.code_db)
-                self.publish(lamp)
-                self.pub_topic = "RootyPy/lightShift/manual_list"
+                pump["e"][0]["v"] = self.flow
+                pump["e"][1]["v"] = self.manual_init_hour
+                pump["e"][2]["v"] = self.manual_final_hour
+                pump["e"][0]["t"] = time.time()
+                pump["e"][1]["t"] = time.time()
+                pump["e"][2]["t"] = time.time()
+                pump["bn"] = "pump_state"
+                self.check_manuals(pump)
+                self.pub_topic = "RootyPy/"+topic_parts[1]+"/"+topic_parts[2]+"/waterPump/manual"
+                print("\nState of the pump :" + str(pump) + "\nstate = " +str(self.state) +\
+                    "\n" + str(self.pub_topic) + "\nmax flow: " + str(self.max_flow))
+                self.publish(pump)
+                self.pub_topic = "RootyPy/waterPump/manual_list"
                 self.publish(self.list_of_manual_plant)
-
-        else: print(f"No lamp found for the {self.current_user} and {self.current_plant}")
+        else: print(f"No pump found for the {self.current_user} and {self.current_plant}")
 
     def myconnect(self,paho_mqtt, userdata, flags, rc):
-       print(f"light shift: Connected to {self.broker} with result code {rc} \n subtopic {self.sub_topic}, pubtopic {self.pub_topic}")
+       print(f"water pump: Connected to {self.broker} with result code {rc} \n subtopic {self.sub_topic}, pubtopic {self.pub_topic}")
 
-    def publish(self, lamp):
-       lamp=json.dumps(lamp)
-       self.client.publish(self.pub_topic,lamp,2)
+    def publish(self, pump):
+       pump=json.dumps(pump)
+       self.client.publish(self.pub_topic,pump,2)
 
-    
     def CodeRequest(self):
         self.code_db=json.loads((requests.get(self.url_models)).text) 
-        # self.code_db = json.load(open("UV_light/code_db.json",'r'))
 
-    def GetLamp(self):
+        # with open("fake_catalogue.json",'r') as file:
+        #         catalogue = json.loads(file.read())
+        # self.code_db = catalogue['models']
+
+    def GetPump(self):
         try:
-            req_lamp = requests.get(self.url_devices)
-            req_lamp.raise_for_status()  # Verifica lo stato della risposta
-            self.lamp = json.loads(req_lamp.text)
+            req_pump = requests.get(self.url_devices)
+            req_pump.raise_for_status()  # Verifica lo stato della risposta
+            self.pump = json.loads(req_pump.text)
             req_plants = requests.get(self.url_plants)
             req_plants.raise_for_status()  # Verifica lo stato della risposta
             self.plants = json.loads(req_plants.text)
-            # print("lamp: ",self.lamp)
-            # print("Plants: ",self.plants)
+
+            # with open("fake_catalogue.json",'r') as file:
+            #     catalogue = json.loads(file.read())
+            # self.pump = catalogue['devices']
+            # self.plants = catalogue['plants']
             
 
-            # self.lamp = json.load(open("UV_light/devices.json",'r'))
+            # self.pump = json.load(open("UV_light/devices.json",'r'))
             # self.plants = json.load(open("UV_light/temp_plants.json",'r'))
-            for lamp in self.lamp:
+            for lamp in self.pump:
                 ID = lamp["deviceID"]
                 ID_split = ID.split("/")
                 plantcode = ID_split[0]
@@ -184,8 +168,8 @@ class light_shift(object):
 
                     
                     if plant['plantCode'] == plantcode and self.current_user == plant['userId'] and \
-                        type == "lampLight":
-                        print(f"Find a lamp for user {self.current_user} and plant {plantcode}")
+                        type == "tank":
+                        print(f"Find a pump for user {self.current_user} and plant {plantcode}")
                         return True
         except requests.exceptions.RequestException as e:
             print(f"Request failed: {e}")
@@ -193,8 +177,12 @@ class light_shift(object):
 
 
     def get_plant_jar(self):
+
         self.plants = json.loads(requests.get(self.url_plants).text) 
-        # self.plants = json.load(open("UV_light/temp_plants.json",'r'))
+        # with open("fake_catalogue.json",'r') as file:
+        #         catalogue = json.loads(file.read())
+        # self.plants = catalogue['plants']
+
         for plant in self.plants:
             if plant['userId'] == self.current_user:
                 if plant['plantCode'] == self.current_plant:
@@ -203,13 +191,13 @@ class light_shift(object):
                     self.CodeRequest()
                     for code in self.code_db:
                         if code["model_code"] == current_model:
-                            self.max_lux = code["max_lux"]
+                            self.max_flow = code["max_Flow"]
                             return
                     print(f"No plant code found for {current_model}")
         print(f"\nNo plant found for {self.current_user}/{self.current_plant}")
 
     
-    def check_manuals(self,lamp):
+    def check_manuals(self,pump):
 
         for j,user in enumerate(self.list_of_manual_plant):
             if self.current_user == user["e"][0]["v"] and self.current_plant == user["e"][1]["v"]:
@@ -220,9 +208,8 @@ class light_shift(object):
                                              { "n": "state", "u": "boleean", "t": time.time(), "v": 1 }, \
                                              { "n": "init_hour", "u": "s", "t": time.time(), "v":self.manual_init_hour }, \
                                              { "n": "final_hour", "u": "s", "t": time.time(), "v":self.manual_final_hour }, \
-                                             { "n": "current_intensity", "u": "percentage", "t": time.time(), "v":lamp["e"][0]["v"] }  \
+                                             { "n": "mass flow rate", "u": "percentage", "t": time.time(), "v":pump["e"][0]["v"] }  \
                                              ]}
-
                 return
             
         self.list_of_manual_plant.append({"bn": self.current_user + "/" + self.current_plant,\
@@ -232,10 +219,9 @@ class light_shift(object):
                                             { "n": "state", "u": "boleean", "t": time.time(), "v": 1 }, \
                                             { "n": "init_hour", "u": "s", "t": time.time(), "v":self.manual_init_hour }, \
                                             { "n": "final_hour", "u": "s", "t": time.time(), "v":self.manual_final_hour }, \
-                                            { "n": "current_intensity", "u": "percentage", "t": time.time(), "v":lamp["e"][0]["v"] }  \
+                                            { "n": "mass flow rate", "u": "percentage", "t": time.time(), "v":pump["e"][0]["v"] }  \
                                             ]})
-
-
+        
 class Thread2(threading.Thread):
     """Thread to run mqtt."""
 
@@ -243,13 +229,14 @@ class Thread2(threading.Thread):
         threading.Thread.__init__(self)
         self.ThreadID = ThreadID
         self.name = name
-        self.shift = light_shift(config)
+        self.shift = water_pump(config)
         self.shift.start_mqtt()
 
 class Iamalive(object):
     "I am alive"
 
     def __init__(self , config):
+        # threading.Thread.__init__(self)
 
         # mqtt attributes
         self.clientID = config["ID_Iamalive"]
@@ -262,12 +249,14 @@ class Iamalive(object):
         self.client.on_connect = self.myconnect
         self.message = {"bn": "updateCatalogService",\
                         "e":\
-                        [{ "n": "UV_light_shift", "u": "", "t": self.time, "v":"light_shift" }]}
+                        [{ "n": "water_irrigator", "u": "", "t": self.time, "v":"water_irrigator" }]}
     
     def start_mqtt(self):
         self.client.connect(self.broker,self.port)
         self.client.loop_start()
         # Avvia il metodo self.control_state() come thread
+        # control_thread = threading.Thread(target=self.control_state)
+        # control_thread.start()
 
 
     def myconnect(self,paho_mqtt, userdata, flags, rc):
@@ -298,15 +287,28 @@ class AliveThread(threading.Thread):
 
 if __name__=="__main__":
 
-    config = json.load(open("config_UV_light.json","r"))
+
     
-    print("> Starting light shift...")
+    config = json.load(open("config_water_irrigator.json","r"))
+    # pump = json.load(open("EnviromentMonitoring/pump.json","r"))
+    # configIamalive = json.load(open("water_irrigator/Iamalive.json","r"))
+    
+
+    # thread1 = Iamalive(1, "Iamalive",config)
+    # print("> Starting I am alive...")
+    # thread_Alive = threading.Thread(target=thread1.start_mqtt)
+    # thread_Alive.start()
+    # thread1.join()  # Wait for thread1 to finish
+    
+    # thread2 = Thread1(2, "CherryPy",pump)
+    # print("> Starting CherryPy...")
+    # thread2.start()
+
     thread3 = Thread2(3, "Mqtt",config)
+    print("> Starting light shift...")
     thread3.start()
 
-    print("> Starting IamAlive...")
     thread1 = AliveThread(2, "aliveThread", config)
     thread1.run()
 
     
-
