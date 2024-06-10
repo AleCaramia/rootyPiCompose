@@ -12,14 +12,12 @@ P = Path(__file__).parent.absolute()
 SETTINGS = P / 'settings.json'
 
 class TankSimulator:
-    def __init__(self, simId,  baseTopic, plantCode, jarVolume):
+    def __init__(self, simId,  baseTopic, plantCode, jarVolume, tankCapacity):
         self.simId = simId
         self.active = True
         self.isOn = True
-        #self.maxFlow = 1000 
-        #self.percentFlow = 100
-        self.tankCapacity = 10 #liters
-        self.tankLevel = 10 #liters
+        self.tankCapacity = tankCapacity #liters
+        self.tankLevel = tankCapacity #liters
         self.jarVolumne = jarVolume
         self.pubTopic = baseTopic + "/tank"
         self.subTopic = baseTopic + "waterPump/+" 
@@ -134,8 +132,9 @@ def update_simulators(simulators):
             for mod in models:
                 if simId.startswith(mod["model_code"]):
                     jarVolume = mod["jar_volume"]
+                    tankCapacity = mod["tank_capacity"]
             baseTopic = "RootyPy/" + plant["userId"] + "/" + plant["plantCode"]
-            sim = TankSimulator(simId, baseTopic, plant["plantCode"], jarVolume)
+            sim = TankSimulator(simId, baseTopic, plant["plantCode"], jarVolume, tankCapacity)
             simulators.append(sim)
     for sim in simulators:
         found = 0
@@ -170,9 +169,12 @@ class AllPubs(threading.Thread):
                         mess = json.loads(msg.payload)
                         litersToGive = mess["e"][0]["v"]
                 if litersToGive < sim.tankLevel:
-                    event = {"n": "tank", "u": "l/m^3", "t": str(time.time()), 
+                    event = {"n": "irrigation", "u": "l/m^3", "t": str(time.time()), 
                         "v": litersToGive/sim.jarVolume*100}
-                    out = {"bn": sim.pubTopic,"e":[event]}
+                    sim.tankLevel -= litersToGive
+                    event1 = {"n": "tankLevel", "u": "l", "t": str(time.time()), 
+                        "v": sim.tankLevel}
+                    out = {"bn": sim.pubTopic,"e":[event, event1]}
                     print(out)
                     sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
                 else:
