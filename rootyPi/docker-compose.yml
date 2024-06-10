@@ -94,6 +94,16 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.31
+  tank:
+    build: tank
+    links:
+      - registry
+    depends_on:
+      - adaptor
+      - registry
+    networks:
+      net:
+        ipv4_address: 192.68.0.77
   node-red:
     build: node-red
     environment:
