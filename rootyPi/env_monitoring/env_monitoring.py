@@ -214,7 +214,7 @@ class EnvMonitoring(object):
         #NUOVA VERSIONE DEL CALCOLO: Adesso calcolo il deficit nella giornata fin ora       
         DLIhgoal=DLI_goal/sun_cycle
         DLI_current_goal=DLIhgoal*hours_passed
-
+        print(f"DLI_current_goal: {DLI_current_goal}")
         if dli_given_today<DLI_current_goal:
             DLI_toAdd=DLI_current_goal-dli_given_today
             Lux_toAdd=DLI_toAdd/(0.0135*0.0036)

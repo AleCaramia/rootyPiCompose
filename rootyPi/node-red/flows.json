@@ -2725,7 +2725,7 @@
         "type": "python3-function",
         "z": "785f53d943d8482e",
         "name": "Read users plants",
-        "func": "import json\nuser=msg['user']\nplants=msg[\"payload\"]\n #palce holder\n#importante dire options se no non capisce\nmsg['options']=[]\nmsg['plants']=[]\nfor plant in plants:\n    ID=plant['plantId']\n    CODE=plant['plantCode']\n    if plant['userId']==user:\n        msg['options'].append(ID)\n        msg['plants'].append(plant)\n    \n\nreturn msg",
+        "func": "# Extract 'user' and 'plants' from the incoming message\nuser = msg.get('user')\nplants = msg.get(\"payload\", [])\n\n# Initialize the 'options' and 'plants' lists in the message\nmsg['options'] = []\nmsg['plants'] = []\n\n# Iterate over each plant in the plants list\nfor plant in plants:\n    # Check if the necessary keys are present in the plant dictionary\n    if 'userId' in plant and 'plantId' in plant and 'plantCode' in plant:\n        # Extract the ID and CODE from the plant dictionary\n        ID = plant['plantId']\n        CODE = plant['plantCode']\n        \n        # If the plant belongs to the user, add it to the lists\n        if plant['userId'] == user:\n            msg['options'].append(ID)\n            msg['plants'].append(plant)\n\n# Return the modified message\nreturn msg\n\n    \n",
         "outputs": 1,
         "x": 590,
         "y": 300,
@@ -3437,7 +3437,8 @@
         "y": 460,
         "wires": [
             [
-                "d92f8c29ead70dec"
+                "d92f8c29ead70dec",
+                "8d64052a2d1721b5"
             ]
         ]
     },
@@ -3446,7 +3447,7 @@
         "type": "python3-function",
         "z": "785f53d943d8482e",
         "name": "Find current plant devices",
-        "func": "online_dev=msg['payload']\nsel_plant=msg['selected_plant']\ncurrent_plant_online_dev=[]\nfor dev in online_dev:\n    plant_code,dev_type = dev['deviceID'].split('/')\n    if plant_code==sel_plant['plantCode']:\n        current_plant_online_dev.append(dev_type)\n\n\nmsg[\"current_plant_online_dev\"]=current_plant_online_dev\nreturn msg",
+        "func": "online_dev=msg.get('payload')\nsel_plant=msg.get('selected_plant')\ncurrent_plant_online_dev=[]\nfor dev in online_dev:\n    plant_code,dev_type = dev['deviceID'].split('/')\n    if plant_code==sel_plant['plantCode']:\n        current_plant_online_dev.append(dev_type)\n\n\nmsg[\"current_plant_online_dev\"]=current_plant_online_dev\nreturn msg",
         "outputs": 1,
         "x": 1950,
         "y": 460,
@@ -3551,6 +3552,23 @@
                 "516632a2a2b54cbe"
             ]
         ]
+    },
+    {
+        "id": "8d64052a2d1721b5",
+        "type": "debug",
+        "z": "785f53d943d8482e",
+        "name": "debug 36",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1680,
+        "y": 540,
+        "wires": []
     },
     {
         "id": "205746116f4c2e47",
@@ -4114,7 +4132,7 @@
         "z": "d8e05e37459eb50e",
         "g": "fe9e7ffa346a55af",
         "name": "Read users plants",
-        "func": "import json\n\nplants=msg[\"plants\"]\n #palce holder\n#importante dire options se no non capisce\nmsg['options']=[]\nfor plant in plants:\n    msg['options'].append(plant['plantId'])\n    \n\nreturn msg",
+        "func": "import json\n\nplants=msg.get(\"plants\")\n #palce holder\n#importante dire options se no non capisce\nmsg['options']=[]\nfor plant in plants:\n    msg['options'].append(plant['plantId'])\n    \n\nreturn msg",
         "outputs": 1,
         "x": 390,
         "y": 840,
@@ -5245,9 +5263,9 @@
         "width": 0,
         "height": 0,
         "gtype": "gage",
-        "title": "gauge",
-        "label": "units",
-        "format": "{{value}}",
+        "title": "Light intensity",
+        "label": "% di intensità",
+        "format": "{{msg.payload}}",
         "min": 0,
         "max": "100",
         "colors": [
@@ -6600,7 +6618,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1010,
+        "x": 930,
         "y": 1540,
         "wires": [
             [
