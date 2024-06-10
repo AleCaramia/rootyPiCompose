@@ -898,8 +898,8 @@ class GreenHouseBot:
         payload = msg.payload
         print(f"Received message on topic {msg.topic}")
         if 'RootyPy/microservices/report_generator' in msg.topic:
-            user = msg.topic.split('/')[3]
-            plant = msg.topic.split('/')[4]
+            user = msg.topic.split('/')[2]
+            plant = msg.topic.split('/')[3]
             # If the payload is an image, display it
             try:
                 # Decode the JSON payload
