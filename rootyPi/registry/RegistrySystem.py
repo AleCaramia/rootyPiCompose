@@ -102,7 +102,7 @@ class Catalog(object):
         self.load_file()
         found = 0
         foundP = 0
-        valideCode = False
+        validCode = False
         for mod in self.catalog["models"]:
             if plant_json["plantCode"].startswith(mod["model_code"]):
                 validCode = True
@@ -363,30 +363,29 @@ class Webserver(object):
                 response = {"status": "OK", "code": 200, "message": "Data updated successfully"}
             return json.dumps(response)
         elif uri[0] == 'modifyPlant':
+            print('put request received')
             body = json.loads(cherrypy.request.body.read())  # Read body data
             cat = Catalog()
+            print('catalog opened')
             print(json.dumps(body))
             plantCode = body["plantCode"]
             newplantId = body["new_name"]
             found = False
-            output = ""
+            print('starting for cycle')
             for plant in cat.catalog["plants"]:
-                print(plant)
                 if plant["plantCode"] == plantCode:
+                    print('found is true')
                     found = True
-                    index = self.catalog["plants"].index(plant)
-                    oldname = plant["plantId"]
-                    cat.catalog['plants'][index]['plantId'] = newplantId 
-                    owner = plant['userId']
-            for user in cat.catalog['users']:
-                if user['userId'] == owner:
-                    index = user['plants'].index(oldname)
-                    user['plants'][index] = newplantId
+                    index = cat.catalog["plants"].index(plant)
+                    print(f'index is {index}')
+            cat.catalog['plants'][index]['plantId'] = newplantId 
             cat.write_catalog()
+            print('catalog written')
             if not found:   
                 response = {"status": "NOT_OK", "code": 400, "message": "Invalid plant code"}
             else:
                 response = {"status": "OK", "code": 200, "message": "Data updated successfully"}
+            print(response)
             return json.dumps(response)
         elif uri[0] == 'setreportfrequency':
             body = json.loads(cherrypy.request.body.read())  # Read body data
@@ -439,9 +438,8 @@ class Webserver(object):
                 headers = {'content-type': 'application/json; charset=UTF-8'}
                 response = requests.delete(self.settings["adaptor_url"] + "/deleteUser/" + uri[1])
                 response = {"status": "OK", "code": 200}
-                return json.dumps(response)
-                
-        if uri[0] == 'rmp':
+                return json.dumps(response)           
+        elif uri[0] == 'rmp':
             cat = Catalog()
             out = cat.remove_plant(uri[1], uri[2])
             if out == "User not found":
