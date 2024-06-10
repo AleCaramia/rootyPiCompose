@@ -355,7 +355,7 @@ class GreenHouseBot:
 
     def manage_invalid_request(self,chat_ID,req_output):
         if req_output['code'] != 200:
-            msg_id = self.bot.sendMessage(chat_ID,f'{req_output['message']}')['message_id']
+            msg_id = self.bot.sendMessage(chat_ID,text = f'{req_output['message']}')['message_id']
             self.update_message_to_remove(msg_id,chat_ID)
 
     def add_user_first_time(self,chat_ID):
@@ -388,12 +388,20 @@ class GreenHouseBot:
         self.manage_invalid_request(chat_ID,output)
 
     def choose_plant_type(self,chat_ID,plantname):
-
-        buttons = [[InlineKeyboardButton(text='evergreen', callback_data=f'plant_type&evergreen&{plantname}'), InlineKeyboardButton(text='succulent', callback_data=f'plant_type&succulent&{plantname}'), InlineKeyboardButton(text='tropical', callback_data=f'plant_type&tropical&{plantname}'),InlineKeyboardButton(text='flower', callback_data=f'plant_type&flower&{plantname}'),InlineKeyboardButton(text=f'🔙', callback_data='plant_type&back')]]
+        available_plant_types = self.get_available_plant_types()
+        buttons = []
+        for pt in available_plant_types:
+            button = InlineKeyboardButton(text=pt['type'], callback_data=f'plant_type&{pt['type']}&{plantname}')
+            buttons.append(button)
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID,text =f'choose plant type:',reply_markup=keyboard)['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
+
+    def get_available_plant_types(self):
+        r = requests.get(self.registry_url+'/valid_plant_types')
+        output = json.loads(r.text)
+        return output
 
         
 
@@ -420,13 +428,14 @@ class GreenHouseBot:
             return True    
 
     def add_user(self,chat_ID):
-        msg_id = self.bot.sendMessage(chat_ID, text='Choose a username')['message_id']
-        self.remove_previous_messages(chat_ID)
-        self.update_message_to_remove(msg_id,chat_ID)
+
         #self.uservariables[chat_ID]['first'] = True
         self.uservariables[chat_ID]['chatstatus'] = 'listeningforuser'
         buttons = [[InlineKeyboardButton(text=f'back', callback_data='newuser&back')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+        msg_id = self.bot.sendMessage(chat_ID, text='Choose a username',reply_markup=keyboard)['message_id']
+        self.remove_previous_messages(chat_ID)
+        self.update_message_to_remove(msg_id,chat_ID)
         print(f'waiting for name from {chat_ID}')
 
     def eval_username(self,chat_ID,message):
@@ -446,11 +455,12 @@ class GreenHouseBot:
 
 
     def add_passwd(self,chat_ID):
-        msg_id = self.bot.sendMessage(chat_ID, text='Choose a password')['message_id']
-        self.remove_previous_messages(chat_ID)
-        self.update_message_to_remove(msg_id,chat_ID)
+
         buttons = [[InlineKeyboardButton(text=f'back', callback_data='newuser&back')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+        msg_id = self.bot.sendMessage(chat_ID, text='Choose a password',reply_markup=keyboard)['message_id']
+        self.remove_previous_messages(chat_ID)
+        self.update_message_to_remove(msg_id,chat_ID)
         self.uservariables[chat_ID]['chatstatus'] = 'listeningforpwd'
         print(f'waiting for password from {chat_ID}')
 
