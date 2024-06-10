@@ -262,8 +262,8 @@ class GreenHouseBot:
 
     def generate_instant_report(self,chat_ID):
         print(f'{chat_ID} is asking for a report')
-        r = requests.get(self.reportgenerator_url+f'/getreport/{self.uservariables[chat_ID]['selected_plant']}',headers = self.headers)
-        print(f'GET request sent at \'{self.reportgenerator_url}/getreport/{self.uservariables[chat_ID]['selected_plant']}')
+        r = requests.get(self.report_generator_url+f'/getreport/{self.uservariables[chat_ID]['selected_plant']}',headers = self.headers)
+        print(f'GET request sent at \'{self.report_generator_url}/getreport/{self.uservariables[chat_ID]['selected_plant']}')
         output = json.loads(r.text)
             # Extract the base64-encoded image and decode it
         image_base64 = output['image']
@@ -557,9 +557,10 @@ class GreenHouseBot:
 
     def confirmed_remove_plant(self,chat_ID,plantname):#*
         print(f'removing from {chat_ID} plant formerly named {plantname}')
-        body = {'input1':self.get_username_for_chat_ID(chat_ID),'input2':plantname}
-        r = requests.post(self.registry_url+'/rmp',headers = self.headers,json = body)
-        print(f'post request sent at {self.registry_url}/rmp')
+        userid = self.get_username_for_chat_ID(chat_ID)
+        plantcode = self.get_plant_code_from_plant_name(userid,plantname)
+        r = requests.delete(self.registry_url+f'/rmp/{userid}/{plantcode}',headers = self.headers)
+        print(f'delete request sent at {self.registry_url}/rmp')
         output = json.dumps(r.text)
         msg_id = self.bot.sendMessage(chat_ID,text = f"You correctly removed {plantname}")['message_id']
         self.remove_previous_messages(chat_ID)
@@ -592,6 +593,7 @@ class GreenHouseBot:
         plant_code = self.get_plant_code_from_plant_name(userid,oldname)
         body = {"plantCode":plant_code,'new_name':newname}
         r = requests.put(self.registry_url+'/modifyPlant',headers=self.headers,json = body)
+        print(f'PUT requesrr sent at {self.registry_url+'/modifyPlant'} with {body}')
         output = json.loads(r.text)
         self.manage_invalid_request(chat_ID,output)
         self.choose_plant(chat_ID)
