@@ -262,8 +262,10 @@ class GreenHouseBot:
 
     def generate_instant_report(self,chat_ID):
         print(f'{chat_ID} is asking for a report')
-        r = requests.get(self.report_generator_url+f'/getreport/{self.uservariables[chat_ID]['selected_plant']}',headers = self.headers)
-        print(f'GET request sent at \'{self.report_generator_url}/getreport/{self.uservariables[chat_ID]['selected_plant']}')
+
+        plantcode = self.get_plant_code_from_plant_name(self.get_username_for_chat_ID(chat_ID),self.uservariables[chat_ID]['selected_plant'])
+        r = requests.get(self.report_generator_url+f'/getreport/{plantcode}',headers = self.headers)
+        print(f'GET request sent at \'{self.report_generator_url}/getreport/{plantcode}')
         output = json.loads(r.text)
             # Extract the base64-encoded image and decode it
         image_base64 = output['image']
