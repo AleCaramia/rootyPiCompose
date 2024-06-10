@@ -12,20 +12,20 @@ P = Path(__file__).parent.absolute()
 SETTINGS = P / 'settings.json'
 
 class TankSimulator:
-    def __init__(self, simId,  baseTopic, plantCode):
+    def __init__(self, simId,  baseTopic, plantCode, jarVolume, tankCapacity):
         self.simId = simId
         self.active = True
-        self.isAuto = True
         self.isOn = True
-        self.maxFlow = 1000 
-        self.percentFlow = 100
+        self.tankCapacity = tankCapacity #liters
+        self.tankLevel = tankCapacity #liters
+        self.jarVolumne = jarVolume
         self.pubTopic = baseTopic + "/tank"
         self.subTopic = baseTopic + "waterPump/+" 
         self.plantCode = plantCode
         self.aliveTopic = baseTopic + "/alive"
         self.aliveBn = "updateCatalogDevice"
-        self.myPub = MyPublisher(self.simId + "Pub", self.pubTopic)
-        self.mySub = MySubscriber(self.simId + "Sub", self.subTopic)
+        self.myPub = MyPublisher(self.simId + "TankPub", self.pubTopic)
+        self.mySub = MySubscriber(self.simId + "TankSub", self.subTopic)
         self.myPub.start()
         self.mySub.start()
         
@@ -116,8 +116,11 @@ def update_simulators(simulators):
     except Exception:
         print("Problem in loading settings")
     url = settings["registry_url"] + "/plants"
+    modelsUrl = settings["registry_url"] + "/models"
     response = requests.get(url)
     plants = json.loads(response.text)
+    responseModels = requests.get(modelsUrl)
+    models = json.loads(responseModels.text)
     for plant in plants:
         simId = plant["plantCode"]
         simId
@@ -126,8 +129,12 @@ def update_simulators(simulators):
             if sim.simId == simId:
                 found = 1
         if found == 0:
+            for mod in models:
+                if simId.startswith(mod["model_code"]):
+                    jarVolume = mod["jar_volume"]
+                    tankCapacity = mod["tank_capacity"]
             baseTopic = "RootyPy/" + plant["userId"] + "/" + plant["plantCode"]
-            sim = TankSimulator(simId, baseTopic, plant["plantCode"])
+            sim = TankSimulator(simId, baseTopic, plant["plantCode"], jarVolume, tankCapacity)
             simulators.append(sim)
     for sim in simulators:
         found = 0
@@ -160,13 +167,20 @@ class AllPubs(threading.Thread):
                         continue
                     else:
                         mess = json.loads(msg.payload)
-                        sim.percentFlow = mess["e"][0]["v"]
-                event = {"n": "tank", "u": "l/m^3", "t": str(time.time()), 
-                        "v": float(sim.maxFlow*sim.percentFlow/100)}
-                out = {"bn": sim.pubTopic,"e":[event]}
-                print(out)
-                sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
-                eventAlive = {"n": sim.plantCode + "/moisture", "u": "IP", "t": str(time.time()), "v": ""}
+                        litersToGive = mess["e"][0]["v"]
+                if litersToGive < sim.tankLevel:
+                    event = {"n": "irrigation", "u": "l/m^3", "t": str(time.time()), 
+                        "v": litersToGive/sim.jarVolume*100}
+                    sim.tankLevel -= litersToGive
+                    event1 = {"n": "tankLevel", "u": "l", "t": str(time.time()), 
+                        "v": sim.tankLevel}
+                    out = {"bn": sim.pubTopic,"e":[event, event1]}
+                    print(out)
+                    sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
+                else:
+                    #send message to user to fill the tank
+                    print(f"Insufficient water in tank {sim.simId}, requested water {litersToGive}")
+                eventAlive = {"n": sim.plantCode + "/tank", "u": "IP", "t": str(time.time()), "v": ""}
                 outAlive = {"bn": sim.aliveBn,"e":[eventAlive]}
                 print(outAlive)
                 print(sim.aliveTopic)
