@@ -20,14 +20,15 @@ class Report_generator(object):
             
     exposed = True
 
-    def __init__(self,config_path):
+    def __init__(self,config_path,stop_event):
         config =  json.load(open(config_path,'r'))
         self.registry_url = config['url_registry']
-        #self.registry_url = 'http://127.0.0.1:8080'
+        self.registry_url = 'http://127.0.0.1:8080'
         self.headers = config['headers']
         self.ID = config['ID']
         self.broker = config['broker']
         self.port = config['port']
+        self.stop_event = stop_event
         self.start_web_server( )
 
     def start_web_server(self):
@@ -300,43 +301,45 @@ class Report_generator(object):
         plants = requests.get(self.registry_url+'/plants')
         plants = json.loads(plants.text)
         print(f'GET request sent at {self.registry_url+'/plants'}')
-        while True:
-            now = datetime.datetime.now()
-            #print(now)
-            current_time = now.time()
-            current_day = now.weekday()  # Monday is 0 and Sunday is 6
-
-            # Check if it's 5 PM
-            if current_time.hour == 23 and current_time.minute == 24:
-                for plant in plants:
-                    user = plant['userId']
-                    chatID = self.get_chatID_from_user(user) 
-                    if chatID == None:
-                        pass
-                    else:
-                        time_setting = plant['report_frequency']
-                        send_message = False
-                        if time_setting == "daily":
-                            duration = 24
-                            send_message = True
-                        elif time_setting == "weekly" and current_day == 6:  # Sunday
-                            send_message = True
-                            duration = 7*24
-                        elif time_setting == "two weeks" and current_day == 6:  # Handle two-week logic
-                            week_num = now.isocalendar()[1]
-                            duration = 14*24
-                            if week_num % 2 == 0:
+        try:
+            while True:
+                now = datetime.datetime.now()
+                current_time = now.time()
+                current_day = now.weekday()  # Monday is 0 and Sunday is 6
+                # Check if it's 5 PM
+                if current_time.hour == 23 and current_time.minute == 24:
+                    for plant in plants:
+                        user = plant['userId']
+                        chatID = self.get_chatID_from_user(user) 
+                        if chatID == None:
+                            pass
+                        else:
+                            time_setting = plant['report_frequency']
+                            send_message = False
+                            if time_setting == "daily":
+                                duration = 24
                                 send_message = True
-                        elif time_setting == "monthly":
-                            duration = 30*24
-                            last_day_of_month = (now.replace(day=28) + datetime.timedelta(days=4)).replace(day=1) - datetime.timedelta(days=1)
-                            if now.date() == last_day_of_month:
+                            elif time_setting == "weekly" and current_day == 6:  # Sunday
                                 send_message = True
+                                duration = 7*24
+                            elif time_setting == "two weeks" and current_day == 6:  # Handle two-week logic
+                                week_num = now.isocalendar()[1]
+                                duration = 14*24
+                                if week_num % 2 == 0:
+                                    send_message = True
+                            elif time_setting == "monthly":
+                                duration = 30*24
+                                last_day_of_month = (now.replace(day=28) + datetime.timedelta(days=4)).replace(day=1) - datetime.timedelta(days=1)
+                                if now.date() == last_day_of_month:
+                                    send_message = True
 
-                        if send_message:
-                            self.generate_report(user,plant)
-            
-                time.sleep(60)  # Check every minute
+                            if send_message:
+                                self.generate_report(user,plant)
+                
+                    time.sleep(60)  # Check every minute
+        except Exception as e:
+            print('Report generator stopped working')
+            self.stop_event.set()
 
     def generate_report(self,user,plant,instant = False):
         lux_sensor =  {"Time": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "Value": [753.28, 423.11, 598.56, 729.18, 444.72, 385.96, 301.67, 529.88, 676.92, 773.53]}
@@ -419,7 +422,7 @@ class Report_generator(object):
 
 class Iamalive(object):
 
-    def __init__(self ,config_path):
+    def __init__(self ,config_path,stop_event):
 
         json_config =  json.load(open(config_path,'r'))
         # mqtt attributes
@@ -434,6 +437,7 @@ class Iamalive(object):
         self.interval = json_config["update_time"]
         print('i am alive initialized')
         self.start_mqtt()
+        self.stop_event = stop_event
         
 
     def start_mqtt(self):
@@ -445,11 +449,12 @@ class Iamalive(object):
        print(f"report generator: Connected to {self.broker} with result code {rc}")
 
     def check_and_publish(self):
-        while True:
+        while  not self.stop_event.is_set():
             actual_time = time.time()
             #print('checking time')
             if actual_time > self.starting_time + self.interval:
                 self.publish()
+                print('sent alive message')
                 self.starting_time = actual_time
             time.sleep(5)
 
@@ -471,9 +476,10 @@ class ThreadManager:
 
 if __name__ == '__main__':
     # Initialize the objects
-    config_path = "config_report_generator.json"
-    report_generator = Report_generator(config_path)
-    iamalive = Iamalive(config_path)  # Provide the actual path to your config file
+    config_path = "C:\\Users\\Lenovo\\rootyPiCompose\\rootyPi\\report_generator\\config_report_generator.json"
+    stop_event = threading.Event()
+    report_generator = Report_generator(config_path,stop_event)
+    iamalive = Iamalive(config_path,stop_event)  # Provide the actual path to your config file
 
     # Start the threads
     thread_manager = ThreadManager(report_generator, iamalive)
