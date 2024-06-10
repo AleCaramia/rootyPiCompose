@@ -47,6 +47,14 @@
         "env": []
     },
     {
+        "id": "f2b7d1cdce5c4bfe",
+        "type": "tab",
+        "label": "Charts",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "abef47bed1338c6e",
         "type": "tab",
         "label": "Flow 2",
@@ -178,9 +186,9 @@
             "d3dd0254ee70784d",
             "f64e64a2ef64c852"
         ],
-        "x": 44,
+        "x": 34,
         "y": 159,
-        "w": 1222,
+        "w": 1232,
         "h": 222
     },
     {
@@ -218,12 +226,17 @@
             "9b04a441f222c5b5",
             "d20fab234f28a810",
             "d52ba22ad87bd43b",
-            "131030e64dc70ed7"
+            "131030e64dc70ed7",
+            "39a9451eda1333c1",
+            "fc73b3126d9de4a9",
+            "ded0127bd1ea067c",
+            "8990fc281601b01d",
+            "7bab5d2d56cf4653"
         ],
         "x": 14,
-        "y": 299,
+        "y": 259,
         "w": 2152,
-        "h": 322
+        "h": 342
     },
     {
         "id": "fe9e7ffa346a55af",
@@ -320,7 +333,8 @@
             "2772fb529fcf83ab",
             "f3d07133f7eda261",
             "4ada2e0b45349fc7",
-            "e73397e7a65b2d9c"
+            "e73397e7a65b2d9c",
+            "a841450211115ca7"
         ],
         "x": 54,
         "y": 559,
@@ -721,7 +735,7 @@
         "tab": "363a57f6eb311ab9",
         "order": 5,
         "disp": true,
-        "width": "6",
+        "width": 5,
         "collapse": true,
         "className": ""
     },
@@ -861,83 +875,74 @@
         "height": 1
     },
     {
-        "id": "7f5d59053d8489a5",
-        "type": "ui_spacer",
-        "z": "d8e05e37459eb50e",
-        "name": "spacer",
-        "group": "43a5a58f83248d8e",
-        "order": 2,
-        "width": 6,
-        "height": 1
+        "id": "b13c842165b97de9",
+        "type": "ui_group",
+        "name": "Light Charts",
+        "tab": "363a57f6eb311ab9",
+        "order": 6,
+        "disp": true,
+        "width": 10,
+        "collapse": false,
+        "className": ""
     },
     {
-        "id": "5fb91f023b2d14eb",
+        "id": "2ef2de86a10a8d2c",
         "type": "ui_spacer",
-        "z": "d8e05e37459eb50e",
+        "z": "f2b7d1cdce5c4bfe",
         "name": "spacer",
-        "group": "43a5a58f83248d8e",
-        "order": 10,
+        "group": "c846bf76c8606a05",
+        "order": 5,
         "width": 1,
         "height": 1
     },
     {
-        "id": "b4ff4b36d1dde2d5",
+        "id": "64241fcd5d3a665b",
         "type": "ui_spacer",
-        "z": "d8e05e37459eb50e",
+        "z": "f2b7d1cdce5c4bfe",
         "name": "spacer",
-        "group": "43a5a58f83248d8e",
-        "order": 12,
+        "group": "c846bf76c8606a05",
+        "order": 7,
         "width": 1,
         "height": 1
     },
     {
-        "id": "bc2b113a410bd785",
+        "id": "c92bc1868c7ac74a",
         "type": "ui_spacer",
-        "z": "d8e05e37459eb50e",
+        "z": "f2b7d1cdce5c4bfe",
         "name": "spacer",
-        "group": "8fda65c920cfe174",
-        "order": 1,
-        "width": 2,
-        "height": 1
-    },
-    {
-        "id": "ec7c1b3e5ec8e758",
-        "type": "ui_spacer",
-        "z": "d8e05e37459eb50e",
-        "name": "spacer",
-        "group": "8fda65c920cfe174",
-        "order": 3,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "7ae1a793d010f14e",
-        "type": "ui_spacer",
-        "z": "d8e05e37459eb50e",
-        "name": "spacer",
-        "group": "8fda65c920cfe174",
-        "order": 4,
-        "width": 6,
-        "height": 1
-    },
-    {
-        "id": "8c7d0c95b8e6c390",
-        "type": "ui_spacer",
-        "z": "d8e05e37459eb50e",
-        "name": "spacer",
-        "group": "8fda65c920cfe174",
+        "group": "c846bf76c8606a05",
         "order": 9,
-        "width": 3,
+        "width": 1,
         "height": 1
     },
     {
-        "id": "8592dc59748b86a1",
+        "id": "be1a0f8373bde3cb",
         "type": "ui_spacer",
-        "z": "d8e05e37459eb50e",
+        "z": "f2b7d1cdce5c4bfe",
         "name": "spacer",
-        "group": "8fda65c920cfe174",
+        "group": "c846bf76c8606a05",
         "order": 11,
-        "width": 2,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "e728389f9e3c864b",
+        "type": "ui_spacer",
+        "z": "f2b7d1cdce5c4bfe",
+        "name": "spacer",
+        "group": "43a5a58f83248d8e",
+        "order": 9,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "cfa37ae4fe636932",
+        "type": "ui_spacer",
+        "z": "f2b7d1cdce5c4bfe",
+        "name": "spacer",
+        "group": "43a5a58f83248d8e",
+        "order": 11,
+        "width": 1,
         "height": 1
     },
     {
@@ -2964,6 +2969,13 @@
                 "pt": "global",
                 "to": "selected_plant",
                 "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "settings.settings.url_registry",
+                "tot": "global"
             }
         ],
         "action": "",
@@ -2971,12 +2983,13 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1830,
-        "y": 340,
+        "x": 1720,
+        "y": 300,
         "wires": [
             [
                 "ec8467ddc25d19fa",
-                "c35503890140b023"
+                "26303b619ff2969e",
+                "26516ead26b4b223"
             ]
         ]
     },
@@ -2993,8 +3006,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 2100,
-        "y": 340,
+        "x": 1760,
+        "y": 80,
         "wires": []
     },
     {
@@ -3004,7 +3017,7 @@
         "g": "fb36f2e94f5d2da4",
         "name": "Esc",
         "group": "c846bf76c8606a05",
-        "order": 7,
+        "order": 10,
         "width": 5,
         "height": 1,
         "passthru": false,
@@ -3262,7 +3275,9 @@
         "x": 580,
         "y": 740,
         "wires": [
-            []
+            [
+                "a841450211115ca7"
+            ]
         ]
     },
     {
@@ -3272,7 +3287,7 @@
         "g": "fb36f2e94f5d2da4",
         "name": "Delete plant",
         "group": "c846bf76c8606a05",
-        "order": 5,
+        "order": 6,
         "width": 5,
         "height": 1,
         "passthru": false,
@@ -3425,7 +3440,7 @@
         "method": "GET",
         "ret": "obj",
         "paytoqs": "ignore",
-        "url": "http://192.68.0.24:8081/devices",
+        "url": "",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -3433,7 +3448,7 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 1470,
+        "x": 1710,
         "y": 460,
         "wires": [
             [
@@ -3449,7 +3464,7 @@
         "name": "Find current plant devices",
         "func": "online_dev=msg.get('payload')\nsel_plant=msg.get('selected_plant')\ncurrent_plant_online_dev=[]\nfor dev in online_dev:\n    plant_code,dev_type = dev['deviceID'].split('/')\n    if plant_code==sel_plant['plantCode']:\n        current_plant_online_dev.append(dev_type)\n\n\nmsg[\"current_plant_online_dev\"]=current_plant_online_dev\nreturn msg",
         "outputs": 1,
-        "x": 1950,
+        "x": 2170,
         "y": 460,
         "wires": [
             [
@@ -3476,7 +3491,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1700,
+        "x": 1940,
         "y": 460,
         "wires": [
             [
@@ -3503,7 +3518,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 2210,
+        "x": 2430,
         "y": 460,
         "wires": [
             [
@@ -3566,8 +3581,50 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1680,
+        "x": 1920,
         "y": 540,
+        "wires": []
+    },
+    {
+        "id": "a841450211115ca7",
+        "type": "link out",
+        "z": "785f53d943d8482e",
+        "g": "fb36f2e94f5d2da4",
+        "name": "From add new plant button",
+        "mode": "link",
+        "links": [
+            "39a9451eda1333c1"
+        ],
+        "x": 695,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "26303b619ff2969e",
+        "type": "python3-function",
+        "z": "785f53d943d8482e",
+        "name": "url for devices",
+        "func": "msg['url']=msg['url']+\"/devices\"\nreturn msg;\nreturn msg",
+        "outputs": 1,
+        "x": 1520,
+        "y": 460,
+        "wires": [
+            [
+                "c35503890140b023"
+            ]
+        ]
+    },
+    {
+        "id": "26516ead26b4b223",
+        "type": "link out",
+        "z": "785f53d943d8482e",
+        "name": "From selected plant",
+        "mode": "link",
+        "links": [
+            "fb1f65509cefabf3"
+        ],
+        "x": 1935,
+        "y": 300,
         "wires": []
     },
     {
@@ -3589,8 +3646,8 @@
         "sendOnBlur": true,
         "className": "",
         "topicType": "str",
-        "x": 170,
-        "y": 340,
+        "x": 490,
+        "y": 320,
         "wires": [
             [
                 "dd6200c65eacd514"
@@ -3612,24 +3669,13 @@
         "height": 0,
         "passthru": true,
         "multiple": false,
-        "options": [
-            {
-                "label": "Evergreen1",
-                "value": "Evergreen",
-                "type": "str"
-            },
-            {
-                "label": "Flower1",
-                "value": "Flower",
-                "type": "str"
-            }
-        ],
+        "options": [],
         "payload": "",
-        "topic": "plant_type",
-        "topicType": "str",
+        "topic": "topic",
+        "topicType": "msg",
         "className": "",
-        "x": 210,
-        "y": 440,
+        "x": 550,
+        "y": 420,
         "wires": [
             [
                 "881f8f2d6597c088"
@@ -3655,8 +3701,8 @@
         "sendOnBlur": true,
         "className": "",
         "topicType": "str",
-        "x": 170,
-        "y": 380,
+        "x": 490,
+        "y": 360,
         "wires": [
             [
                 "b5f8d6462425d98d"
@@ -3672,7 +3718,7 @@
         "func": "#msg['payload']={\n#    \"code\": msg[\"code\"],\n#    \"plantId\": msg[\"new_plantId\"],\n#    \"plant_type\": msg[\"plant_type\"]\n#};\n#plants_list=msg['plant_list']\n#new_plant=msg['new_plantId']\n#result=0\n#if new_plant and msg['code'] and msg['plant_type']:\n#    for plant in plants_list:\n#        if plant['plantId']==new_plant:\n#            result=1\n#            msg['payload']=\"The chosen plant id is alredy registered in your plant list\"\n#            break\n#else:\n#    result=2\n            \n#if result==0:\nmsg['payload']={'userId':msg['user'],'plantId':msg[\"new_plantId\"],\"plantCode\":msg[\"code\"],\"type\":msg[\"plant_type\"]}\n    \n#msg['result']=result\nreturn msg",
         "outputs": 1,
         "x": 950,
-        "y": 500,
+        "y": 480,
         "wires": [
             [
                 "2f3bc360bc7fb70a"
@@ -3694,8 +3740,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 680,
-        "y": 340,
+        "x": 1000,
+        "y": 320,
         "wires": []
     },
     {
@@ -3718,8 +3764,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 430,
-        "y": 340,
+        "x": 750,
+        "y": 320,
         "wires": [
             [
                 "71c498b1f81aa11a"
@@ -3746,8 +3792,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 420,
-        "y": 380,
+        "x": 740,
+        "y": 360,
         "wires": [
             [
                 "71c498b1f81aa11a"
@@ -3774,8 +3820,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 450,
-        "y": 440,
+        "x": 770,
+        "y": 420,
         "wires": [
             [
                 "71c498b1f81aa11a"
@@ -3796,7 +3842,7 @@
         "finalize": "",
         "libs": [],
         "x": 320,
-        "y": 520,
+        "y": 500,
         "wires": [
             [
                 "d20fab234f28a810"
@@ -3825,7 +3871,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 120,
-        "y": 520,
+        "y": 500,
         "wires": [
             [
                 "c95bca5680e5e288"
@@ -3850,7 +3896,7 @@
         "senderr": false,
         "headers": [],
         "x": 1100,
-        "y": 500,
+        "y": 480,
         "wires": [
             [
                 "aac34bcadb7ff94d"
@@ -3881,7 +3927,7 @@
         "repair": false,
         "outputs": 2,
         "x": 1410,
-        "y": 500,
+        "y": 480,
         "wires": [
             [
                 "5b3afc0e1e29be08"
@@ -3908,7 +3954,7 @@
         "topic": "",
         "name": "Succesful add",
         "x": 1600,
-        "y": 420,
+        "y": 400,
         "wires": [
             [
                 "725d4a493984679c",
@@ -3933,7 +3979,7 @@
         "topic": "",
         "name": "failed",
         "x": 1590,
-        "y": 500,
+        "y": 480,
         "wires": [
             []
         ]
@@ -3947,7 +3993,7 @@
         "func": "response=msg['payload']\nsub_status=response['status']\n\nif sub_status == \"OK\":\n    result=1\n    msg['payload']=\"Plant was added to list\"\n    \nelse:\n    result=0\n    msg['payload']=\"Could not add plant to list. Try again\"\nmsg['result']=result\nreturn msg",
         "outputs": 1,
         "x": 1270,
-        "y": 500,
+        "y": 480,
         "wires": [
             [
                 "4b6db7c16dc843c8"
@@ -3982,7 +4028,7 @@
         "to": "",
         "reg": false,
         "x": 2010,
-        "y": 340,
+        "y": 320,
         "wires": [
             []
         ]
@@ -3996,7 +4042,7 @@
         "func": "msg['payload']={'tab': 'Plant status',\n    \"tabs\": {\n        \"hide\": 'Plant registration',\n        \"show\": 'Plant status'\n    }}\nreturn msg;",
         "outputs": 1,
         "x": 1820,
-        "y": 420,
+        "y": 400,
         "wires": [
             [
                 "68126b66041a1b9f",
@@ -4012,7 +4058,7 @@
         "name": "Return to log in",
         "events": "change",
         "x": 2060,
-        "y": 420,
+        "y": 400,
         "wires": [
             []
         ]
@@ -4034,7 +4080,7 @@
         "topic": "",
         "name": "Plant already present",
         "x": 1080,
-        "y": 560,
+        "y": 540,
         "wires": [
             []
         ]
@@ -4061,7 +4107,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 90,
-        "y": 580,
+        "y": 560,
         "wires": [
             [
                 "e63f7e3449184563"
@@ -4077,7 +4123,7 @@
         "func": "msg['payload']={'tab': 'Plant status',\n    \"tabs\": {\n        \"hide\": 'Plant deletion',\n        \"show\": 'Plant status'\n    }\n}\nreturn msg;",
         "outputs": 1,
         "x": 270,
-        "y": 580,
+        "y": 560,
         "wires": [
             [
                 "b4ef7ff50fe64395"
@@ -4092,7 +4138,7 @@
         "name": "",
         "events": "all",
         "x": 460,
-        "y": 580,
+        "y": 560,
         "wires": [
             []
         ]
@@ -4486,7 +4532,7 @@
         "g": "ae0aa142fe4b8c55",
         "name": "Delete account",
         "group": "c846bf76c8606a05",
-        "order": 6,
+        "order": 8,
         "width": 5,
         "height": 1,
         "passthru": false,
@@ -4877,7 +4923,7 @@
         "mode": "link",
         "links": [],
         "x": 1715,
-        "y": 340,
+        "y": 320,
         "wires": []
     },
     {
@@ -5014,8 +5060,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 760,
-        "y": 420,
+        "x": 1080,
+        "y": 400,
         "wires": [
             [
                 "a8923480b36f5932",
@@ -5032,7 +5078,7 @@
         "func": "msg[\"result\"]=0\nif len(msg['new_plantId'])==0 or len(msg['plant_type'])==0 or len(msg['code'])==0:\n    msg[\"result\"]=1\nreturn msg",
         "outputs": 1,
         "x": 540,
-        "y": 520,
+        "y": 500,
         "wires": [
             [
                 "d52ba22ad87bd43b"
@@ -5063,7 +5109,7 @@
         "repair": false,
         "outputs": 2,
         "x": 690,
-        "y": 520,
+        "y": 500,
         "wires": [
             [
                 "aee5b849fa4bfac7",
@@ -5083,7 +5129,7 @@
         "func": "msg['payload']=\"All fields need to be filled to submit\"\nreturn msg",
         "outputs": 1,
         "x": 860,
-        "y": 560,
+        "y": 540,
         "wires": [
             [
                 "f72fae14d274ddfc"
@@ -5229,6 +5275,113 @@
         ]
     },
     {
+        "id": "39a9451eda1333c1",
+        "type": "link in",
+        "z": "d8e05e37459eb50e",
+        "g": "1167eb289c340144",
+        "name": "To plantType selection",
+        "links": [
+            "a841450211115ca7"
+        ],
+        "x": 55,
+        "y": 300,
+        "wires": [
+            [
+                "fc73b3126d9de4a9"
+            ]
+        ]
+    },
+    {
+        "id": "fc73b3126d9de4a9",
+        "type": "change",
+        "z": "d8e05e37459eb50e",
+        "g": "1167eb289c340144",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "settings.settings.url_registry",
+                "tot": "global"
+            },
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 200,
+        "y": 300,
+        "wires": [
+            [
+                "ded0127bd1ea067c"
+            ]
+        ]
+    },
+    {
+        "id": "ded0127bd1ea067c",
+        "type": "python3-function",
+        "z": "d8e05e37459eb50e",
+        "g": "1167eb289c340144",
+        "name": "Produce url valid types",
+        "func": "msg[\"url\"]=msg[\"url\"]+\"/valid_plant_types\"\nreturn msg",
+        "outputs": 1,
+        "x": 140,
+        "y": 340,
+        "wires": [
+            [
+                "8990fc281601b01d"
+            ]
+        ]
+    },
+    {
+        "id": "8990fc281601b01d",
+        "type": "http request",
+        "z": "d8e05e37459eb50e",
+        "g": "1167eb289c340144",
+        "name": "Get valid plant types",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 140,
+        "y": 380,
+        "wires": [
+            [
+                "7bab5d2d56cf4653"
+            ]
+        ]
+    },
+    {
+        "id": "7bab5d2d56cf4653",
+        "type": "python3-function",
+        "z": "d8e05e37459eb50e",
+        "g": "1167eb289c340144",
+        "name": "produce types options",
+        "func": "types=msg['payload']\nmsg['options']=[]\nfor ptype in types:\n    msg['options'].append(ptype['type'])\nreturn msg",
+        "outputs": 1,
+        "x": 300,
+        "y": 420,
+        "wires": [
+            [
+                "d2997b320dbc147d"
+            ]
+        ]
+    },
+    {
         "id": "89d8170855e00a85",
         "type": "http request",
         "z": "420e20ab72977e1d",
@@ -5286,13 +5439,13 @@
         "type": "ui_switch",
         "z": "420e20ab72977e1d",
         "name": "",
-        "label": "Manual<->Auto",
-        "tooltip": "Switch mode",
+        "label": "Mode:",
+        "tooltip": "manual<=>auto",
         "group": "43a5a58f83248d8e",
-        "order": 4,
+        "order": 3,
         "width": 3,
         "height": 1,
-        "passthru": true,
+        "passthru": false,
         "decouple": "false",
         "topic": "state",
         "topicType": "msg",
@@ -5307,7 +5460,7 @@
         "offcolor": "",
         "animate": false,
         "className": "",
-        "x": 480,
+        "x": 490,
         "y": 1200,
         "wires": [
             [
@@ -5564,20 +5717,20 @@
         "type": "ui_text_input",
         "z": "420e20ab72977e1d",
         "name": "new start time",
-        "label": "Starting time",
+        "label": "Starting time:",
         "tooltip": "",
         "group": "43a5a58f83248d8e",
-        "order": 6,
+        "order": 5,
         "width": 3,
         "height": 1,
-        "passthru": true,
+        "passthru": false,
         "mode": "time",
         "delay": 300,
         "topic": "topic",
         "sendOnBlur": true,
         "className": "",
         "topicType": "msg",
-        "x": 480,
+        "x": 600,
         "y": 1260,
         "wires": [
             [
@@ -5590,20 +5743,20 @@
         "type": "ui_text_input",
         "z": "420e20ab72977e1d",
         "name": "new end time",
-        "label": "Ending time",
+        "label": "Ending time:",
         "tooltip": "",
         "group": "43a5a58f83248d8e",
-        "order": 8,
+        "order": 7,
         "width": 3,
         "height": 1,
-        "passthru": true,
+        "passthru": false,
         "mode": "time",
         "delay": 300,
         "topic": "topic",
         "sendOnBlur": true,
         "className": "",
         "topicType": "msg",
-        "x": 470,
+        "x": 590,
         "y": 1300,
         "wires": [
             [
@@ -5616,7 +5769,7 @@
         "type": "ui_text",
         "z": "420e20ab72977e1d",
         "group": "43a5a58f83248d8e",
-        "order": 5,
+        "order": 4,
         "width": 3,
         "height": 1,
         "name": "curr mode start",
@@ -5637,7 +5790,7 @@
         "type": "ui_text",
         "z": "420e20ab72977e1d",
         "group": "43a5a58f83248d8e",
-        "order": 7,
+        "order": 6,
         "width": 3,
         "height": 1,
         "name": "curr mode end ",
@@ -5659,7 +5812,7 @@
         "z": "420e20ab72977e1d",
         "name": "submit mode change",
         "group": "43a5a58f83248d8e",
-        "order": 11,
+        "order": 10,
         "width": 4,
         "height": 1,
         "passthru": false,
@@ -5686,7 +5839,7 @@
         "type": "ui_text",
         "z": "420e20ab72977e1d",
         "group": "43a5a58f83248d8e",
-        "order": 3,
+        "order": 2,
         "width": 3,
         "height": 1,
         "name": "Current mode",
@@ -5721,7 +5874,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 710,
+        "x": 830,
         "y": 1260,
         "wires": [
             []
@@ -5746,7 +5899,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 710,
+        "x": 830,
         "y": 1300,
         "wires": [
             []
@@ -5781,10 +5934,10 @@
         "label": "Light intensity picker",
         "tooltip": "",
         "group": "43a5a58f83248d8e",
-        "order": 9,
+        "order": 8,
         "width": 0,
         "height": 0,
-        "passthru": true,
+        "passthru": false,
         "outs": "end",
         "topic": "topic",
         "topicType": "msg",
@@ -5792,7 +5945,7 @@
         "max": "100",
         "step": "5",
         "className": "",
-        "x": 500,
+        "x": 620,
         "y": 1360,
         "wires": [
             [
@@ -5819,7 +5972,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 740,
+        "x": 860,
         "y": 1360,
         "wires": [
             []
@@ -5850,15 +6003,15 @@
             "739a3e78cb7efcf5",
             "dc3f3f19f9e872e3"
         ],
-        "x": 255,
-        "y": 1320,
+        "x": 125,
+        "y": 1300,
         "wires": [
             [
                 "8fe2c4200c4ff5da",
-                "8272ab9f2f83aa74",
-                "8d762e03adc6fd2b",
-                "c3419924c6639675",
-                "e4dd6fe5aea494e0"
+                "e4dd6fe5aea494e0",
+                "2843ab6368109d23",
+                "e9cecb49144f315a",
+                "5a5d0da0b0965eef"
             ]
         ]
     },
@@ -6002,16 +6155,6 @@
                 "8fe2c4200c4ff5da"
             ]
         ]
-    },
-    {
-        "id": "4d1c085233f71f55",
-        "type": "comment",
-        "z": "420e20ab72977e1d",
-        "name": "Cose che mancano",
-        "info": "-riechiesta status corrente\n-cambio di status\n",
-        "x": 1110,
-        "y": 1220,
-        "wires": []
     },
     {
         "id": "3a15322846a367db",
@@ -6471,7 +6614,7 @@
         "type": "python3-function",
         "z": "420e20ab72977e1d",
         "name": "take last intensity mesure",
-        "func": "msg['payload']=msg['payload'][-1][\"v\"]\nreturn msg",
+        "func": "if len(msg['payload'])>0:\n    msg['payload']=msg['payload'][-1][\"v\"]\nelse:\n    msg['payload']=\"Initializing plant...\"\nreturn msg",
         "outputs": 1,
         "x": 2650,
         "y": 220,
@@ -6562,7 +6705,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 670,
+        "x": 750,
         "y": 1200,
         "wires": [
             []
@@ -6764,6 +6907,81 @@
         "x": 1060,
         "y": 1680,
         "wires": []
+    },
+    {
+        "id": "2843ab6368109d23",
+        "type": "change",
+        "z": "420e20ab72977e1d",
+        "name": "",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "start",
+                "pt": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 1260,
+        "wires": [
+            [
+                "8272ab9f2f83aa74"
+            ]
+        ]
+    },
+    {
+        "id": "e9cecb49144f315a",
+        "type": "change",
+        "z": "420e20ab72977e1d",
+        "name": "",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "end",
+                "pt": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 1300,
+        "wires": [
+            [
+                "8d762e03adc6fd2b"
+            ]
+        ]
+    },
+    {
+        "id": "5a5d0da0b0965eef",
+        "type": "change",
+        "z": "420e20ab72977e1d",
+        "name": "",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "new_light_int",
+                "pt": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 370,
+        "y": 1360,
+        "wires": [
+            [
+                "c3419924c6639675"
+            ]
+        ]
     },
     {
         "id": "1314dcec3ebab8b8",
@@ -7189,6 +7407,164 @@
         "wires": [
             [
                 "46df1d3d9b00eac4"
+            ]
+        ]
+    },
+    {
+        "id": "ef054254640742d7",
+        "type": "ui_chart",
+        "z": "f2b7d1cdce5c4bfe",
+        "name": "Last DLI mesurements",
+        "group": "b13c842165b97de9",
+        "order": 1,
+        "width": 10,
+        "height": 5,
+        "label": "DLI mesurements",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#edfe67",
+            "#f2930d",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1200,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "208073084ef84f6e",
+        "type": "http request",
+        "z": "f2b7d1cdce5c4bfe",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 770,
+        "y": 360,
+        "wires": [
+            [
+                "45777d880f5576dc",
+                "0b53aaab4d536dd5"
+            ]
+        ]
+    },
+    {
+        "id": "72721b0ff243e437",
+        "type": "change",
+        "z": "f2b7d1cdce5c4bfe",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "adaptor.route",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 360,
+        "wires": [
+            [
+                "4529fd5f59199167"
+            ]
+        ]
+    },
+    {
+        "id": "4529fd5f59199167",
+        "type": "python3-function",
+        "z": "f2b7d1cdce5c4bfe",
+        "name": "Url for chart",
+        "func": "msg['url']=f\"{msg['url']}/getData/{msg['selected_plant']['userId']}/{msg['selected_plant']['plantCode']}?measurament=DLI&duration=24\"\nreturn msg",
+        "outputs": 1,
+        "x": 590,
+        "y": 360,
+        "wires": [
+            [
+                "208073084ef84f6e"
+            ]
+        ]
+    },
+    {
+        "id": "fb1f65509cefabf3",
+        "type": "link in",
+        "z": "f2b7d1cdce5c4bfe",
+        "name": "To light chart",
+        "links": [
+            "26516ead26b4b223"
+        ],
+        "x": 255,
+        "y": 360,
+        "wires": [
+            [
+                "72721b0ff243e437"
+            ]
+        ]
+    },
+    {
+        "id": "45777d880f5576dc",
+        "type": "debug",
+        "z": "f2b7d1cdce5c4bfe",
+        "name": "debug 37",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "0b53aaab4d536dd5",
+        "type": "python3-function",
+        "z": "f2b7d1cdce5c4bfe",
+        "name": "",
+        "func": "\nlabels = []\ndata = []\ncumulative_data = []\ncumulative_sum = 0\nfor measure in msg['payload']:\n    labels.append(measure['t'])\n    data.append(measure['v'])\n    cumulative_sum += measure['v']\n    cumulative_data.append(cumulative_sum)\n\nmsg['payload'] = [{\n    \"series\": [\"DLI per hour\",\"cumulative DLI\"],\n    \"data\": [data,cumulative_data],\n    \"labels\": labels\n}]\nreturn msg\n",
+        "outputs": 1,
+        "x": 970,
+        "y": 380,
+        "wires": [
+            [
+                "ef054254640742d7"
             ]
         ]
     },

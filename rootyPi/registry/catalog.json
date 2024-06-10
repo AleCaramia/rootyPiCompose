@@ -18,5 +18,27 @@
       "max_flow": 700,
       "jar_volume":2
     }
+  ],
+  "valid_plant_types": [
+    {
+      "type": "Foliage",
+      "DLI_goal": 4,
+      "moisture_goal": 500
+    },
+    {
+      "type": "Flower",
+      "DLI_goal": 10,
+      "moisture_goal": 700
+    },
+    {
+      "type": "Succulent",
+      "DLI_goal": 14,
+      "moisture_goal": 500
+    },
+    {
+      "type": "Fruit",
+      "DLI_goal": 25,
+      "moisture_goal": 500
+    }
   ]
 }

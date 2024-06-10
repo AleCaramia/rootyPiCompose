@@ -277,6 +277,8 @@ class Webserver(object):
                 return json.dumps(cat.catalog["models"])
             if uri[0] == 'plants':
                 return json.dumps(cat.catalog["plants"])
+            if uri[0] == 'valid_plant_types':
+                return json.dumps(cat.catalog["valid_plant_types"])
         
 
     def POST(self, *uri, **params):

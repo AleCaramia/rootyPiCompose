@@ -16,7 +16,7 @@ class EnvMonitoring(object):
         self.port=settings['port']
         self.broker=settings['broker']
         self.clientID=settings['ID']
-        self.goals=settings["DlI_goals"]
+        #self.goals=settings["DlI_goals"]
         self.default_time=settings['default_time']
         
         ###
@@ -56,7 +56,7 @@ class EnvMonitoring(object):
     def MyPublish(self):
 
         # users_plant=json.loads(req.get("http://localhost:8080/getUsers")) #http://localhost:8080/getData/user1?measurament=humidity&duration=1
-        plants,url_adptor,models=self.RequestsToRegistry() 
+        plants,url_adptor,models,valid_plant_types=self.RequestsToRegistry() 
         
         for plant in plants:
                 
@@ -81,7 +81,7 @@ class EnvMonitoring(object):
                 time_difference = end_datetime - start_datetime
                 suncycle = round(time_difference.total_seconds() / 3600)
 
-                lux_to_add,dli_recived_past_hour=self.PlantLuxEstimation(url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp)
+                lux_to_add,dli_recived_past_hour=self.PlantLuxEstimation(url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp,valid_plant_types)
                 current_msg=self.__message.copy()
                 
                 current_topic=f"{self.base_topic}/{userId}/{plant_code}/lux_to_give/automatic"
@@ -117,14 +117,18 @@ class EnvMonitoring(object):
   
         plants=json.loads(response.text)
         models=json.loads((req.get(f"{self.url_registry}/models")).text)
-        active_services=json.loads(req.get(f"{self.url_registry}/services").text)
+        
+        valid_plant_types=json.loads((req.get(f"{self.url_registry}/valid_plant_types")).text)
+
+        # active_services=json.loads(req.get(f"{self.url_registry}/services").text)
         # for service in active_services:
         #     if service['name']=="adaptor":
-        #         url_adptor=service['url']
+        #         url_adaptor=service['url']
+        #         break
         url_adaptor=self.url_adaptor
 
         # users_plant= self.temp_users
-        return plants,url_adaptor,models
+        return plants,url_adaptor,models,valid_plant_types
         
     def retriveMaxLuxLamp(self,plant_code,models):
         vase_type=plant_code[:2]
@@ -134,7 +138,7 @@ class EnvMonitoring(object):
                 break
         return max_lux_lamp
 
-    def PlantLuxEstimation(self,url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp):               
+    def PlantLuxEstimation(self,url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp,valid_plant_types):               
         
 
         # Devo fare una request per sapere la misurazione della pianta (nome misurazione place holder)
@@ -143,7 +147,7 @@ class EnvMonitoring(object):
         #ipotizzando siano lux al secondo e siano in un vettore
         # lux_past_hour=self.LuxPastHour(mesurements_past_hour)
         lux_past_hour,mean_lamp_intensity,dli_given_today=self.LuxPastHour(mesurements_past_hour,lamp_intensity_past_hour,DLI_daily_record)  
-        current_plant_goal=self.goals[plant_type]
+        current_plant_goal=self.PlantGoal(plant_type,valid_plant_types)
 
         lux_to_add,dli_recived_past_hour=self.LuxDeficitCalculation(current_plant_goal,suncycle,lux_past_hour,mean_lamp_intensity,dli_given_today,hours_passed,max_lux_lamp)
     
@@ -153,7 +157,7 @@ class EnvMonitoring(object):
         #print(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=light&duration=1").text)
         
         mesurements_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=light&duration=1").text)
-        lamp_intensity_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=lightShift&duration=1").text)
+        lamp_intensity_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=current_intensity&duration=1").text)
         # mesurements_past_hour=self.temp_mesure['light']
         #me lo sono inventato io "http://localhost:8080/getStatus/{userId}/{plantId}?status=DI COSA RICHIEDO LO STATUS&duration=DI QUANDO"
         # perc_intensity_lamp=json.loads(req.get(f"http://localhost:8080/getStatus/{userId}/{plantId}?status=light_intensity&duration=1")) #da definire output
@@ -190,9 +194,11 @@ class EnvMonitoring(object):
 
         return lux_past_hour,mean_light_intensity,dli_given_today
     
-    def PlantGoal(self,plant_type):
-        if plant_type in self.goals.keys():
-            current_plant_goal=self.goals[plant_type]
+    def PlantGoal(self,plant_type,valid_plant_types):
+        for ptype in valid_plant_types:
+
+            if plant_type in ptype['type']:
+                current_plant_goal=ptype['DLI_goal']
 
         return current_plant_goal
     
