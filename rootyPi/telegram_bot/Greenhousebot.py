@@ -898,8 +898,8 @@ class GreenHouseBot:
         payload = msg.payload
         print(f"Received message on topic {msg.topic}")
         if 'RootyPy/microservices/report_generator' in msg.topic:
-            user = msg.topic.split('/')[2]
-            plant = msg.topic.split('/')[3]
+            user = msg.topic.split('/')[3]
+            plant = msg.topic.split('/')[4]
             # If the payload is an image, display it
             try:
                 # Decode the JSON payload
@@ -929,8 +929,8 @@ class GreenHouseBot:
             except Exception as e:
                 print(f"Error processing message: {e}")
         elif 'RootyPy/microservices/tank_alert' in msg.topic:
-            user = msg.topic.split('/')[2]
-            plant = msg.topic.split('/')[3]
+            user = msg.topic.split('/')[3]
+            plant = msg.topic.split('/')[4]
             try:
                 chat_ID = self.get_chatID_for_username(user)
                 self.bot.sendMessage(chat_ID,text = f'watchout tank almost empty for {plant}')   
