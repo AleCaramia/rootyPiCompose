@@ -9,7 +9,6 @@ import requests
 class light_shift(object):
 
     def __init__(self , config):
-        threading.Thread.__init__(self)
         self.manual_init_hour = None
         self.manual_final_hour = None
         self.state = 0 # 0 automatic | 1 manual
@@ -97,15 +96,15 @@ class light_shift(object):
             
             self.intensity = mess['e'][0]['v']
             # print(mess)
-            if float(self.intensity) > 0:
-                if float(self.intensity) >= self.max_lux:
-                    self.intensity = self.max_lux
-                else:
-                    self.intensity = float(self.intensity)
-            else: 
-                self.intensity = 0
-            
             if last_part == "automatic" and self.state == 0:
+
+                if float(self.intensity) > 0:
+                    if float(self.intensity) >= self.max_lux:
+                        self.intensity = self.max_lux
+                    else:
+                        self.intensity = float(self.intensity)
+                else: 
+                    self.intensity = 0
                 self.pub_topic = "RootyPy/"+topic_parts[1]+"/"+topic_parts[2]+"/lightShift/automatic"
                 lamp["e"][0]["v"] = self.intensity*100/self.max_lux
                 lamp["e"][1]["v"] = 0
@@ -236,15 +235,25 @@ class light_shift(object):
                                             ]})
 
 
-class Thread2(threading.Thread):
+class run():
     """Thread to run mqtt."""
 
     def __init__(self, ThreadID, name,config):
-        threading.Thread.__init__(self)
         self.ThreadID = ThreadID
-        self.name = name
         self.shift = light_shift(config)
         self.shift.start_mqtt()
+        self.alive = Iamalive(config)
+
+    def run(self):
+        try:
+            self.alive.start_mqtt()
+            while True:
+                self.alive.publish()  
+                time.sleep(5)
+        except KeyboardInterrupt:
+                self.shift.stop()
+                self.alive.stop()
+
 
 class Iamalive(object):
     "I am alive"
@@ -281,32 +290,32 @@ class Iamalive(object):
         self.client.publish(topic=self.pub_topic,payload=__message,qos=2)
         # print("I am alive message sent")
 
-class AliveThread(threading.Thread):
-    def __init__(self, threadId, name, config):
-        threading.Thread.__init__(self)
-        self.threadId = threadId
-        self.name = name
-        self.alive = Iamalive(config)
+# class AliveThread(threading.Thread):
+#     def __init__(self, threadId, name, config):
+#         threading.Thread.__init__(self)
+#         self.threadId = threadId
+#         self.name = name
+#         self.alive = Iamalive(config)
         
 
 
-    def run(self):
-        self.alive.start_mqtt()
-        while True:
-            self.alive.publish()  
-            time.sleep(5)  
+#     def run(self):
+#         self.alive.start_mqtt()
+#         while True:
+#             self.alive.publish()  
+#             time.sleep(5)  
 
 if __name__=="__main__":
 
     config = json.load(open("config_UV_light.json","r"))
     
     print("> Starting light shift...")
-    thread3 = Thread2(3, "Mqtt",config)
-    thread3.start()
+    main = run(3, "Mqtt",config)
+    main.run()
 
-    print("> Starting IamAlive...")
-    thread1 = AliveThread(2, "aliveThread", config)
-    thread1.run()
+    # print("> Starting IamAlive...")
+    # thread1 = AliveThread(2, "aliveThread", config)
+    # thread1.run()
 
     
 

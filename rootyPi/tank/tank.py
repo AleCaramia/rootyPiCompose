@@ -170,9 +170,18 @@ class AllPubs(threading.Thread):
                         mess = json.loads(msg.payload)
                         litersToGive = mess["e"][0]["v"]
                 if litersToGive < sim.tankLevel:
-                    event = {"n": "irrigation", "u": "l", "t": str(time.time()), 
+                    event = {"n": "irrigation", "u": "VWC", "t": str(time.time()), 
                         "v": litersToGive/sim.jarVolume*100}
                     sim.tankLevel -= litersToGive
+                    event1 = {"n": "tankLevel", "u": "l", "t": str(time.time()), 
+                        "v": sim.tankLevel}
+                    out = {"bn": sim.pubTopic,"e":[event, event1]}
+                    print(out)
+                    sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
+                elif sim.tankLevel > 0 and litersToGive > sim.tankLevel:
+                    event = {"n": "irrigation", "u": "VWC", "t": str(time.time()), 
+                        "v": sim.tankLevel/sim.jarVolume*100}
+                    sim.tankLevel = 0
                     event1 = {"n": "tankLevel", "u": "l", "t": str(time.time()), 
                         "v": sim.tankLevel}
                     out = {"bn": sim.pubTopic,"e":[event, event1]}

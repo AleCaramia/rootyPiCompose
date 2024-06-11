@@ -6,7 +6,6 @@ import requests
 
 class water_pump(object):
     def __init__(self , config):
-        threading.Thread.__init__(self)
         self.manual_init_hour = None
         self.manual_final_hour = None
         self.state = 0 # 0 automatic | 1 manual
@@ -198,15 +197,26 @@ class water_pump(object):
                                             { "n": "mass flow rate", "u": "percentage", "t": time.time(), "v":pump["e"][0]["v"] }  \
                                             ]})
         
-class Thread2(threading.Thread):
+class run():
     """Thread to run mqtt."""
 
     def __init__(self, ThreadID, name,config):
-        threading.Thread.__init__(self)
         self.ThreadID = ThreadID
         self.name = name
-        self.shift = water_pump(config)
-        self.shift.start_mqtt()
+        self.water_pump = water_pump(config)
+        self.water_pump.start_mqtt()
+        self.alive = Iamalive(config)
+        self.alive.start_mqtt()
+
+
+    def run(self):
+        try:
+            while True:
+                self.alive.publish()  
+                time.sleep(5)
+        except KeyboardInterrupt:
+                self.water_pump.stop()
+                self.alive.stop()
 
 class Iamalive(object):
     "I am alive"
@@ -246,20 +256,20 @@ class Iamalive(object):
         self.client.publish(topic=self.pub_topic,payload=__message,qos=2)
         # print("I am alive message sent")
 
-class AliveThread(threading.Thread):
-    def __init__(self, threadId, name, config):
-        threading.Thread.__init__(self)
-        self.threadId = threadId
-        self.name = name
-        self.alive = Iamalive(config)
+# class AliveThread(threading.Thread):
+#     def __init__(self, threadId, name, config):
+#         threading.Thread.__init__(self)
+#         self.threadId = threadId
+#         self.name = name
+#         self.alive = Iamalive(config)
         
 
 
-    def run(self):
-        self.alive.start_mqtt()
-        while True:
-            self.alive.publish()  
-            time.sleep(5)  
+#     def run(self):
+#         self.alive.start_mqtt()
+#         while True:
+#             self.alive.publish()  
+#             time.sleep(5)  
 
 if __name__=="__main__":
 
@@ -280,11 +290,11 @@ if __name__=="__main__":
     # print("> Starting CherryPy...")
     # thread2.start()
 
-    thread3 = Thread2(3, "Mqtt",config)
+    main = run(3, "Mqtt",config)
     print("> Starting light shift...")
-    thread3.start()
+    main.run()
 
-    thread1 = AliveThread(2, "aliveThread", config)
-    thread1.run()
+    # thread1 = AliveThread(2, "aliveThread", config)
+    # thread1.run()
 
     

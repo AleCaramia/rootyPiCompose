@@ -154,9 +154,13 @@ class MoistureMonitoring(object):
         mesurements_past_hour_moisture = []
         for mesure in mesurements_past_hour:
                 mesurements_past_hour_moisture.append(mesure['v'])
-        # mean_moisture_past_hour= np.mean(mesurements_past_hour_moisture)
-        mean_moisture_past_hour = float(mesurements_past_hour_moisture[-1])
+        mean_moisture_past_hour= np.mean(mesurements_past_hour_moisture)
 
+        ##################################################################
+        ##################################################################
+        # mean_moisture_past_hour = float(mesurements_past_hour_moisture[-1])
+        ##################################################################
+        ##################################################################
         
         if self.moisture_goals - mean_moisture_past_hour > 0:
             water_to_add = (self.moisture_goals - mean_moisture_past_hour)/100 * jar_volume
@@ -185,47 +189,47 @@ class MoistureMonitoring(object):
             
 #################################################################################################################################################à
 
-class Iamalive(object):
-    "I am alive"
+# class Iamalive(object):
+#     "I am alive"
 
-    def __init__(self,settings):
+#     def __init__(self,settings):
     
 
-        # mqtt attributes
-        self.base_topic=settings['pub_topic_Iamalive']
-        self.port=settings['port']
-        self.broker=settings['broker']
-        self.clientID=settings['ID_Iamalive']
+#         # mqtt attributes
+#         self.base_topic=settings['pub_topic_Iamalive']
+#         self.port=settings['port']
+#         self.broker=settings['broker']
+#         self.clientID=settings['ID_Iamalive']
 
-        self.topic = f"{self.base_topic}/{self.clientID}"       
-        # self.pub_topic = self.clientID
+#         self.topic = f"{self.base_topic}/{self.clientID}"       
+#         # self.pub_topic = self.clientID
 
-        self.client = PahoMQTT.Client(self.clientID, True)
-        self.client.on_connect = self.myconnect
-        #########################################################################################
-        #Il message è da definire, vedere come preferisce ale
-        self.message = {"bn":"updateCatalogService","e":[{"n":"MoistureMonitoring", "t": time.time(), "v":None,"u":"IP"}]}
-        #########################################################################################à
-        self.time = time.time()
+#         self.client = PahoMQTT.Client(self.clientID, True)
+#         self.client.on_connect = self.myconnect
+#         #########################################################################################
+#         #Il message è da definire, vedere come preferisce ale
+#         self.message = {"bn":"updateCatalogService","e":[{"n":"MoistureMonitoring", "t": time.time(), "v":None,"u":"IP"}]}
+#         #########################################################################################à
+#         self.time = time.time()
     
-    def start_mqtt(self):
-        self.client.connect(self.broker,self.port)
-        self.client.loop_start()
-        # Avvia il metodo self.control_state() come thread
-        # control_thread = threading.Thread(target=self.control_state)
-        # control_thread.start()
-        # self.publish()
+#     def start_mqtt(self):
+#         self.client.connect(self.broker,self.port)
+#         self.client.loop_start()
+#         # Avvia il metodo self.control_state() come thread
+#         # control_thread = threading.Thread(target=self.control_state)
+#         # control_thread.start()
+#         # self.publish()
     
-    def myconnect(self,paho_mqtt, userdata, flags, rc):
-       print(f"AlIVE: Connected to {self.broker} with result code {rc} \n subtopic {None}, pubtopic {self.topic}")
+#     def myconnect(self,paho_mqtt, userdata, flags, rc):
+#        print(f"AlIVE: Connected to {self.broker} with result code {rc} \n subtopic {None}, pubtopic {self.topic}")
 
-    def publish(self):           
-        __message=json.dumps(self.message)
-        print(__message)
-        self.client.publish(topic=self.topic,payload=__message,qos=2)
+#     def publish(self):           
+#         __message=json.dumps(self.message)
+#         print(__message)
+#         self.client.publish(topic=self.topic,payload=__message,qos=2)
 
 ################################################################################################################################################
-class thredFunction(object): 
+class run(object): 
     def __init__(self,settings):
         
         # self.env_time="EnviromentMonitoring\envTime.json"
@@ -234,13 +238,16 @@ class thredFunction(object):
         self.function.start()
         
             # DEVO METTERE CHE NON PARTE SE L'orario corrente NON VA BENE
-    def RunThred(self):
+    def run(self):
         
         try:
+            start = time.time()
             while True:
                 # current_time = datetime.now().time()
                 # if current_time>self.start_time:
-                    self.function.MyPublish("function")
+                    if time.time()-start > 3600:
+                        self.function.MyPublish("function")
+                        start = time.time()
                     self.function.MyPublish("alive")     
                     time.sleep(15)
                 # else:
@@ -250,20 +257,20 @@ class thredFunction(object):
                 self.function.stop()
 
 
-class AliveThread(threading.Thread):
-    def __init__(self, threadId, name, config):
-        threading.Thread.__init__(self)
-        self.threadId = threadId
-        self.name = name
-        self.alive = Iamalive(config)
+# class AliveThread(threading.Thread):
+#     def __init__(self, threadId, name, config):
+#         threading.Thread.__init__(self)
+#         self.threadId = threadId
+#         self.name = name
+#         self.alive = Iamalive(config)
         
 
 
-    def run(self):
-        self.alive.start_mqtt()
-        while True:
-            self.alive.publish()  
-            time.sleep(5) 
+#     def run(self):
+#         self.alive.start_mqtt()
+#         while True:
+#             self.alive.publish()  
+#             time.sleep(5) 
 
 ##############################################################################################################################################à
 # class ThreadServer(object):
@@ -315,9 +322,9 @@ if __name__ == "__main__":
     # print("> Starting thread_server...")
     # thread_server.start()
 
-    tFunction = thredFunction(settings)
+    tFunction = run(settings)
     #thread_function = threading.Thread(target=tFunction.RunThred())
     print("> Starting thread_function...")
-    tFunction.RunThred()
+    tFunction.run()
 
 

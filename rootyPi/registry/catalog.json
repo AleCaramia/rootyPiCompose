@@ -22,7 +22,7 @@
   "valid_plant_types": [
     {
       "type": "Foliage",
-      "DLI_goal": 4,
+      "DLI_goal": 17,
       "moisture_goal": 50
     },
     {
@@ -32,7 +32,7 @@
     },
     {
       "type": "Succulent",
-      "DLI_goal": 14,
+      "DLI_goal": 50,
       "moisture_goal": 80
     },
     {
