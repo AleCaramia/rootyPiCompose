@@ -9,8 +9,8 @@ import requests
 class light_shift(object):
 
     def __init__(self , config):
-        self.manual_init_hour = None
-        self.manual_final_hour = None
+        self.manual_init_hour = 0
+        self.manual_final_hour = 0
         self.state = 0 # 0 automatic | 1 manual
         self.current_user = None
         self.current_plant = None
@@ -120,8 +120,8 @@ class light_shift(object):
 
             elif last_part == "manual":
 
-                self.manual_init_hour = mess["e"][1]["t"]
-                self.manual_final_hour = mess["e"][1]["v"]
+                self.manual_init_hour = mess["e"][1]["v"]
+                self.manual_final_hour = mess["e"][2]["v"]
                 lamp["e"][0]["v"] = self.intensity
                 lamp["e"][1]["v"] = datetime.datetime.fromtimestamp(self.manual_init_hour).strftime("%H:%M")
                 lamp["e"][2]["v"] = datetime.datetime.fromtimestamp(self.manual_final_hour).strftime("%H:%M")
