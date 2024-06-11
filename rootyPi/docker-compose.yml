@@ -154,13 +154,28 @@ services:
       - telegram_bot-storage:/var/lib/telegram_bot:rw
     links:
       - registry
+      - report_generator
+    depends_on:
+      - registry
+      -report_generator
+      - adaptor
+    networks:
+      net:
+        ipv4_address: 192.68.0.11
+
+  report_generator:
+    build: report_generator
+    volumes:
+      - report_generator-storage:/var/lib/report_generator:rw
+    links:
+      - registry
       - adaptor
     depends_on:
       - registry
       - adaptor
     networks:
       net:
-        ipv4_address: 192.68.0.11
+        ipv4_address: 192.68.0.33
 
   moisture_monitoring:
     build: moisture_monitoring
@@ -200,6 +215,7 @@ volumes:
   env_monitoring-storage:
   uv_light_shift-storage:
   telegram_bot-storage:
+  report_generator-storage:
   moisture_monitoring-storage:
   water_irrigator-storage:
 networks:
