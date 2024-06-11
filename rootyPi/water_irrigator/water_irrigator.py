@@ -30,23 +30,10 @@ class water_pump(object):
     def start_mqtt(self):
         self.client.connect(self.broker,self.port)
         self.client.loop_start()
-        control_thread = threading.Thread(target=self.control_state)
-        control_thread.start()
         for topic in self.sub_topic:
             self.client.subscribe(topic, 2)
 
-    def control_state(self):
-        while True:
-            for j,user in enumerate(self.list_of_manual_plant):
-                if time.time() >= int(user["e"][3]["v"]) and \
-                time.time() <= int(user["e"][4]["v"]):
-                    self.state = 1
-                else:
-                    self.state = 0
-                    del self.list_of_manual_plant[j]
-            print("\nDict:\n" + str(self.list_of_manual_plant) + "\n")
-            time.sleep(2)
-
+   
     def mymessage(self,paho_mqtt,userdata,msg):
         mess = json.loads(msg.payload)
         pump = { "bn": "None","e": [
@@ -82,8 +69,7 @@ class water_pump(object):
                     "\n" + str(self.pub_topic))
                 self.publish(pump)
             elif last_part == "manual":
-                self.manual_init_hour = mess["e"][1]["t"]
-                self.manual_final_hour = mess["e"][1]["v"]
+            
                 pump["e"][0]["v"] = self.flow
                 pump["e"][0]["t"] = time.time()
                 pump["bn"] = "pump_state"
@@ -172,30 +158,7 @@ class water_pump(object):
     #     print(f"\nNo plant found for {self.current_user}/{self.current_plant}")
 
     
-    def check_manuals(self,pump):
-
-        for j,user in enumerate(self.list_of_manual_plant):
-            if self.current_user == user["e"][0]["v"] and self.current_plant == user["e"][1]["v"]:
-                self.list_of_manual_plant[j] = {"bn": self.current_user + "/" + self.current_plant,\
-                                            "e":\
-                                            [{ "n": "user", "u": None, "t": time.time(), "v":self.current_user }, \
-                                             { "n": "plant", "u": None, "t": time.time(), "v":self.current_plant }, \
-                                             { "n": "state", "u": "boolean", "t": time.time(), "v": 1 }, \
-                                             { "n": "init_hour", "u": "s", "t": time.time(), "v":self.manual_init_hour }, \
-                                             { "n": "final_hour", "u": "s", "t": time.time(), "v":self.manual_final_hour }, \
-                                             { "n": "mass flow rate", "u": "percentage", "t": time.time(), "v":pump["e"][0]["v"] }  \
-                                             ]}
-                return
-            
-        self.list_of_manual_plant.append({"bn": self.current_user + "/" + self.current_plant,\
-                                        "e":\
-                                        [{ "n": "user", "u": None, "t": time.time(), "v":self.current_user }, \
-                                            { "n": "plant", "u": None, "t": time.time(), "v":self.current_plant }, \
-                                            { "n": "state", "u": "boolean", "t": time.time(), "v": 1 }, \
-                                            { "n": "init_hour", "u": "s", "t": time.time(), "v":self.manual_init_hour }, \
-                                            { "n": "final_hour", "u": "s", "t": time.time(), "v":self.manual_final_hour }, \
-                                            { "n": "mass flow rate", "u": "percentage", "t": time.time(), "v":pump["e"][0]["v"] }  \
-                                            ]})
+    
         
 class run():
     """Thread to run mqtt."""
