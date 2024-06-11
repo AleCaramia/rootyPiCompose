@@ -123,8 +123,8 @@ class light_shift(object):
                 self.manual_init_hour = mess["e"][1]["t"]
                 self.manual_final_hour = mess["e"][1]["v"]
                 lamp["e"][0]["v"] = self.intensity
-                lamp["e"][1]["v"] = self.manual_init_hour
-                lamp["e"][2]["v"] = self.manual_final_hour
+                lamp["e"][1]["v"] = datetime.datetime.fromtimestamp(self.manual_init_hour).strftime("%H:%M")
+                lamp["e"][2]["v"] = datetime.datetime.fromtimestamp(self.manual_final_hour).strftime("%H:%M")
                 lamp["e"][0]["t"] = time.time()
                 lamp["e"][1]["t"] = time.time()
                 lamp["e"][2]["t"] = time.time()
