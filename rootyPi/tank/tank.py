@@ -20,7 +20,7 @@ class TankSimulator:
         self.tankLevel = tankCapacity #liters
         self.jarVolume = jarVolume
         self.pubTopic = baseTopic + "/tank"
-        self.subTopic = baseTopic + "waterPump/+" 
+        self.subTopic = baseTopic + "/waterPump/+" 
         self.plantCode = plantCode
         self.aliveTopic = baseTopic + "/alive"
         self.aliveBn = "updateCatalogDevice"
@@ -196,3 +196,4 @@ if __name__ == '__main__':
     thredPub = AllPubs(1, "AllPubs")
     print("Starting all publishers")
     thredPub.start()
+    thredPub.join()

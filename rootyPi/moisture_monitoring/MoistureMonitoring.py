@@ -61,20 +61,20 @@ class MoistureMonitoring(object):
                     plant_code=plant["plantCode"]
                     
 
-                    max_lux_lamp,jar_volume=self.retriveMaxFlowPumpAndJarVolume(plant_code,models)
+                    jar_volume=self.retriveMaxFlowPumpAndJarVolume(plant_code,models)
                     
-                    start_time=plant['auto_init']
-                    end_time=plant['auto_end']
+                    # start_time=plant['auto_init']
+                    # end_time=plant['auto_end']
 
-                    current_time = datetime.now().time()
-                    current_datetime = datetime.combine(datetime.today(), current_time)
-                    start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
-                    time_difference = current_datetime - start_datetime
-                    hours_passed = round(time_difference.total_seconds() / 3600)
+                    # current_time = datetime.now().time()
+                    # current_datetime = datetime.combine(datetime.today(), current_time)
+                    # start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
+                    # time_difference = current_datetime - start_datetime
+                    # hours_passed = round(time_difference.total_seconds() / 3600)
 
-                    end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
-                    time_difference = end_datetime - start_datetime
-                    suncycle = round(time_difference.total_seconds() / 3600)
+                    # end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
+                    # time_difference = end_datetime - start_datetime
+                    # suncycle = round(time_difference.total_seconds() / 3600)
 
                     water_to_add = self.PlantWaterEstimation(url_adptor,plant_code,plant_type,userId,jar_volume)
                     if water_to_add>0:
@@ -90,9 +90,8 @@ class MoistureMonitoring(object):
 
 
                         __message=json.dumps(current_msg)
-                        if current_datetime>=start_datetime and current_datetime<=end_datetime:
-                            print(__message)
-                            self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)
+                        print(__message)
+                        self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)
                         
 
             return 
@@ -126,10 +125,10 @@ class MoistureMonitoring(object):
         vase_type=plant_code[:2]
         for model in models:
             if model['model_code']==vase_type:
-                max_lux_lamp=model["max_flow"]
+                # max_lux_lamp=model["max_flow"]
                 jar_volume=model["jar_volume"]
                 break
-        return max_lux_lamp,jar_volume
+        return jar_volume
 
     def PlantWaterEstimation(self,url_adptor,plant_code,plant_type,userId,jar_volume):               
         
@@ -155,7 +154,8 @@ class MoistureMonitoring(object):
         mesurements_past_hour_moisture = []
         for mesure in mesurements_past_hour:
                 mesurements_past_hour_moisture.append(mesure['v'])
-        mean_moisture_past_hour= np.mean(mesurements_past_hour_moisture)
+        # mean_moisture_past_hour= np.mean(mesurements_past_hour_moisture)
+        mean_moisture_past_hour = float(mesurements_past_hour_moisture[-1])
 
         
         if self.moisture_goals - mean_moisture_past_hour > 0:
