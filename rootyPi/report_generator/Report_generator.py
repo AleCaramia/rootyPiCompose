@@ -12,8 +12,34 @@ import paho.mqtt.client as mqtt
 import base64
 import threading
 import cherrypy
+from datetime import datetime, timedelta
 
+def hourly_timestamps_unix(start_time, end_time):
+    """
+    Generate a list of timestamps at hourly intervals between two given Unix timestamps.
 
+    Args:
+    start_time (int): The starting timestamp in Unix format.
+    end_time (int): The ending timestamp in Unix format.
+
+    Returns:
+    list: A list of Unix timestamps at hourly intervals.
+    """
+    start = datetime.fromtimestamp(start_time)
+    end = datetime.fromtimestamp(end_time)
+    
+    # Ensure start is on the hour
+    if start.minute != 0 or start.second != 0:
+        start = (start.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1))
+
+    current = start
+    timestamps = []
+
+    while current <= end:
+        timestamps.append(int(current.timestamp()))
+        current += timedelta(hours=1)
+
+    return timestamps  
 
 
 class Report_generator(object):
@@ -334,14 +360,14 @@ class Report_generator(object):
                                     send_message = True
 
                             if send_message:
-                                self.generate_report(user,plant)
+                                self.generate_report(user,plant,duration = duration)
                 
                     time.sleep(60)  # Check every minute
         except Exception as e:
             print('Report generator stopped working')
             self.stop_event.set()
 
-    def generate_report(self,user,plant,instant = False):
+    def generate_report(self,user,plant,duration = 24,instant = False):
         lux_sensor =  {"Time": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "Value": [753.28, 423.11, 598.56, 729.18, 444.72, 385.96, 301.67, 529.88, 676.92, 773.53]}
         lux_emitted = {"Time": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "Value": [459.45, 142.22, 361.34, 233.16, 389.65, 421.54, 283.64, 119.98, 249.29, 391.77]}
         moisture = {"Time": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "Value": [15.28, 45.34, 23.12, 54.87, 31.94, 41.07, 57.23, 11.75, 29.66, 37.14]}
@@ -364,7 +390,7 @@ class Report_generator(object):
         light_fluctuation = self.calculate_light_fluctuation(self.lux_absorbed_values)
         water_absorption = self.calculate_water_absorption(self.moisture_values)
         tips = self.analyze_plant_conditions(dli, light_fluctuation, self.moisture_values, water_absorption)
-        if instant:
+        if not instant:
             self.publish_image_via_mqtt(combined_image, tips, self.broker, self.port, f'Rootypy/report_generator/{user}/{plant}')
         else:
             combined_image.seek(0)
@@ -380,6 +406,21 @@ class Report_generator(object):
             return body
         print(f"Message sent to {user} for plant {plant} with instant: {instant}")
 
+    def translate_uv_lamp_values(self,lux_emitted):
+        uv_translated_timestamps = []
+        uv_translated_values = []
+        lux_emitted_timestamps = lux_emitted['Time']
+        lux_emitted_values = lux_emitted['Value']
+        for i in range(len(lux_emitted_timestamps)-1):
+            translated_timestamp = hourly_timestamps_unix(lux_emitted_timestamps[i])
+            translated_value = lux_emitted_values['e'][0]["v"]
+            for element in translated_timestamp:
+                uv_translated_timestamps.append(element)
+            for element in translated_value:
+                uv_translated_values.append(translated_value)
+        
+        return uv_translated_timestamps,uv_translated_values
+      
 
     def get_chatID_from_user(self,user):
 
@@ -409,7 +450,7 @@ class Report_generator(object):
                     found = True
                     userid = diz['userId']
                     plantname = diz['plantId']
-                    body =self.generate_report(userid,plantname)
+                    body =self.generate_report(userid,plantname,instant =True)
             if not found:   
                 response = {"status": "NOT_OK", "code": 400, "message": "Invalid user"}
             else:
@@ -432,7 +473,8 @@ class Iamalive(object):
         self.pub_topic = json_config["alive_topic"]
         self.paho_mqtt = pahoMQTT.Client(self.clientID,True)
         self.paho_mqtt.on_connect = self.myconnect_live
-        self.message = {"bn": "updateCatalogService","e":[{ "n": f"{id}", "u": "", "t": time.time(), "v":f"{id}" }]}
+        self.myurl = json_config["myurl"]
+        self.message = {"bn": "updateCatalogService","e":[{ "n": f"{self.clientID}", "u": "", "t": time.time(), "v":f"{self.myurl}" }]}
         self.starting_time = time.time()
         self.interval = json_config["update_time"]
         print('i am alive initialized')
@@ -451,7 +493,6 @@ class Iamalive(object):
     def check_and_publish(self):
         while  not self.stop_event.is_set():
             actual_time = time.time()
-            #print('checking time')
             if actual_time > self.starting_time + self.interval:
                 self.publish()
                 print('sent alive message')
