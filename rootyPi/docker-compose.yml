@@ -130,8 +130,6 @@ services:
     depends_on:
       - registry
       - adaptor
-    ports:
-      - 8085:8085
     networks:
       net:
         ipv4_address: 192.68.0.29

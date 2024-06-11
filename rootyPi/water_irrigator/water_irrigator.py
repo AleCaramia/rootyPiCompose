@@ -56,18 +56,6 @@ class water_pump(object):
             "u": "l",
             "t": "None",
             "v": "None"
-        },
-        {
-            "n": "init_hour",
-            "u": "s",
-            "t": "None",
-            "v": "None"
-        },
-        {
-            "n": "final_hour",
-            "u": "s",
-            "t": "None",
-            "v": "None"
         }
     ]}
         topic = msg.topic
@@ -78,44 +66,32 @@ class water_pump(object):
         self.state = 0
         self.getpump = self.GetPump()
         if self.getpump == True:
-            self.get_plant_jar()
             for user in self.list_of_manual_plant:
                 if user["e"][1]['v'] == self.current_plant and user["e"][0]["v"] == self.current_user:
                     self.state = 1 
             self.flow = mess['e'][0]['v']
             if float(self.flow) > 0:
-                if float(self.flow) >= self.max_flow:
-                    self.flow = self.max_flow
-                else:
-                    self.flow = float(self.flow)
+                self.flow = float(self.flow)
             else: 
                 self.flow = 0
             if last_part == "automatic" and self.state == 0:
                 self.pub_topic = "RootyPy/"+topic_parts[1]+"/"+topic_parts[2]+"/waterPump/automatic"
-                pump["e"][0]["v"] = self.flow*100/self.max_flow
-                pump["e"][1]["v"] = 0
-                pump["e"][2]["v"] = 0
+                pump["e"][0]["v"] = self.flow
                 pump["e"][0]["t"] = time.time()
-                pump["e"][1]["t"] = time.time()
-                pump["e"][2]["t"] = time.time()
                 pump["bn"] = "pump_state"
                 print("\nState of the pump :" + str(pump) + "\nstate = " +str(self.state) +\
-                    "\n" + str(self.pub_topic)+ "\nmax flow: " + str(self.max_flow))
+                    "\n" + str(self.pub_topic))
                 self.publish(pump)
             elif last_part == "manual":
                 self.manual_init_hour = mess["e"][1]["t"]
                 self.manual_final_hour = mess["e"][1]["v"]
                 pump["e"][0]["v"] = self.flow
-                pump["e"][1]["v"] = self.manual_init_hour
-                pump["e"][2]["v"] = self.manual_final_hour
                 pump["e"][0]["t"] = time.time()
-                pump["e"][1]["t"] = time.time()
-                pump["e"][2]["t"] = time.time()
                 pump["bn"] = "pump_state"
                 self.check_manuals(pump)
                 self.pub_topic = "RootyPy/"+topic_parts[1]+"/"+topic_parts[2]+"/waterPump/manual"
                 print("\nState of the pump :" + str(pump) + "\nstate = " +str(self.state) +\
-                    "\n" + str(self.pub_topic) + "\nmax flow: " + str(self.max_flow))
+                    "\n" + str(self.pub_topic) )
                 self.publish(pump)
                 self.pub_topic = "RootyPy/waterPump/manual_list"
                 self.publish(self.list_of_manual_plant)
@@ -176,25 +152,25 @@ class water_pump(object):
             return False
 
 
-    def get_plant_jar(self):
+    # def get_plant_jar(self):
 
-        self.plants = json.loads(requests.get(self.url_plants).text) 
-        # with open("fake_catalogue.json",'r') as file:
-        #         catalogue = json.loads(file.read())
-        # self.plants = catalogue['plants']
+    #     self.plants = json.loads(requests.get(self.url_plants).text) 
+    #     # with open("fake_catalogue.json",'r') as file:
+    #     #         catalogue = json.loads(file.read())
+    #     # self.plants = catalogue['plants']
 
-        for plant in self.plants:
-            if plant['userId'] == self.current_user:
-                if plant['plantCode'] == self.current_plant:
-                    current_code = plant['plantCode']
-                    current_model = current_code[0:2]
-                    self.CodeRequest()
-                    for code in self.code_db:
-                        if code["model_code"] == current_model:
-                            self.max_flow = code["max_flow"]
-                            return
-                    print(f"No plant code found for {current_model}")
-        print(f"\nNo plant found for {self.current_user}/{self.current_plant}")
+    #     for plant in self.plants:
+    #         if plant['userId'] == self.current_user:
+    #             if plant['plantCode'] == self.current_plant:
+    #                 current_code = plant['plantCode']
+    #                 current_model = current_code[0:2]
+    #                 self.CodeRequest()
+    #                 for code in self.code_db:
+    #                     if code["model_code"] == current_model:
+    #                         print(f"Find a pump for {current_model}")
+    #                         return
+    #                 print(f"No plant code found for {current_model}")
+    #     print(f"\nNo plant found for {self.current_user}/{self.current_plant}")
 
     
     def check_manuals(self,pump):
