@@ -318,7 +318,8 @@ class thredFunction(threading.Thread):
             time_passed=time.time()-self._time
             
             if time_passed>=self.settings['publishInterval']:
-                self.function.MyPublish()        
+                self.function.MyPublish()
+                self.function.PublishAlive()        
                 
             else:
                 self.function.PublishAlive()
