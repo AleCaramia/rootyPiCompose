@@ -41,6 +41,34 @@ def hourly_timestamps_unix(start_time, end_time):
 
     return timestamps  
 
+def convert_timestamps(timestamps, duration):
+    """
+    Converts a list of Unix timestamps into hours or days based on the duration.
+    
+    Parameters:
+    timestamps (list of int): List of Unix timestamps.
+    duration (int): The duration to determine the format of conversion.
+
+    Returns:
+    list of str: List of converted timestamps in the specified format.
+    """
+    converted_timestamps = []
+    
+    if duration > 6*24:
+        # Convert to days format
+        for ts in timestamps:
+            dt = datetime.utcfromtimestamp(ts)
+            converted_timestamps.append(dt.strftime('%Y-%m-%d'))
+    elif duration > 25:
+        # Convert to hours format
+        for ts in timestamps:
+            dt = datetime.utcfromtimestamp(ts)
+            converted_timestamps.append(dt.strftime('%Y-%m-%d %H:%M:%S'))
+    else:
+        # Return timestamps as is (Unix format)
+        converted_timestamps = timestamps
+    
+    return converted_timestamps
 
 class Report_generator(object):
             
@@ -383,7 +411,9 @@ class Report_generator(object):
         self.moisture_timestamps = moisture['Time']
         self.moisture_values = moisture['Value']
         
-
+        self.lux_absorbed_timestamps = convert_timestamps(self.lux_absorbed_timestamps,duration)
+        self.lux_emitted_timestamps = convert_timestamps(self.lux_emitted_timestamps,duration)
+        self.lux_moisture_timestamps = convert_timestamps(self.lux_moisture_timestamps,duration)
 
         combined_image = self.create_image(self.lux_absorbed_timestamps, self.lux_absorbed_values, self.lux_emitted_timestamps, self.lux_emitted_values, self.moisture_timestamps, self.moisture_values)
         dli = self.calculate_dli(self.lux_absorbed_values)
