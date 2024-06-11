@@ -204,7 +204,6 @@
             "d2997b320dbc147d",
             "a8923480b36f5932",
             "aee5b849fa4bfac7",
-            "71c498b1f81aa11a",
             "dd6200c65eacd514",
             "b5f8d6462425d98d",
             "881f8f2d6597c088",
@@ -226,7 +225,6 @@
             "9b04a441f222c5b5",
             "d20fab234f28a810",
             "d52ba22ad87bd43b",
-            "131030e64dc70ed7",
             "39a9451eda1333c1",
             "fc73b3126d9de4a9",
             "ded0127bd1ea067c",
@@ -235,8 +233,8 @@
         ],
         "x": 14,
         "y": 259,
-        "w": 2152,
-        "h": 342
+        "w": 2112,
+        "h": 442
     },
     {
         "id": "fe9e7ffa346a55af",
@@ -271,14 +269,13 @@
             "2f0cfd438fd87152",
             "baceeb4063def798",
             "65ce55230ef0af1a",
-            "b3d1e62ef5e71a5f",
             "08678b0a13896242",
             "d613dabea3643ff2"
         ],
-        "x": 14,
-        "y": 639,
-        "w": 2612,
-        "h": 382
+        "x": 34,
+        "y": 759,
+        "w": 2592,
+        "h": 262
     },
     {
         "id": "ae0aa142fe4b8c55",
@@ -296,7 +293,6 @@
             "2bb4b8523a447533",
             "097ea17c93278929",
             "fd272948bd036f4c",
-            "8c86bd086806d22c",
             "c7579521f90149a4",
             "a1d56d1552642ef8",
             "d00f853f7ce95464",
@@ -307,7 +303,8 @@
             "05462e3fba4c6eaa",
             "0d083e036d14f5fb",
             "553f26cc2b246d9b",
-            "9b515e7a7a54c3e7"
+            "9b515e7a7a54c3e7",
+            "53f52b60e7f2d3a4"
         ],
         "x": 14,
         "y": 59,
@@ -379,7 +376,7 @@
             "name": "theme-light",
             "lightTheme": {
                 "default": "#0094CE",
-                "baseColor": "#0ecc00",
+                "baseColor": "#44a503",
                 "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
                 "edited": true,
                 "reset": false
@@ -401,44 +398,44 @@
             "themeState": {
                 "base-color": {
                     "default": "#0094CE",
-                    "value": "#0094CE",
+                    "value": "#44a503",
                     "edited": true
                 },
                 "page-titlebar-backgroundColor": {
-                    "value": "#0ecc00",
+                    "value": "#44a503",
                     "edited": false
                 },
                 "page-backgroundColor": {
                     "value": "#fafafa",
-                    "edited": false
+                    "edited": true
                 },
                 "page-sidebar-backgroundColor": {
                     "value": "#ffffff",
                     "edited": false
                 },
                 "group-textColor": {
-                    "value": "#29ff1a",
+                    "value": "#63f004",
                     "edited": false
                 },
                 "group-borderColor": {
                     "value": "#ffffff",
-                    "edited": false
+                    "edited": true
                 },
                 "group-backgroundColor": {
                     "value": "#ffffff",
-                    "edited": false
+                    "edited": true
                 },
                 "widget-textColor": {
                     "value": "#111111",
                     "edited": false
                 },
                 "widget-backgroundColor": {
-                    "value": "#0ecc00",
+                    "value": "#44a503",
                     "edited": false
                 },
                 "widget-borderColor": {
                     "value": "#ffffff",
-                    "edited": false
+                    "edited": true
                 },
                 "base-font": {
                     "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
@@ -475,7 +472,7 @@
         "id": "6eafc24cd03c3171",
         "type": "ui_tab",
         "name": "Access",
-        "icon": "dashboard",
+        "icon": "fa-users",
         "order": 1,
         "disabled": false,
         "hidden": false
@@ -501,105 +498,6 @@
         "className": ""
     },
     {
-        "id": "7c7cd39c63cd8c95",
-        "type": "ui_group",
-        "name": "Default",
-        "tab": "4a4e34e7851021a0",
-        "order": 2,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "a7f34f2f87de6c59",
-        "type": "ui_group",
-        "name": "cazz",
-        "tab": "4a4e34e7851021a0",
-        "order": 3,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "0bcc6aa87385e51f",
-        "type": "ui_group",
-        "name": "Log in",
-        "tab": "27597ee0e5ce9069",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "7a7ae5378c8e68d8",
-        "type": "ui_group",
-        "name": "Register User",
-        "tab": "27597ee0e5ce9069",
-        "order": 2,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "2b2d41db03025b6a",
-        "type": "ui_group",
-        "name": "User plants",
-        "tab": "ccac12f5f7d7ecf9",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "afc5e4ddbfed26d1",
-        "type": "ui_group",
-        "name": "Light",
-        "tab": "ccac12f5f7d7ecf9",
-        "order": 2,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "d05efae24612854a",
-        "type": "ui_group",
-        "name": "Water",
-        "tab": "ccac12f5f7d7ecf9",
-        "order": 3,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "da3c9cc364e77e99",
-        "type": "ui_group",
-        "name": "Charts",
-        "tab": "ccac12f5f7d7ecf9",
-        "order": 4,
-        "disp": true,
-        "width": "12",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "13992361a6d4443c",
-        "type": "ui_group",
-        "name": "Plant selector",
-        "tab": "363a57f6eb311ab9",
-        "order": 2,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
         "id": "43a5a58f83248d8e",
         "type": "ui_group",
         "name": "Lamp info",
@@ -609,42 +507,6 @@
         "width": "6",
         "collapse": false,
         "className": ""
-    },
-    {
-        "id": "1e337ada666de5c8",
-        "type": "ui_group",
-        "name": "a5606bb016d6d1c0",
-        "tab": "",
-        "order": 5,
-        "disp": true,
-        "width": 6
-    },
-    {
-        "id": "c5d374ba2834794a",
-        "type": "ui_group",
-        "name": "79404650b2f99f0a",
-        "tab": "",
-        "order": 3,
-        "disp": true,
-        "width": 6
-    },
-    {
-        "id": "9195f498d7783b6d",
-        "type": "ui_group",
-        "name": "897de1565acb2be9",
-        "tab": "",
-        "order": 3,
-        "disp": true,
-        "width": 6
-    },
-    {
-        "id": "263e8a9ced74d536",
-        "type": "ui_group",
-        "name": "d9bb3581b58cf74c",
-        "tab": "",
-        "order": 2,
-        "disp": true,
-        "width": 6
     },
     {
         "id": "6d7fed1744c73108",
@@ -740,85 +602,6 @@
         "className": ""
     },
     {
-        "id": "a8e4a3.d31edb6",
-        "type": "ui_group",
-        "name": "Chart",
-        "tab": "8032fe72.980b98",
-        "order": 3,
-        "disp": false,
-        "width": "6",
-        "collapse": false
-    },
-    {
-        "id": "8032fe72.980b98",
-        "type": "ui_tab",
-        "name": "PnH",
-        "icon": "dashboard",
-        "order": 1,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "e367035897143620",
-        "type": "ui_spacer",
-        "z": "075376242320f0ef",
-        "name": "spacer",
-        "group": "d9bb3581b58cf74c",
-        "order": 1,
-        "width": 12,
-        "height": 1
-    },
-    {
-        "id": "33e1ee9e639ae2e3",
-        "type": "ui_spacer",
-        "z": "075376242320f0ef",
-        "name": "spacer",
-        "group": "d9bb3581b58cf74c",
-        "order": 2,
-        "width": 12,
-        "height": 1
-    },
-    {
-        "id": "10a8e481fb8f4dcc",
-        "type": "ui_spacer",
-        "z": "075376242320f0ef",
-        "name": "spacer",
-        "group": "d9bb3581b58cf74c",
-        "order": 3,
-        "width": 12,
-        "height": 1
-    },
-    {
-        "id": "4d5fe6d1cb16ae10",
-        "type": "ui_spacer",
-        "z": "075376242320f0ef",
-        "name": "spacer",
-        "group": "d9bb3581b58cf74c",
-        "order": 4,
-        "width": 12,
-        "height": 1
-    },
-    {
-        "id": "4e913f71f19853f5",
-        "type": "ui_spacer",
-        "z": "075376242320f0ef",
-        "name": "spacer",
-        "group": "d9bb3581b58cf74c",
-        "order": 5,
-        "width": 12,
-        "height": 1
-    },
-    {
-        "id": "d8ed856f190871bf",
-        "type": "ui_spacer",
-        "z": "075376242320f0ef",
-        "name": "spacer",
-        "group": "d9bb3581b58cf74c",
-        "order": 6,
-        "width": 12,
-        "height": 1
-    },
-    {
         "id": "a016faa19b5c5a46",
         "type": "ui_spacer",
         "z": "785f53d943d8482e",
@@ -839,49 +622,13 @@
         "height": "1"
     },
     {
-        "id": "e3fb2484c1bf844b",
-        "type": "ui_group",
-        "name": "Group 1",
-        "tab": "bd0f2f8e3d1cceaf",
-        "order": 1,
-        "disp": false,
-        "width": "6"
-    },
-    {
-        "id": "bd0f2f8e3d1cceaf",
-        "type": "ui_tab",
-        "name": "switch test",
-        "icon": "dashboard",
-        "order": 3
-    },
-    {
-        "id": "b3d889cdf5c2914d",
-        "type": "ui_spacer",
-        "z": "d8e05e37459eb50e",
-        "name": "spacer",
-        "group": "6d7fed1744c73108",
-        "order": 2,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "254f4553e60cfe51",
-        "type": "ui_spacer",
-        "z": "d8e05e37459eb50e",
-        "name": "spacer",
-        "group": "6d7fed1744c73108",
-        "order": 4,
-        "width": 1,
-        "height": 1
-    },
-    {
         "id": "b13c842165b97de9",
         "type": "ui_group",
-        "name": "Light Charts",
+        "name": "Plant statistics",
         "tab": "363a57f6eb311ab9",
         "order": 6,
         "disp": true,
-        "width": 10,
+        "width": "10",
         "collapse": false,
         "className": ""
     },
@@ -942,6 +689,36 @@
         "name": "spacer",
         "group": "43a5a58f83248d8e",
         "order": 11,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "baf09a28b04468c4",
+        "type": "ui_spacer",
+        "z": "075376242320f0ef",
+        "name": "spacer",
+        "group": "6d7fed1744c73108",
+        "order": 2,
+        "width": "6",
+        "height": "1"
+    },
+    {
+        "id": "c71a0fe4ab6c453c",
+        "type": "ui_spacer",
+        "z": "075376242320f0ef",
+        "name": "spacer",
+        "group": "6d7fed1744c73108",
+        "order": 4,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "14995aceccb61ad6",
+        "type": "ui_spacer",
+        "z": "075376242320f0ef",
+        "name": "spacer",
+        "group": "6d7fed1744c73108",
+        "order": 6,
         "width": 1,
         "height": 1
     },
@@ -1325,7 +1102,7 @@
         "type": "ui_button",
         "z": "f857e0827ca4bf08",
         "name": "",
-        "group": "1e337ada666de5c8",
+        "group": "",
         "order": 0,
         "width": 0,
         "height": 0,
@@ -1450,7 +1227,7 @@
         "id": "48c4f878b548335b",
         "type": "ui_template",
         "z": "f857e0827ca4bf08",
-        "group": "1e337ada666de5c8",
+        "group": "",
         "name": "",
         "order": 3,
         "width": 0,
@@ -1544,7 +1321,7 @@
         "name": "",
         "label": "Sign in",
         "group": "6d7fed1744c73108",
-        "order": 5,
+        "order": 1,
         "width": 0,
         "height": 0,
         "options": [
@@ -1687,7 +1464,7 @@
         "g": "e1bab6a23adfa149",
         "name": "Registartion button",
         "group": "6d7fed1744c73108",
-        "order": 3,
+        "order": 5,
         "width": 4,
         "height": 1,
         "passthru": false,
@@ -1963,18 +1740,18 @@
         "z": "075376242320f0ef",
         "g": "e1bab6a23adfa149",
         "group": "6d7fed1744c73108",
-        "order": 1,
+        "order": 3,
         "width": 0,
         "height": 0,
         "name": "",
-        "label": "New to Rootypy?",
+        "label": "New to RootyPy?",
         "format": "",
         "layout": "col-center",
         "className": "",
         "style": true,
         "font": "",
         "fontSize": "24",
-        "color": "#ffffff",
+        "color": "#000000",
         "x": 130,
         "y": 380,
         "wires": []
@@ -2706,16 +2483,16 @@
         "order": 1,
         "width": 0,
         "height": 0,
-        "gtype": "wave",
-        "title": "gauge",
+        "gtype": "gage",
+        "title": "Tank capacity",
         "label": "units",
         "format": "{{value}}",
         "min": 0,
         "max": 10,
         "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
+            "#c20505",
+            "#00d6e6",
+            "#0008ff"
         ],
         "seg1": "",
         "seg2": "",
@@ -2730,15 +2507,14 @@
         "type": "python3-function",
         "z": "785f53d943d8482e",
         "name": "Read users plants",
-        "func": "# Extract 'user' and 'plants' from the incoming message\nuser = msg.get('user')\nplants = msg.get(\"payload\", [])\n\n# Initialize the 'options' and 'plants' lists in the message\nmsg['options'] = []\nmsg['plants'] = []\n\n# Iterate over each plant in the plants list\nfor plant in plants:\n    # Check if the necessary keys are present in the plant dictionary\n    if 'userId' in plant and 'plantId' in plant and 'plantCode' in plant:\n        # Extract the ID and CODE from the plant dictionary\n        ID = plant['plantId']\n        CODE = plant['plantCode']\n        \n        # If the plant belongs to the user, add it to the lists\n        if plant['userId'] == user:\n            msg['options'].append(ID)\n            msg['plants'].append(plant)\n\n# Return the modified message\nreturn msg\n\n    \n",
+        "func": "\nuser = msg.get('user')\nplants = msg.get(\"payload\", [])\n\n\nmsg['options'] = []\nmsg['plants'] = []\nmsg['noPlants']=0\n\nfor plant in plants:\n\n    if 'userId' in plant and 'plantId' in plant and 'plantCode' in plant:\n        # Extract the ID and CODE from the plant dictionary\n        ID = plant['plantId']\n        CODE = plant['plantCode']\n        \n        \n        if plant['userId'] == user:\n            msg['options'].append(ID)\n            msg['plants'].append(plant)\nif len(msg['plants'])==0:\n    msg['noPlants']=1\n\nreturn msg\n\n    \n",
         "outputs": 1,
-        "x": 590,
-        "y": 300,
+        "x": 490,
+        "y": 260,
         "wires": [
             [
-                "d8c72c05911f0862",
-                "a6f7dab877c8d216",
-                "80ecaf75183b5b7e"
+                "5c84c44701bb62c5",
+                "2e1aed2981aeef32"
             ]
         ]
     },
@@ -2838,12 +2614,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 370,
+        "x": 310,
         "y": 260,
         "wires": [
             [
                 "e51ba9d7d72048d2",
-                "2e1aed2981aeef32",
                 "9250c5e5ac7e3051"
             ]
         ]
@@ -2911,8 +2686,8 @@
             "4ceec963bc87e85e",
             "648567d6b13c3f30"
         ],
-        "x": 25,
-        "y": 300,
+        "x": 45,
+        "y": 100,
         "wires": [
             [
                 "890463be03cb6168"
@@ -2936,7 +2711,7 @@
         "font": "",
         "fontSize": 16,
         "color": "#000000",
-        "x": 590,
+        "x": 490,
         "y": 360,
         "wires": []
     },
@@ -2945,7 +2720,7 @@
         "type": "debug",
         "z": "785f53d943d8482e",
         "name": "debug 16",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2953,8 +2728,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 560,
-        "y": 240,
+        "x": 480,
+        "y": 180,
         "wires": []
     },
     {
@@ -3077,25 +2852,29 @@
         "name": "Forget current info",
         "rules": [
             {
-                "t": "set",
+                "t": "delete",
                 "p": "user",
-                "pt": "global",
-                "to": "",
-                "tot": "str"
+                "pt": "global"
             },
             {
-                "t": "set",
+                "t": "delete",
                 "p": "choice",
-                "pt": "global",
-                "to": "",
-                "tot": "str"
+                "pt": "global"
             },
             {
-                "t": "set",
+                "t": "delete",
                 "p": "plants",
-                "pt": "global",
-                "to": "",
-                "tot": "str"
+                "pt": "global"
+            },
+            {
+                "t": "delete",
+                "p": "online_devices",
+                "pt": "global"
+            },
+            {
+                "t": "delete",
+                "p": "selected_plant",
+                "pt": "global"
             }
         ],
         "action": "",
@@ -3370,8 +3149,8 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 330,
-        "y": 340,
+        "x": 130,
+        "y": 260,
         "wires": [
             [
                 "3703f643425bb130"
@@ -3390,6 +3169,11 @@
                 "pt": "global",
                 "to": "plants",
                 "tot": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "noPlants",
+                "pt": "msg"
             }
         ],
         "action": "",
@@ -3397,8 +3181,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 820,
-        "y": 200,
+        "x": 840,
+        "y": 240,
         "wires": [
             []
         ]
@@ -3546,7 +3330,7 @@
         "to": "",
         "reg": false,
         "x": 170,
-        "y": 220,
+        "y": 100,
         "wires": [
             [
                 "b960cd3fce75fc43"
@@ -3560,8 +3344,8 @@
         "name": "req plants",
         "func": "msg['url']=msg['url']+\"/plants\"\nreturn msg",
         "outputs": 1,
-        "x": 160,
-        "y": 340,
+        "x": 120,
+        "y": 180,
         "wires": [
             [
                 "516632a2a2b54cbe"
@@ -3628,13 +3412,44 @@
         "wires": []
     },
     {
+        "id": "5c84c44701bb62c5",
+        "type": "switch",
+        "z": "785f53d943d8482e",
+        "name": "",
+        "property": "noPlants",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 650,
+        "y": 260,
+        "wires": [
+            [],
+            [
+                "80ecaf75183b5b7e",
+                "d8c72c05911f0862",
+                "a6f7dab877c8d216"
+            ]
+        ]
+    },
+    {
         "id": "205746116f4c2e47",
         "type": "ui_text_input",
         "z": "d8e05e37459eb50e",
         "g": "1167eb289c340144",
         "name": "",
         "label": "Plant code:",
-        "tooltip": "",
+        "tooltip": "Insert the code on the vase (ex. AA000)",
         "group": "a82a07a6313512b6",
         "order": 1,
         "width": 0,
@@ -3646,8 +3461,8 @@
         "sendOnBlur": true,
         "className": "",
         "topicType": "str",
-        "x": 490,
-        "y": 320,
+        "x": 1090,
+        "y": 360,
         "wires": [
             [
                 "dd6200c65eacd514"
@@ -3661,7 +3476,7 @@
         "g": "1167eb289c340144",
         "name": "",
         "label": "Select plant type from list",
-        "tooltip": "",
+        "tooltip": "Select the category that better reflect your plant",
         "place": "Select plant type from list",
         "group": "a82a07a6313512b6",
         "order": 3,
@@ -3674,8 +3489,8 @@
         "topic": "topic",
         "topicType": "msg",
         "className": "",
-        "x": 550,
-        "y": 420,
+        "x": 1130,
+        "y": 300,
         "wires": [
             [
                 "881f8f2d6597c088"
@@ -3689,7 +3504,7 @@
         "g": "1167eb289c340144",
         "name": "",
         "label": "Plant name:",
-        "tooltip": "",
+        "tooltip": "Can't contain the following ' ', ':', '/', ';', ',', '\"', \"'\", \"{\", \"}\", \"[\", \"]\"",
         "group": "a82a07a6313512b6",
         "order": 2,
         "width": 0,
@@ -3701,8 +3516,8 @@
         "sendOnBlur": true,
         "className": "",
         "topicType": "str",
-        "x": 490,
-        "y": 360,
+        "x": 1090,
+        "y": 440,
         "wires": [
             [
                 "b5f8d6462425d98d"
@@ -3717,32 +3532,13 @@
         "name": "Set plant info",
         "func": "#msg['payload']={\n#    \"code\": msg[\"code\"],\n#    \"plantId\": msg[\"new_plantId\"],\n#    \"plant_type\": msg[\"plant_type\"]\n#};\n#plants_list=msg['plant_list']\n#new_plant=msg['new_plantId']\n#result=0\n#if new_plant and msg['code'] and msg['plant_type']:\n#    for plant in plants_list:\n#        if plant['plantId']==new_plant:\n#            result=1\n#            msg['payload']=\"The chosen plant id is alredy registered in your plant list\"\n#            break\n#else:\n#    result=2\n            \n#if result==0:\nmsg['payload']={'userId':msg['user'],'plantId':msg[\"new_plantId\"],\"plantCode\":msg[\"code\"],\"type\":msg[\"plant_type\"]}\n    \n#msg['result']=result\nreturn msg",
         "outputs": 1,
-        "x": 950,
+        "x": 870,
         "y": 480,
         "wires": [
             [
                 "2f3bc360bc7fb70a"
             ]
         ]
-    },
-    {
-        "id": "71c498b1f81aa11a",
-        "type": "debug",
-        "z": "d8e05e37459eb50e",
-        "d": true,
-        "g": "1167eb289c340144",
-        "name": "debug 14",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1000,
-        "y": 320,
-        "wires": []
     },
     {
         "id": "dd6200c65eacd514",
@@ -3764,12 +3560,10 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 750,
-        "y": 320,
+        "x": 1270,
+        "y": 360,
         "wires": [
-            [
-                "71c498b1f81aa11a"
-            ]
+            []
         ]
     },
     {
@@ -3792,12 +3586,10 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 740,
-        "y": 360,
+        "x": 1300,
+        "y": 440,
         "wires": [
-            [
-                "71c498b1f81aa11a"
-            ]
+            []
         ]
     },
     {
@@ -3820,12 +3612,10 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 770,
-        "y": 420,
+        "x": 1390,
+        "y": 300,
         "wires": [
-            [
-                "71c498b1f81aa11a"
-            ]
+            []
         ]
     },
     {
@@ -3841,8 +3631,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 320,
-        "y": 500,
+        "x": 340,
+        "y": 480,
         "wires": [
             [
                 "d20fab234f28a810"
@@ -3871,7 +3661,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 120,
-        "y": 500,
+        "y": 480,
         "wires": [
             [
                 "c95bca5680e5e288"
@@ -3895,8 +3685,8 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 1100,
-        "y": 480,
+        "x": 1060,
+        "y": 500,
         "wires": [
             [
                 "aac34bcadb7ff94d"
@@ -3926,8 +3716,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 1410,
-        "y": 480,
+        "x": 1390,
+        "y": 500,
         "wires": [
             [
                 "5b3afc0e1e29be08"
@@ -3953,8 +3743,8 @@
         "className": "",
         "topic": "",
         "name": "Succesful add",
-        "x": 1600,
-        "y": 400,
+        "x": 1560,
+        "y": 460,
         "wires": [
             [
                 "725d4a493984679c",
@@ -3978,8 +3768,8 @@
         "className": "",
         "topic": "",
         "name": "failed",
-        "x": 1590,
-        "y": 480,
+        "x": 1530,
+        "y": 540,
         "wires": [
             []
         ]
@@ -3992,8 +3782,8 @@
         "name": "Plant sub res",
         "func": "response=msg['payload']\nsub_status=response['status']\n\nif sub_status == \"OK\":\n    result=1\n    msg['payload']=\"Plant was added to list\"\n    \nelse:\n    result=0\n    msg['payload']=\"Could not add plant to list. Try again\"\nmsg['result']=result\nreturn msg",
         "outputs": 1,
-        "x": 1270,
-        "y": 480,
+        "x": 1230,
+        "y": 500,
         "wires": [
             [
                 "4b6db7c16dc843c8"
@@ -4008,18 +3798,14 @@
         "name": "Forget current info",
         "rules": [
             {
-                "t": "set",
+                "t": "delete",
                 "p": "code",
-                "pt": "flow",
-                "to": "",
-                "tot": "str"
+                "pt": "flow"
             },
             {
-                "t": "set",
+                "t": "delete",
                 "p": "new_plantId",
-                "pt": "flow",
-                "to": "",
-                "tot": "str"
+                "pt": "flow"
             }
         ],
         "action": "",
@@ -4028,7 +3814,7 @@
         "to": "",
         "reg": false,
         "x": 2010,
-        "y": 320,
+        "y": 420,
         "wires": [
             []
         ]
@@ -4041,8 +3827,8 @@
         "name": "Exit page",
         "func": "msg['payload']={'tab': 'Plant status',\n    \"tabs\": {\n        \"hide\": 'Plant registration',\n        \"show\": 'Plant status'\n    }}\nreturn msg;",
         "outputs": 1,
-        "x": 1820,
-        "y": 400,
+        "x": 1780,
+        "y": 480,
         "wires": [
             [
                 "68126b66041a1b9f",
@@ -4057,8 +3843,8 @@
         "g": "1167eb289c340144",
         "name": "Return to log in",
         "events": "change",
-        "x": 2060,
-        "y": 400,
+        "x": 2000,
+        "y": 500,
         "wires": [
             []
         ]
@@ -4078,8 +3864,8 @@
         "raw": false,
         "className": "",
         "topic": "",
-        "name": "Plant already present",
-        "x": 1080,
+        "name": "Error message",
+        "x": 860,
         "y": 540,
         "wires": [
             []
@@ -4107,7 +3893,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 90,
-        "y": 560,
+        "y": 660,
         "wires": [
             [
                 "e63f7e3449184563"
@@ -4120,10 +3906,10 @@
         "z": "d8e05e37459eb50e",
         "g": "1167eb289c340144",
         "name": "Go to plant status",
-        "func": "msg['payload']={'tab': 'Plant status',\n    \"tabs\": {\n        \"hide\": 'Plant deletion',\n        \"show\": 'Plant status'\n    }\n}\nreturn msg;",
+        "func": "msg['payload']={'tab': 'Plant status',\n    \"tabs\": {\n        \"hide\": 'Plant registration',\n        \"show\": 'Plant status'\n    }\n}\nreturn msg;",
         "outputs": 1,
         "x": 270,
-        "y": 560,
+        "y": 660,
         "wires": [
             [
                 "b4ef7ff50fe64395"
@@ -4138,7 +3924,7 @@
         "name": "",
         "events": "all",
         "x": 460,
-        "y": 560,
+        "y": 660,
         "wires": [
             []
         ]
@@ -4666,34 +4452,13 @@
         "z": "d8e05e37459eb50e",
         "g": "ae0aa142fe4b8c55",
         "name": "Produce deletion url",
-        "func": "user=msg['user']\nmsg['url']=f\"http://192.68.0.25:8080/rmu/{user}\"\nreturn msg",
+        "func": "user=msg['user']\nmsg['url']=f\"{msg['url']}/rmu/{user}\"\nreturn msg",
         "outputs": 1,
         "x": 340,
         "y": 160,
         "wires": [
             [
                 "097ea17c93278929"
-            ]
-        ]
-    },
-    {
-        "id": "8c86bd086806d22c",
-        "type": "function",
-        "z": "d8e05e37459eb50e",
-        "g": "ae0aa142fe4b8c55",
-        "name": "Fetch user",
-        "func": "msg.user = global.get(\"user\")\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 130,
-        "y": 160,
-        "wires": [
-            [
-                "fd272948bd036f4c"
             ]
         ]
     },
@@ -4828,25 +4593,19 @@
         "name": "Forget current info",
         "rules": [
             {
-                "t": "set",
+                "t": "delete",
                 "p": "user",
-                "pt": "global",
-                "to": "",
-                "tot": "str"
+                "pt": "global"
             },
             {
-                "t": "set",
+                "t": "delete",
                 "p": "choice",
-                "pt": "global",
-                "to": "",
-                "tot": "str"
+                "pt": "global"
             },
             {
-                "t": "set",
+                "t": "delete",
                 "p": "plants",
-                "pt": "global",
-                "to": "",
-                "tot": "str"
+                "pt": "global"
             }
         ],
         "action": "",
@@ -4906,8 +4665,8 @@
         "links": [
             "e73397e7a65b2d9c"
         ],
-        "x": 55,
-        "y": 840,
+        "x": 185,
+        "y": 800,
         "wires": [
             [
                 "2f0cfd438fd87152"
@@ -4923,7 +4682,7 @@
         "mode": "link",
         "links": [],
         "x": 1715,
-        "y": 320,
+        "y": 420,
         "wires": []
     },
     {
@@ -5060,7 +4819,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1080,
+        "x": 880,
         "y": 400,
         "wires": [
             [
@@ -5075,10 +4834,10 @@
         "z": "d8e05e37459eb50e",
         "g": "1167eb289c340144",
         "name": "Check validity",
-        "func": "msg[\"result\"]=0\nif len(msg['new_plantId'])==0 or len(msg['plant_type'])==0 or len(msg['code'])==0:\n    msg[\"result\"]=1\nreturn msg",
+        "func": "import re\n\nspecial_characters = {' ', ':', '/', ';', ',', '\"', \"'\", \"{\", \"}\", \"[\", \"]\"}\nmsg[\"result\"] = 0\n\nrequired_keys = ['code', 'new_plantId', 'plant_type']\nmissing_keys = [key for key in required_keys if key not in msg]\n\nif missing_keys:\n    msg[\"result\"] = 4\n    msg['payload'] = f\"Missing required keys: {', '.join(missing_keys)}\"\nelse:\n    if len(msg['new_plantId']) == 0 or len(msg['plant_type']) == 0 or len(msg['code']) == 0:\n        msg[\"result\"] = 1\n        msg['payload'] = \"All the informations need to be filled\"\n    else:\n        code = msg['code']\n        regex = r'^[A-Z]{2}\\d{3}$'\n        if not re.match(regex, code):\n            msg['payload'] = \"Invalid code format\"\n            msg['result'] = 2\n        elif any(char in special_characters for char in msg['new_plantId']):\n            msg['result'] = 3\n            msg['payload'] = f\"Plant name can't contain {special_characters}\"\n\nreturn msg\n",
         "outputs": 1,
         "x": 540,
-        "y": 500,
+        "y": 480,
         "wires": [
             [
                 "d52ba22ad87bd43b"
@@ -5100,8 +4859,8 @@
                 "vt": "num"
             },
             {
-                "t": "eq",
-                "v": "1",
+                "t": "neq",
+                "v": "0",
                 "vt": "num"
             }
         ],
@@ -5109,50 +4868,16 @@
         "repair": false,
         "outputs": 2,
         "x": 690,
-        "y": 500,
+        "y": 480,
         "wires": [
             [
                 "aee5b849fa4bfac7",
                 "9b04a441f222c5b5"
             ],
             [
-                "131030e64dc70ed7"
-            ]
-        ]
-    },
-    {
-        "id": "131030e64dc70ed7",
-        "type": "python3-function",
-        "z": "d8e05e37459eb50e",
-        "g": "1167eb289c340144",
-        "name": "Msg empty field",
-        "func": "msg['payload']=\"All fields need to be filled to submit\"\nreturn msg",
-        "outputs": 1,
-        "x": 860,
-        "y": 540,
-        "wires": [
-            [
                 "f72fae14d274ddfc"
             ]
         ]
-    },
-    {
-        "id": "b3d1e62ef5e71a5f",
-        "type": "debug",
-        "z": "d8e05e37459eb50e",
-        "g": "fe9e7ffa346a55af",
-        "name": "debug 33",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1880,
-        "y": 680,
-        "wires": []
     },
     {
         "id": "08678b0a13896242",
@@ -5270,7 +4995,7 @@
         "wires": [
             [],
             [
-                "8c86bd086806d22c"
+                "53f52b60e7f2d3a4"
             ]
         ]
     },
@@ -5316,7 +5041,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 200,
+        "x": 180,
         "y": 300,
         "wires": [
             [
@@ -5332,8 +5057,8 @@
         "name": "Produce url valid types",
         "func": "msg[\"url\"]=msg[\"url\"]+\"/valid_plant_types\"\nreturn msg",
         "outputs": 1,
-        "x": 140,
-        "y": 340,
+        "x": 400,
+        "y": 300,
         "wires": [
             [
                 "8990fc281601b01d"
@@ -5357,8 +5082,8 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 140,
-        "y": 380,
+        "x": 640,
+        "y": 300,
         "wires": [
             [
                 "7bab5d2d56cf4653"
@@ -5373,11 +5098,46 @@
         "name": "produce types options",
         "func": "types=msg['payload']\nmsg['options']=[]\nfor ptype in types:\n    msg['options'].append(ptype['type'])\nreturn msg",
         "outputs": 1,
-        "x": 300,
-        "y": 420,
+        "x": 880,
+        "y": 300,
         "wires": [
             [
                 "d2997b320dbc147d"
+            ]
+        ]
+    },
+    {
+        "id": "53f52b60e7f2d3a4",
+        "type": "change",
+        "z": "d8e05e37459eb50e",
+        "g": "ae0aa142fe4b8c55",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "user",
+                "pt": "msg",
+                "to": "user",
+                "tot": "global"
+            },
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "settings.settings.url_registry",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 120,
+        "y": 160,
+        "wires": [
+            [
+                "fd272948bd036f4c"
             ]
         ]
     },
@@ -5422,8 +5182,8 @@
         "min": 0,
         "max": "100",
         "colors": [
-            "#00b500",
-            "#e6e600",
+            "#464805",
+            "#e6bf00",
             "#ca3838"
         ],
         "seg1": "",
@@ -7696,7 +7456,7 @@
         "type": "ui_button",
         "z": "abef47bed1338c6e",
         "name": "Submit Button",
-        "group": "ui_group_id",
+        "group": "",
         "order": 1,
         "width": 0,
         "height": 0,
@@ -7762,7 +7522,7 @@
         "id": "fb1c58f2a3fe45be",
         "type": "ui_text",
         "z": "abef47bed1338c6e",
-        "group": "a8e4a3.d31edb6",
+        "group": "",
         "order": 4,
         "width": 0,
         "height": 0,
@@ -7921,7 +7681,7 @@
         "name": "",
         "label": "switch",
         "tooltip": "",
-        "group": "e3fb2484c1bf844b",
+        "group": "",
         "order": 0,
         "width": 0,
         "height": 0,

@@ -4,6 +4,10 @@
         "light":{
             "devices":["light","lampLight"],
             "services":["EnvMonitoring","UV_light_shift"]
+        },
+        "water":{
+            "devices":["tank","water_irrigator"],
+            "services":["MoistureMonitoring"]
         }
     }
 }

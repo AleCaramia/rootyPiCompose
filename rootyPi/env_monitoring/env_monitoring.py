@@ -18,7 +18,7 @@ class EnvMonitoring(object):
         self.clientID=settings['ID']
         #self.goals=settings["DlI_goals"]
         self.default_time=settings['default_time']
-        
+        self.alive_topic=f"{self.base_topic}/{self.clientID}"
         ###
         self.url_registry=settings['url_registry']
         self.url_adaptor=settings['url_adaptor']
@@ -52,65 +52,77 @@ class EnvMonitoring(object):
 
     def MyOnConnect(self,paho_mqtt,userdata,flags,rc):
         print(f"EnvMonitoring: Connected to {self.broker} with result code {rc} \n subtopic {None}, pubtopic PROVA")
-
+    
     def MyPublish(self):
+        try:
+            # users_plant=json.loads(req.get("http://localhost:8080/getUsers")) #http://localhost:8080/getData/user1?measurament=humidity&duration=1
+            plants,url_adptor,models,valid_plant_types=self.RequestsToRegistry() 
+            
+            for plant in plants:
+                    
+                    plant_type=plant['type']
+                    plantId=plant['plantId']
+                    #print(plantId)
+                    userId=plant['userId']
+                    plant_code=plant["plantCode"]
 
-        # users_plant=json.loads(req.get("http://localhost:8080/getUsers")) #http://localhost:8080/getData/user1?measurament=humidity&duration=1
-        plants,url_adptor,models,valid_plant_types=self.RequestsToRegistry() 
-        
-        for plant in plants:
-                
-                plant_type=plant['type']
-                plantId=plant['plantId']
-                #print(plantId)
-                userId=plant['userId']
-                plant_code=plant["plantCode"]
+                    max_lux_lamp=self.retriveMaxLuxLamp(plant_code,models)
 
-                max_lux_lamp=self.retriveMaxLuxLamp(plant_code,models)
+                    start_time=plant['auto_init']
+                    end_time=plant['auto_end']
 
-                start_time=plant['auto_init']
-                end_time=plant['auto_end']
+                    current_time = datetime.now().time()
+                    current_datetime = datetime.combine(datetime.today(), current_time)
+                    start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
+                    time_difference = current_datetime - start_datetime
+                    hours_passed = max(round(time_difference.total_seconds() / 3600),1)
 
-                current_time = datetime.now().time()
-                current_datetime = datetime.combine(datetime.today(), current_time)
-                start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
-                time_difference = current_datetime - start_datetime
-                hours_passed = max(round(time_difference.total_seconds() / 3600),1)
+                    end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
+                    time_difference = end_datetime - start_datetime
+                    suncycle = round(time_difference.total_seconds() / 3600)
 
-                end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
-                time_difference = end_datetime - start_datetime
-                suncycle = round(time_difference.total_seconds() / 3600)
+                    lux_to_add,dli_recived_past_hour=self.PlantLuxEstimation(url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp,valid_plant_types)
+                    current_msg=self.__message.copy()
+                    
+                    current_topic=f"{self.base_topic}/{userId}/{plant_code}/lux_to_give/automatic"
 
-                lux_to_add,dli_recived_past_hour=self.PlantLuxEstimation(url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp,valid_plant_types)
-                current_msg=self.__message.copy()
-                
-                current_topic=f"{self.base_topic}/{userId}/{plant_code}/lux_to_give/automatic"
+                    current_msg['e'][0]['t']=time.time()
+                    current_msg['e'][0]['v']=lux_to_add
+                    current_msg['bn']=current_topic
+                    
+                    topicDLI=f"{self.base_topic}/{userId}/{plant_code}/DLI"
+                    dli_mess=self.dli_rec_message.copy()
+                    dli_mess['e'][0]['t']=time.time()
+                    dli_mess['e'][0]['v']=dli_recived_past_hour
+                    dli_mess['bn']=topicDLI
+                    dli_mess=json.dumps(dli_mess)
+                    self._paho_mqtt.publish(topic=topicDLI,payload=dli_mess,qos=2)
+                    #req.post("-------------",dli_recived_past_hour)
+                    print(dli_mess)
 
-                current_msg['e'][0]['t']=time.time()
-                current_msg['e'][0]['v']=lux_to_add
-                current_msg['bn']=current_topic
-                
-                topicDLI=f"{self.base_topic}/{userId}/{plant_code}/DLI"
-                dli_mess=self.dli_rec_message.copy()
-                dli_mess['e'][0]['t']=time.time()
-                dli_mess['e'][0]['v']=dli_recived_past_hour
-                dli_mess['bn']=topicDLI
-                dli_mess=json.dumps(dli_mess)
-                self._paho_mqtt.publish(topic=topicDLI,payload=dli_mess,qos=2)
-                #req.post("-------------",dli_recived_past_hour)
-                print(dli_mess)
-
-                #Rootypy/usern/plantn/lux_to_give/automatic
-                
-
-                __message=json.dumps(current_msg)
-                if current_datetime>=start_datetime and current_datetime<=end_datetime:
-                    print(__message)
-                    self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)
+                    #Rootypy/usern/plantn/lux_to_give/automatic
                     
 
-        return 
+                    
+                    if current_datetime>=start_datetime and current_datetime<=end_datetime:
+                        __message=json.dumps(current_msg)
+                        print(__message)
+                        self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)
+                    else:
+                        current_msg['e'][0]['v']=0
+                        __message=json.dumps(current_msg)
+                        self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)                   
+            return
+        except:
+            return "Error reqesting from registry"
     
+    def PublishAlive(self):
+        message={"bn":"updateCatalogService","e":[{"n": self.clientID, "t": time.time(), "v":None,"u":"IP"}]}
+        __message=json.dumps(message)
+        
+        print(__message)
+        self._paho_mqtt.publish(topic=self.alive_topic,payload=__message,qos=2)
+
     def RequestsToRegistry(self):
         #Devo farla al registry
         response=req.get(f"{self.url_registry}/plants")
@@ -235,59 +247,57 @@ class EnvMonitoring(object):
             
 #################################################################################################################################################à
 
-class Iamalive(object):
-    "I am alive"
+# class Iamalive(object):
+#     "I am alive"
 
-    def __init__(self,settings):
+#     def __init__(self,settings):
     
 
-        # mqtt attributes
-        self.base_topic=settings['basetopic']
-        self.port=settings['port']
-        self.broker=settings['broker']
-        self.clientID=settings['ID']+"alive"
+#         # mqtt attributes
+#         self.base_topic=settings['basetopic']
+#         self.port=settings['port']
+#         self.broker=settings['broker']
+#         self.clientID=settings['ID']+"alive"
 
-        self.topic = f"{self.base_topic}/{self.clientID}"       
-        # self.pub_topic = self.clientID
+#         self.topic =        
+#         # self.pub_topic = self.clientID
 
-        self.client = PahoMQTT.Client(self.clientID, True)
-        self.client.on_connect = self.myconnect
-        #########################################################################################
-        #Il message è da definire, vedere come preferisce ale
-        self.message = {"bn":"updateCatalogService","e":[{"n": settings['ID'], "t": time.time(), "v":None,"u":"IP"}]}
-        #########################################################################################à
-        self.time = time.time()
+#         self.client = PahoMQTT.Client(self.clientID, True)
+#         self.client.on_connect = self.myconnect
+#         #########################################################################################
+#         #Il message è da definire, vedere come preferisce ale
+#         self.message = {"bn":"updateCatalogService","e":[{"n": settings['ID'], "t": time.time(), "v":None,"u":"IP"}]}
+#         #########################################################################################à
+#         self.time = time.time()
     
-    def start_mqtt(self):
-        self.client.connect(self.broker,self.port)
-        self.client.loop_start()
-        # Avvia il metodo self.control_state() come thread
-        # control_thread = threading.Thread(target=self.control_state)
-        # control_thread.start()
-        # self.publish()
+#     def start_mqtt(self):
+#         self.client.connect(self.broker,self.port)
+#         self.client.loop_start()
+#         # Avvia il metodo self.control_state() come thread
+#         # control_thread = threading.Thread(target=self.control_state)
+#         # control_thread.start()
+#         # self.publish()
     
-    def myconnect(self,paho_mqtt, userdata, flags, rc):
-       print(f"AlIVE: Connected to {self.broker} with result code {rc} \n subtopic {None}, pubtopic {self.topic}")
+#     def myconnect(self,paho_mqtt, userdata, flags, rc):
+#        print(f"AlIVE: Connected to {self.broker} with result code {rc} \n subtopic {None}, pubtopic {self.topic}")
 
-    def publish(self):           
-        __message=json.dumps(self.message)
-        print(__message)
-        self.client.publish(topic=self.topic,payload=__message,qos=2)
+#     def publish(self):           
+
     
-class AliveThread(threading.Thread):
-    def __init__(self, threadId, name, config):
-        threading.Thread.__init__(self)
-        self.threadId = threadId
-        self.name = name
-        self.alive = Iamalive(config)
+# class AliveThread(threading.Thread):
+#     def __init__(self, threadId, name, config):
+#         threading.Thread.__init__(self)
+#         self.threadId = threadId
+#         self.name = name
+#         self.alive = Iamalive(config)
         
 
 
-    def run(self):
-        self.alive.start_mqtt()
-        while True:
-            self.alive.publish()  
-            time.sleep(5)  
+#     def run(self):
+#         self.alive.start_mqtt()
+#         while True:
+#             self.alive.publish()  
+#             time.sleep(5)  
 
 ################################################################################################################################################
 class thredFunction(threading.Thread): 
@@ -296,84 +306,45 @@ class thredFunction(threading.Thread):
         self.ThreadID = ThreadID
         self.name = name
         self.settings=settings
-        # self.env_time="EnviromentMonitoring\envTime.json"
-        # DEVO METTERE CHE NON PARTE SE L'orario corrente NON VA BENE
+        self._time=time.time()
+
+
     def run(self):
         self.function = EnvMonitoring(self.settings)
         self.function.start()
         # try:
         while True:
-                # current_time = datetime.now().time()
-                # if current_time>self.start_time:
-            self.function.MyPublish()        
-            time.sleep(15)
-                # else:
-                #     time.sleep(15)
+            self._time=time.time()
+            time_passed=time.time()-self._time
+            
+            if time_passed>=self.settings['publishInterval']:
+                self.function.MyPublish()        
                 
-        # except KeyboardInterrupt:
-        #         self.function.stop()
-
-##############################################################################################################################################à
-# class ThreadServer(object):
-#     def __init__(self):
-#         self.url="http://192.68.0.24:8081"
-#         self.server=EnvMonitoringTime()
-
-#     def start(self):
-#         conf={
-#             '/':{
-#             'request.dispatch':cherrypy.dispatch.MethodDispatcher(),
-#             'tools.sessions.on':True
-#             }
-#         }
-#         cherrypy.tree.mount(self.server,'/',conf)
-#         cherrypy.config.update({'server.socket_port': 8085})
-#         cherrypy.config.update({'server.socket_host':'0.0.0.0'})
-#         cherrypy.engine.start()
-
-# def start_env_monitoring():
-#     settings=json.load(open("configEnv.json",'r'))
-#     url_registry=settings["url_registry"]
-#     registartion_payload={"serviceID":settings['ID']}
-#     response=req.put(url_registry,data=json.dumps(registartion_payload))
-    
-#     # base_topic=settings['basetopic']
-#     # port=settings['port']
-#     # broker=settings['broker']
-#     # clientID=settings['ID']
-#     # DLi_goals=settings["DlI_goals"]
-#     return settings,response
-
-
-    
-#########################################################################################################################################
+            else:
+                self.function.PublishAlive()
+            time.sleep(15)    
+    #########################################################################################################################################
 
 def main():
-    # try:
-        time.sleep(5)
-        # settings,response=start_env_monitoring()
-        settings=json.load(open("configEnv.json",'r'))
-        thread2 = AliveThread(2, "aliveThread", settings)
-        thread2.start()
-        # Alive = Iamalive(settings)
-        # thread_Alive = threading.Thread(target=Alive.start_mqtt)
-        print("> Starting I am alive...")
-        # thread_Alive.start()
-        
-        # webserver= ThreadServer()
-        # thread_server = threading.Thread(target=webserver.start())
-        # print("> Starting thread_server...")
-        # thread_server.start()
 
-        thread1 = thredFunction(1,'Function',settings)
-        #thread_function = threading.Thread(target=tFunction.RunThred())
-        print("> Starting thread_function...")
-        thread1.start()
+    time.sleep(5)
+    # settings,response=start_env_monitoring()
+    settings=json.load(open("configEnv.json",'r'))
+    # thread2 = AliveThread(2, "aliveThread", settings)
+    # thread2.start()
+    # Alive = Iamalive(settings)
+    # thread_Alive = threading.Thread(target=Alive.start_mqtt)
+    # print("> Starting I am alive...")
+    # thread_Alive.start()
+            
+    # webserver= ThreadServer()
+    # thread_server = threading.Thread(target=webserver.start())
+    # print("> Starting thread_server...")
+            # thread_server.start()
 
-        # while True:
-        #     time.sleep(3)
-    # except:
-    #     pass
+    thread1 = thredFunction(1,'Function',settings)
+    print("> Starting thread_function...")
+    thread1.start()
 
 if __name__ == "__main__":
     main()
