@@ -8,6 +8,6 @@
     "influx_org": "rootyPi",
     "adaptor_url": "http://192.68.0.25:8080",
     "registry_url": "http://192.68.0.24:8081",
-    "services4db": ["moisture", "sunlight", "lampLight", "light", "lightShift","current_intensity", "DLI", "tank"],
+    "services4db": ["moisture", "sunlight", "lampLight", "light", "lightShift","current_intensity", "DLI", "tank","tankLevel"],
     "alive_topic": "RootyPy/microservices/Adaptor"
 }

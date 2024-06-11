@@ -180,7 +180,7 @@ class water_pump(object):
                                             "e":\
                                             [{ "n": "user", "u": None, "t": time.time(), "v":self.current_user }, \
                                              { "n": "plant", "u": None, "t": time.time(), "v":self.current_plant }, \
-                                             { "n": "state", "u": "boleean", "t": time.time(), "v": 1 }, \
+                                             { "n": "state", "u": "boolean", "t": time.time(), "v": 1 }, \
                                              { "n": "init_hour", "u": "s", "t": time.time(), "v":self.manual_init_hour }, \
                                              { "n": "final_hour", "u": "s", "t": time.time(), "v":self.manual_final_hour }, \
                                              { "n": "mass flow rate", "u": "percentage", "t": time.time(), "v":pump["e"][0]["v"] }  \
@@ -191,7 +191,7 @@ class water_pump(object):
                                         "e":\
                                         [{ "n": "user", "u": None, "t": time.time(), "v":self.current_user }, \
                                             { "n": "plant", "u": None, "t": time.time(), "v":self.current_plant }, \
-                                            { "n": "state", "u": "boleean", "t": time.time(), "v": 1 }, \
+                                            { "n": "state", "u": "boolean", "t": time.time(), "v": 1 }, \
                                             { "n": "init_hour", "u": "s", "t": time.time(), "v":self.manual_init_hour }, \
                                             { "n": "final_hour", "u": "s", "t": time.time(), "v":self.manual_final_hour }, \
                                             { "n": "mass flow rate", "u": "percentage", "t": time.time(), "v":pump["e"][0]["v"] }  \

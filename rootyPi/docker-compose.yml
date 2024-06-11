@@ -157,7 +157,7 @@ services:
       - report_generator
     depends_on:
       - registry
-      -report_generator
+      - report_generator
       - adaptor
     networks:
       net:

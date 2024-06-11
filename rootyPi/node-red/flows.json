@@ -39,6 +39,14 @@
         "env": []
     },
     {
+        "id": "7345f09d639edea5",
+        "type": "tab",
+        "label": "water flows",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "8fa8102ddd6213f9",
         "type": "tab",
         "label": "Operations about registratios",
@@ -184,12 +192,13 @@
             "f2c2c453fc059f3f",
             "77cc26df612d1f54",
             "d3dd0254ee70784d",
-            "f64e64a2ef64c852"
+            "f64e64a2ef64c852",
+            "b96219db0aeefd29"
         ],
         "x": 34,
         "y": 159,
-        "w": 1232,
-        "h": 222
+        "w": 1572,
+        "h": 262
     },
     {
         "id": "1167eb289c340144",
@@ -633,66 +642,6 @@
         "className": ""
     },
     {
-        "id": "2ef2de86a10a8d2c",
-        "type": "ui_spacer",
-        "z": "f2b7d1cdce5c4bfe",
-        "name": "spacer",
-        "group": "c846bf76c8606a05",
-        "order": 5,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "64241fcd5d3a665b",
-        "type": "ui_spacer",
-        "z": "f2b7d1cdce5c4bfe",
-        "name": "spacer",
-        "group": "c846bf76c8606a05",
-        "order": 7,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "c92bc1868c7ac74a",
-        "type": "ui_spacer",
-        "z": "f2b7d1cdce5c4bfe",
-        "name": "spacer",
-        "group": "c846bf76c8606a05",
-        "order": 9,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "be1a0f8373bde3cb",
-        "type": "ui_spacer",
-        "z": "f2b7d1cdce5c4bfe",
-        "name": "spacer",
-        "group": "c846bf76c8606a05",
-        "order": 11,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "e728389f9e3c864b",
-        "type": "ui_spacer",
-        "z": "f2b7d1cdce5c4bfe",
-        "name": "spacer",
-        "group": "43a5a58f83248d8e",
-        "order": 9,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "cfa37ae4fe636932",
-        "type": "ui_spacer",
-        "z": "f2b7d1cdce5c4bfe",
-        "name": "spacer",
-        "group": "43a5a58f83248d8e",
-        "order": 11,
-        "width": 1,
-        "height": 1
-    },
-    {
         "id": "baf09a28b04468c4",
         "type": "ui_spacer",
         "z": "075376242320f0ef",
@@ -719,6 +668,86 @@
         "name": "spacer",
         "group": "6d7fed1744c73108",
         "order": 6,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "aeafce6b4e9ec549",
+        "type": "ui_spacer",
+        "z": "7345f09d639edea5",
+        "name": "spacer",
+        "group": "c846bf76c8606a05",
+        "order": 5,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "356edb0dd6cf1668",
+        "type": "ui_spacer",
+        "z": "7345f09d639edea5",
+        "name": "spacer",
+        "group": "c846bf76c8606a05",
+        "order": 7,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "eaea70002a56dc7e",
+        "type": "ui_spacer",
+        "z": "7345f09d639edea5",
+        "name": "spacer",
+        "group": "c846bf76c8606a05",
+        "order": 9,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "15047879336d69e8",
+        "type": "ui_spacer",
+        "z": "7345f09d639edea5",
+        "name": "spacer",
+        "group": "c846bf76c8606a05",
+        "order": 11,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "436607bbf6ce4db5",
+        "type": "ui_spacer",
+        "z": "7345f09d639edea5",
+        "name": "spacer",
+        "group": "b6795e559d1e41a6",
+        "order": 4,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "c076c30eca2e5e81",
+        "type": "ui_spacer",
+        "z": "7345f09d639edea5",
+        "name": "spacer",
+        "group": "b6795e559d1e41a6",
+        "order": 6,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "999ed706a2492d4c",
+        "type": "ui_spacer",
+        "z": "7345f09d639edea5",
+        "name": "spacer",
+        "group": "43a5a58f83248d8e",
+        "order": 9,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "447325302188575a",
+        "type": "ui_spacer",
+        "z": "7345f09d639edea5",
+        "name": "spacer",
+        "group": "43a5a58f83248d8e",
+        "order": 11,
         "width": 1,
         "height": 1
     },
@@ -2421,9 +2450,7 @@
         "x": 3250,
         "y": 500,
         "wires": [
-            [
-                "da70d3da81bb4656"
-            ]
+            []
         ]
     },
     {
@@ -2472,34 +2499,6 @@
         "color": "#000000",
         "x": 420,
         "y": 100,
-        "wires": []
-    },
-    {
-        "id": "da70d3da81bb4656",
-        "type": "ui_gauge",
-        "z": "785f53d943d8482e",
-        "name": "Tank level",
-        "group": "b6795e559d1e41a6",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "Tank capacity",
-        "label": "units",
-        "format": "{{value}}",
-        "min": 0,
-        "max": 10,
-        "colors": [
-            "#c20505",
-            "#00d6e6",
-            "#0008ff"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 3500,
-        "y": 500,
         "wires": []
     },
     {
@@ -2684,7 +2683,8 @@
         "links": [
             "02177c4d978732d7",
             "4ceec963bc87e85e",
-            "648567d6b13c3f30"
+            "648567d6b13c3f30",
+            "1f751990e75adcb1"
         ],
         "x": 45,
         "y": 100,
@@ -2908,35 +2908,6 @@
         "y": 640,
         "wires": [
             []
-        ]
-    },
-    {
-        "id": "e8c67c07cf39a869",
-        "type": "ui_button",
-        "z": "785f53d943d8482e",
-        "name": "Give water",
-        "group": "b6795e559d1e41a6",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Give water",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 850,
-        "y": 560,
-        "wires": [
-            [
-                "ca404d5476496ca4",
-                "697c348d27f644ef"
-            ]
         ]
     },
     {
@@ -3210,10 +3181,11 @@
         "mode": "link",
         "links": [
             "73f712efb876a113",
-            "891cae89d11131cb"
+            "891cae89d11131cb",
+            "8fb57b83c5e956ab"
         ],
-        "x": 2395,
-        "y": 560,
+        "x": 2595,
+        "y": 460,
         "wires": []
     },
     {
@@ -6744,6 +6716,413 @@
         ]
     },
     {
+        "id": "3e4002b3c3be1387",
+        "type": "http request",
+        "z": "7345f09d639edea5",
+        "name": "Req Current water volume left",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 630,
+        "y": 160,
+        "wires": [
+            [
+                "9eefc2c208f7617b",
+                "a7c7800c1b7c9ad0"
+            ]
+        ]
+    },
+    {
+        "id": "190addbc5ef563a7",
+        "type": "ui_gauge",
+        "z": "7345f09d639edea5",
+        "name": "Tank level",
+        "group": "b6795e559d1e41a6",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Tank level",
+        "label": "% di intensità",
+        "format": "{{msg.payload}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#edcf07",
+            "#00cbe6",
+            "#3a65cb"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1300,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "1f45258a425bb90c",
+        "type": "python3-function",
+        "z": "7345f09d639edea5",
+        "name": "take last tank mesure",
+        "func": "if len(msg['payload'])>0:\n    current_level=msg['payload'][-1][\"v\"]\n    \n    model_of_sel_plant=msg['selected_plant'][\"plantCode\"][:2]\n    \n    for model in msg['models']:\n        if model['model_code']==model_of_sel_plant:\n            msg['payload']= round((current_level/model['tank_capacity'])*100)\n            break\n\nelse:\n    msg['payload']=\"Initializing plant...\"\nreturn msg",
+        "outputs": 1,
+        "x": 1100,
+        "y": 160,
+        "wires": [
+            [
+                "190addbc5ef563a7",
+                "9714b7cc75f3acdf"
+            ]
+        ]
+    },
+    {
+        "id": "9eefc2c208f7617b",
+        "type": "debug",
+        "z": "7345f09d639edea5",
+        "name": "debug 38",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "c8bc0462af4a4e91",
+        "type": "ui_button",
+        "z": "7345f09d639edea5",
+        "name": "submit mode change",
+        "group": "b6795e559d1e41a6",
+        "order": 5,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "label": "button",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 200,
+        "y": 300,
+        "wires": [
+            [
+                "97cb65a5eb34a0ba"
+            ]
+        ]
+    },
+    {
+        "id": "97cb65a5eb34a0ba",
+        "type": "function",
+        "z": "7345f09d639edea5",
+        "name": "Fetch water settings",
+        "func": "msg.selected_plant=global.get(\"selected_plant\")\nmsg.amount = flow.get(\"water_to_give\")\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 300,
+        "wires": [
+            [
+                "bd35fe147c08aef8"
+            ]
+        ]
+    },
+    {
+        "id": "bd35fe147c08aef8",
+        "type": "python3-function",
+        "z": "7345f09d639edea5",
+        "name": "Message mqtt to water_irrigator",
+        "func": "\nirrigation = { \"bn\": \"None\",\"e\": [\n        {\n            \"n\": \"Volume of water\",\n            \"u\": \"l\",\n            \"t\": \"None\",\n            \"v\": msg['amount']\n        }\n]}\nmsg['payload']=irrigation\n    \nmsg['topic']=f\"RootyPy/{msg['selected_plant']['userId']}/{msg['selected_plant']['plantCode']}/water_to_give/manual\"\nreturn msg",
+        "outputs": 1,
+        "x": 730,
+        "y": 300,
+        "wires": [
+            [
+                "6ce0fe96b098fe45",
+                "f29681bf8fa86456",
+                "90f966a252672043"
+            ]
+        ]
+    },
+    {
+        "id": "6ce0fe96b098fe45",
+        "type": "mqtt out",
+        "z": "7345f09d639edea5",
+        "name": "Send to irrigator",
+        "topic": "",
+        "qos": "2",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "8957198026b47e18",
+        "x": 1000,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "f29681bf8fa86456",
+        "type": "debug",
+        "z": "7345f09d639edea5",
+        "name": "debug 39",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "892ef1d2a986b2fd",
+        "type": "ui_slider",
+        "z": "7345f09d639edea5",
+        "name": "",
+        "label": "% of water picker",
+        "tooltip": "",
+        "group": "b6795e559d1e41a6",
+        "order": 3,
+        "width": 6,
+        "height": 1,
+        "passthru": false,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": "1",
+        "max": "10",
+        "step": "1",
+        "className": "",
+        "x": 470,
+        "y": 240,
+        "wires": [
+            [
+                "8bef213f06840208"
+            ]
+        ]
+    },
+    {
+        "id": "8bef213f06840208",
+        "type": "change",
+        "z": "7345f09d639edea5",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "water_to_give",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 700,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "de95cb77b1af2e50",
+        "type": "change",
+        "z": "7345f09d639edea5",
+        "name": "",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "water_to_give",
+                "pt": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 210,
+        "y": 240,
+        "wires": [
+            [
+                "892ef1d2a986b2fd"
+            ]
+        ]
+    },
+    {
+        "id": "90f966a252672043",
+        "type": "change",
+        "z": "7345f09d639edea5",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "adaptor.route",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 150,
+        "y": 160,
+        "wires": [
+            [
+                "88b393252f7acb89"
+            ]
+        ]
+    },
+    {
+        "id": "88b393252f7acb89",
+        "type": "python3-function",
+        "z": "7345f09d639edea5",
+        "name": "Produce url to adaptor",
+        "func": "userId=msg['selected_plant']['userId']\nplantCode=msg['selected_plant']['plantCode']\nmsg['url']=f\"{msg['url']}/getData/{userId}/{plantCode}?measurament=tankLevel&duration=1\"\nreturn msg",
+        "outputs": 1,
+        "x": 360,
+        "y": 160,
+        "wires": [
+            [
+                "3e4002b3c3be1387"
+            ]
+        ]
+    },
+    {
+        "id": "e9be20f99306515c",
+        "type": "ui_text",
+        "z": "7345f09d639edea5",
+        "group": "b6795e559d1e41a6",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "name": "",
+        "label": "",
+        "format": "Give water to plant:",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 230,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "8fb57b83c5e956ab",
+        "type": "link in",
+        "z": "7345f09d639edea5",
+        "name": "To water settings",
+        "links": [
+            "5e3ae2132d1e778b"
+        ],
+        "x": 35,
+        "y": 220,
+        "wires": [
+            [
+                "90f966a252672043",
+                "de95cb77b1af2e50",
+                "c8bc0462af4a4e91"
+            ]
+        ]
+    },
+    {
+        "id": "bb56506e7de298cc",
+        "type": "python3-function",
+        "z": "7345f09d639edea5",
+        "name": "",
+        "func": "\nreturn msg",
+        "outputs": 1,
+        "x": 1010,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a7c7800c1b7c9ad0",
+        "type": "change",
+        "z": "7345f09d639edea5",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "selected_plant",
+                "pt": "msg",
+                "to": "selected_plant",
+                "tot": "global"
+            },
+            {
+                "t": "set",
+                "p": "models",
+                "pt": "msg",
+                "to": "models",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 880,
+        "y": 160,
+        "wires": [
+            [
+                "1f45258a425bb90c"
+            ]
+        ]
+    },
+    {
+        "id": "9714b7cc75f3acdf",
+        "type": "debug",
+        "z": "7345f09d639edea5",
+        "name": "debug 41",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1300,
+        "y": 200,
+        "wires": []
+    },
+    {
         "id": "1314dcec3ebab8b8",
         "type": "inject",
         "z": "8fa8102ddd6213f9",
@@ -6765,7 +7144,7 @@
         "wires": [
             [
                 "3cdf817095039d1d",
-                "f2c2c453fc059f3f"
+                "b96219db0aeefd29"
             ]
         ]
     },
@@ -6828,8 +7207,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1080,
-        "y": 340,
+        "x": 1420,
+        "y": 380,
         "wires": [
             [
                 "f64e64a2ef64c852"
@@ -6972,8 +7351,8 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 520,
-        "y": 340,
+        "x": 860,
+        "y": 380,
         "wires": [
             [
                 "77cc26df612d1f54",
@@ -7004,10 +7383,10 @@
         "z": "8fa8102ddd6213f9",
         "g": "e6c4aaa3566ad829",
         "name": "Ask active services to registry",
-        "func": "msg['url']=\"http://192.68.0.24:8081/services\"\nreturn msg",
+        "func": "msg['url']=f\"{msg['url']}/services\"\nreturn msg",
         "outputs": 1,
-        "x": 210,
-        "y": 340,
+        "x": 550,
+        "y": 380,
         "wires": [
             [
                 "8b51178bff4916c9"
@@ -7028,8 +7407,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 820,
-        "y": 300,
+        "x": 1160,
+        "y": 340,
         "wires": []
     },
     {
@@ -7150,8 +7529,8 @@
         "links": [
             "12ac50748fb9d90b"
         ],
-        "x": 1225,
-        "y": 340,
+        "x": 1565,
+        "y": 380,
         "wires": []
     },
     {
@@ -7162,13 +7541,123 @@
         "name": "divide services online from adaptor",
         "func": "msg['services_online']=[]\nmsg['adaptor']=[]\nfor service in msg['payload']:\n    if service['serviceID']==\"adaptor\":\n        msg['adaptor']=service\n    else:\n        msg['services_online'].append(service)\nreturn msg",
         "outputs": 1,
-        "x": 840,
-        "y": 340,
+        "x": 1180,
+        "y": 380,
         "wires": [
             [
                 "46df1d3d9b00eac4"
             ]
         ]
+    },
+    {
+        "id": "b96219db0aeefd29",
+        "type": "change",
+        "z": "8fa8102ddd6213f9",
+        "g": "e6c4aaa3566ad829",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "settings.settings.url_registry",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 290,
+        "y": 380,
+        "wires": [
+            [
+                "f2c2c453fc059f3f",
+                "b5129cd372d50485"
+            ]
+        ]
+    },
+    {
+        "id": "b5129cd372d50485",
+        "type": "python3-function",
+        "z": "8fa8102ddd6213f9",
+        "name": "Ask models",
+        "func": "msg['url']=f\"{msg['url']}/models\"\nreturn msg",
+        "outputs": 1,
+        "x": 490,
+        "y": 460,
+        "wires": [
+            [
+                "6d4685ccd1907e29"
+            ]
+        ]
+    },
+    {
+        "id": "6d4685ccd1907e29",
+        "type": "http request",
+        "z": "8fa8102ddd6213f9",
+        "name": "Req models to registry",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 760,
+        "y": 460,
+        "wires": [
+            [
+                "8009ee6744d4cd61",
+                "8189296a7b778061"
+            ]
+        ]
+    },
+    {
+        "id": "8009ee6744d4cd61",
+        "type": "change",
+        "z": "8fa8102ddd6213f9",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "models",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1050,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8189296a7b778061",
+        "type": "debug",
+        "z": "8fa8102ddd6213f9",
+        "name": "debug 40",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 520,
+        "wires": []
     },
     {
         "id": "ef054254640742d7",
@@ -7491,32 +7980,6 @@
         "x": 970,
         "y": 190,
         "wires": []
-    },
-    {
-        "id": "ecb5e71fe2ef6e7c",
-        "type": "ui_button",
-        "z": "abef47bed1338c6e",
-        "name": "Submit Button",
-        "group": "b6795e559d1e41a6",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Submit",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "",
-        "topicType": "str",
-        "x": 800,
-        "y": 360,
-        "wires": [
-            []
-        ]
     },
     {
         "id": "fb1c58f2a3fe45be",

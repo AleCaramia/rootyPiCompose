@@ -178,6 +178,8 @@ class AllPubs(threading.Thread):
                 print(outAlive)
                 sens.myPub.myPublish(json.dumps(outAlive), sens.aliveTopic)
                 sens.currentState -= sens.decayCoef
+                if sens.currentState<0:
+                    sens.currentState=0
                 time.sleep(2)
             time.sleep(10)
 
