@@ -54,7 +54,7 @@ class EnvMonitoring(object):
         print(f"EnvMonitoring: Connected to {self.broker} with result code {rc} \n subtopic {None}, pubtopic PROVA")
     
     def MyPublish(self):
-        try:
+        # try:
             # users_plant=json.loads(req.get("http://localhost:8080/getUsers")) #http://localhost:8080/getData/user1?measurament=humidity&duration=1
             plants,url_adptor,models,valid_plant_types=self.RequestsToRegistry() 
             
@@ -113,8 +113,8 @@ class EnvMonitoring(object):
                         __message=json.dumps(current_msg)
                         self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)                   
             return
-        except:
-            return "Error reqesting from registry"
+        # except:
+        #     return "Error reqesting from registry"
     
     def PublishAlive(self):
         message={"bn":"updateCatalogService","e":[{"n": self.clientID, "t": time.time(), "v":None,"u":"IP"}]}
@@ -231,7 +231,7 @@ class EnvMonitoring(object):
 #################################################################
         #NUOVA VERSIONE DEL CALCOLO: Adesso calcolo il deficit nella giornata fin ora       
         DLIhgoal=DLI_goal/sun_cycle
-        DLI_current_goal=DLIhgoal*hours_passed
+        DLI_current_goal=DLIhgoal*hours_passed #cannot evaluate proprely because the hours passed does not grow enough rapidly
         print(f"DLI_current_goal: {DLI_current_goal}")
         if dli_given_today<DLI_current_goal:
             DLI_toAdd=DLI_current_goal-dli_given_today
@@ -300,37 +300,51 @@ class EnvMonitoring(object):
 #             time.sleep(5)  
 
 ################################################################################################################################################
-class thredFunction(threading.Thread): 
-    def __init__(self,ThreadID,name,settings):
-        threading.Thread.__init__(self)
-        self.ThreadID = ThreadID
-        self.name = name
-        self.settings=settings
-        self._time=time.time()
+# class thredFunction(threading.Thread): 
+#     def __init__(self,ThreadID,name,settings):
+#         threading.Thread.__init__(self)
+#         self.ThreadID = ThreadID
+#         self.name = name
+#         self.settings=settings
+#         self._time=time.time()
 
 
-    def run(self):
-        self.function = EnvMonitoring(self.settings)
-        self.function.start()
-        # try:
-        while True:
-            self._time=time.time()
-            time_passed=time.time()-self._time
-            
-            if time_passed>=self.settings['publishInterval']:
-                self.function.MyPublish()
-                self.function.PublishAlive()        
+    # def run(self):
+        # self.function = EnvMonitoring(self.settings)
+        # self.function.start()
+        # # try:
+        # while True:
+        #     self._time=time.time()
+        #     time_passed=time.time()-self._time
+        #     print(f"time_passed: {time_passed}" )
+        #     if time_passed>=self.settings['publishInterval']:
+        #         self.function.MyPublish()
+        #         self.function.PublishAlive()        
                 
-            else:
-                self.function.PublishAlive()
-            time.sleep(15)    
+        #     else:
+        #         self.function.PublishAlive()
+        #     time.sleep(15)    
     #########################################################################################################################################
 
 def main():
-
-    time.sleep(5)
-    # settings,response=start_env_monitoring()
     settings=json.load(open("configEnv.json",'r'))
+    function = EnvMonitoring(settings)
+    function.start()
+    _time=time.time()
+        # try:
+    while True:        
+        time_passed=time.time()-_time
+        print(f"time_passed: {time_passed}" )
+        if round(time_passed)>=settings['publishInterval']:
+            function.MyPublish()
+            function.PublishAlive()
+            _time=time.time()       
+                
+        else:
+            function.PublishAlive()
+        time.sleep(15) 
+    # settings,response=start_env_monitoring()
+    
     # thread2 = AliveThread(2, "aliveThread", settings)
     # thread2.start()
     # Alive = Iamalive(settings)
@@ -343,9 +357,9 @@ def main():
     # print("> Starting thread_server...")
             # thread_server.start()
 
-    thread1 = thredFunction(1,'Function',settings)
-    print("> Starting thread_function...")
-    thread1.start()
+    # thread1 = thredFunction(1,'Function',settings)    
+    # thread1.start()
+    # print("> Starting thread_function...")
 
 if __name__ == "__main__":
     main()
