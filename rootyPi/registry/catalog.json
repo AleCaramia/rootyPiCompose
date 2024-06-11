@@ -25,22 +25,22 @@
     {
       "type": "Foliage",
       "DLI_goal": 4,
-      "moisture_goal": 500
+      "moisture_goal": 50
     },
     {
       "type": "Flower",
       "DLI_goal": 10,
-      "moisture_goal": 700
+      "moisture_goal": 70
     },
     {
       "type": "Succulent",
       "DLI_goal": 14,
-      "moisture_goal": 500
+      "moisture_goal": 80
     },
     {
       "type": "Fruit",
       "DLI_goal": 25,
-      "moisture_goal": 500
+      "moisture_goal": 50
     }
   ]
 }

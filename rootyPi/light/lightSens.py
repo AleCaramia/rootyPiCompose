@@ -167,10 +167,10 @@ class AllSens(threading.Thread):
                         mess = json.loads(msg.payload.decode("utf-8"))
                         event = mess["e"][0]
                         if msg.topic.split("/")[3] == "lampLight" and not  mess["bn"].startswith("update"):
-                            #print("-------lampLight")
+                            print("-------lampLight")
                             sens.artificialLight = float(event["v"])
                         elif msg.topic.split("/")[3] == "sunlight" and not  mess["bn"].startswith("update"):
-                            #print("-----------sunlight")
+                            print("-----------sunlight")
                             sens.sunLight = float(event["v"])                       
                 sens.currentState = sens.artificialLight + sens.sunLight
                 print(f"current state {sens.currentState}")
