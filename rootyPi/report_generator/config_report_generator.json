@@ -2,7 +2,7 @@
     "ID":"Report_generator",
     "broker":"mqtt.eclipseprojects.io",
     "port":1883,
-    "my_url":"http://192.68.0.33:8081",
+    "my_url":"http://192.68.0.33:8097",
     "sub_topic":"RootyPy/iamalive/ReportGenerator",
     "pub_topic":"RootyPy/iamalive/ReportGenerator",
     "url_registry":"http://127.0.0.1:8080",
