@@ -23,7 +23,7 @@ class Report_generator(object):
     def __init__(self,config_path,stop_event):
         config =  json.load(open(config_path,'r'))
         self.registry_url = config['url_registry']
-        self.registry_url = 'http://127.0.0.1:8080'
+        #self.registry_url = 'http://127.0.0.1:8080'
         self.headers = config['headers']
         self.ID = config['ID']
         self.broker = config['broker']
@@ -476,7 +476,7 @@ class ThreadManager:
 
 if __name__ == '__main__':
     # Initialize the objects
-    config_path = "C:\\Users\\Lenovo\\rootyPiCompose\\rootyPi\\report_generator\\config_report_generator.json"
+    config_path = "config_report_generator.json"
     stop_event = threading.Event()
     report_generator = Report_generator(config_path,stop_event)
     iamalive = Iamalive(config_path,stop_event)  # Provide the actual path to your config file

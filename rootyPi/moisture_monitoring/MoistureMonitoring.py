@@ -12,11 +12,12 @@ from datetime import datetime
 class MoistureMonitoring(object):
     def __init__(self,settings):
         #load settings
-        self.base_topic=settings['pub_topic_light_shift']
+        self.base_topic=settings['pub_topic_moisturemonitoring']
+        self.alive_topic = settings['pub_topic_Iamalive']
         self.port=settings['port']
         self.broker=settings['broker']
         self.clientID=settings['ID_moistureMonitoring']
-        self.moisture_goals = settings['moisture_goals']
+        self.moisture_goals = None
         self.default_time=settings['default_time']
         
         ###
@@ -43,55 +44,62 @@ class MoistureMonitoring(object):
         self._paho_mqtt.disconnect()
 
     def MyOnConnect(self,paho_mqtt,userdata,flags,rc):
-        print(f"EnvMonitoring: Connected to {self.broker} with result code {rc} \n subtopic {None}, pubtopic PROVA")
+        print(f"MoistureMonitoring: Connected to {self.broker} with result code {rc} \n subtopic {None}, pubtopic PROVA")
 
-    def MyPublish(self):
+    def MyPublish(self, type):
 
         # users_plant=json.loads(req.get("http://localhost:8080/getUsers")) #http://localhost:8080/getData/user1?measurament=humidity&duration=1
-        plants,url_adptor,models=self.RequestsToRegistry() 
-        
-        for plant in plants:
-                
-                plant_type=plant['type']
-                plantId=plant['plantId']
-                #print(plantId)
-                userId=plant['userId']
-                plant_code=plant["plantCode"]
-                
-
-                max_lux_lamp,jar_volume=self.retriveMaxFlowPumpAndJarVolume(plant_code,models)
-                
-                start_time=plant['auto_init']
-                end_time=plant['auto_end']
-
-                current_time = datetime.now().time()
-                current_datetime = datetime.combine(datetime.today(), current_time)
-                start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
-                time_difference = current_datetime - start_datetime
-                hours_passed = round(time_difference.total_seconds() / 3600)
-
-                end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
-                time_difference = end_datetime - start_datetime
-                suncycle = round(time_difference.total_seconds() / 3600)
-
-                water_to_add = self.PlantWaterEstimation(url_adptor,plant_code,plant_type,userId,jar_volume)
-                current_msg=self.__message.copy()
-                
-                current_topic=f"{self.base_topic}/{userId}/{plant_code}/water_to_give/automatic"
-
-                current_msg['e'][0]['t']=time.time()
-                current_msg['e'][0]['v']=water_to_add
-                current_msg['bn']=current_topic
-                
-
-
-                __message=json.dumps(current_msg)
-                if current_datetime>=start_datetime and current_datetime<=end_datetime:
-                    print(__message)
-                    self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)
+        if type == "function":
+            plants,url_adptor,models=self.RequestsToRegistry() 
+            
+            for plant in plants:
+                    
+                    plant_type=plant['type']
+                    plantId=plant['plantId']
+                    #print(plantId)
+                    userId=plant['userId']
+                    plant_code=plant["plantCode"]
                     
 
-        return 
+                    max_lux_lamp,jar_volume=self.retriveMaxFlowPumpAndJarVolume(plant_code,models)
+                    
+                    start_time=plant['auto_init']
+                    end_time=plant['auto_end']
+
+                    current_time = datetime.now().time()
+                    current_datetime = datetime.combine(datetime.today(), current_time)
+                    start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
+                    time_difference = current_datetime - start_datetime
+                    hours_passed = round(time_difference.total_seconds() / 3600)
+
+                    end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
+                    time_difference = end_datetime - start_datetime
+                    suncycle = round(time_difference.total_seconds() / 3600)
+
+                    water_to_add = self.PlantWaterEstimation(url_adptor,plant_code,plant_type,userId,jar_volume)
+                    if water_to_add>0:
+
+                        current_msg=self.__message.copy()
+                        
+                        current_topic=f"{self.base_topic}/{userId}/{plant_code}/water_to_give/automatic"
+
+                        current_msg['e'][0]['t']=time.time()
+                        current_msg['e'][0]['v']=water_to_add
+                        current_msg['bn']=current_topic
+                        
+
+
+                        __message=json.dumps(current_msg)
+                        if current_datetime>=start_datetime and current_datetime<=end_datetime:
+                            print(__message)
+                            self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)
+                        
+
+            return 
+        else:
+            message = {"bn":"updateCatalogService","e":[{"n":"MoistureMonitoring", "t": time.time(), "v":None,"u":"IP"}]}
+            self._paho_mqtt.publish(topic=self.alive_topic,payload=json.dumps(message),qos=2)
+
     
     def RequestsToRegistry(self):
         #Devo farla al registry
@@ -100,7 +108,6 @@ class MoistureMonitoring(object):
         plants=json.loads(response.text)
         models=json.loads((req.get(f"{self.url_registry}/models")).text)
         active_services=json.loads(req.get(f"{self.url_registry}/services").text)
-       
         # with open("fake_catalogue.json",'r') as file:
         #     catalogue = json.loads(file.read())
         # plants = catalogue['plants']
@@ -119,7 +126,7 @@ class MoistureMonitoring(object):
         vase_type=plant_code[:2]
         for model in models:
             if model['model_code']==vase_type:
-                max_lux_lamp=model["max_Flow"]
+                max_lux_lamp=model["max_flow"]
                 jar_volume=model["jar_volume"]
                 break
         return max_lux_lamp,jar_volume
@@ -129,13 +136,30 @@ class MoistureMonitoring(object):
 
         # Devo fare una request per sapere la misurazione della pianta (nome misurazione place holder)
         # mesurements_past_hour,perc_intensity_lamp=self.PlantSpecificGetReq(userId,plantId)
+        plants_type=json.loads((req.get(f"{self.url_registry}/valid_plant_types")).text)
+        for plant in plants_type:
+            if plant_type == plant["type"]:
+                self.moisture_goals=float(plant["moisture_goal"])
+                break
         mesurements_past_hour=self.PlantSpecificGetReq(url_adptor,userId,plant_code)#aggiungo i dli dati fin ora
+        # print(type(mesurements_past_hour))
+        # print(mesurements_past_hour)
         #ipotizzando siano lux al secondo e siano in un vettore
         # lux_past_hour=self.LuxPastHour(mesurements_past_hour)
-        mean_moisture_past_hour= np.mean(mesurements_past_hour)
-        current_plant_goal=self.moisture_goals[plant_type]
-        if current_plant_goal - mean_moisture_past_hour > 0:
-            water_to_add = (current_plant_goal - mean_moisture_past_hour)/100 * jar_volume
+        
+        # with open("fake_catalogue.json",'r') as file:
+        #     catalogue = json.loads(file.read())
+        # plants_type = catalogue['valid_plant_types']
+        # print(mesurements_past_hour)
+        # print(type(mesurements_past_hour))
+        mesurements_past_hour_moisture = []
+        for mesure in mesurements_past_hour:
+                mesurements_past_hour_moisture.append(mesure['v'])
+        mean_moisture_past_hour= np.mean(mesurements_past_hour_moisture)
+
+        
+        if self.moisture_goals - mean_moisture_past_hour > 0:
+            water_to_add = (self.moisture_goals - mean_moisture_past_hour)/100 * jar_volume
         else:
             water_to_add = 0
     
@@ -146,7 +170,11 @@ class MoistureMonitoring(object):
         
         mesurements_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=moisture&duration=1").text)
         # mesurements_past_hour = np.random.randint(0,100,1000)
-        return mesurements_past_hour
+        if len(mesurements_past_hour)==0:
+            mesurements_past_hour = [{"t": f"{datetime.now()}, {time.time()}", "v": self.moisture_goals + 1}]
+            return mesurements_past_hour
+        else: 
+            return mesurements_past_hour
 
     
     
@@ -176,7 +204,7 @@ class Iamalive(object):
         self.client.on_connect = self.myconnect
         #########################################################################################
         #Il message è da definire, vedere come preferisce ale
-        self.message = {"bn":"updateCatalogService","e":[{"n": "MoistureMonitoring", "t": time.time(), "v":None,"u":"IP"}]}
+        self.message = {"bn":"updateCatalogService","e":[{"n":"MoistureMonitoring", "t": time.time(), "v":None,"u":"IP"}]}
         #########################################################################################à
         self.time = time.time()
     
@@ -186,18 +214,15 @@ class Iamalive(object):
         # Avvia il metodo self.control_state() come thread
         # control_thread = threading.Thread(target=self.control_state)
         # control_thread.start()
-        self.publish()
+        # self.publish()
     
     def myconnect(self,paho_mqtt, userdata, flags, rc):
        print(f"AlIVE: Connected to {self.broker} with result code {rc} \n subtopic {None}, pubtopic {self.topic}")
 
-    def publish(self):
-        while True:
-            
-            __message=json.dumps(self.message)
-            print(__message)
-            self.client.publish(topic=self.topic,payload=__message,qos=2)
-            time.sleep(30)    
+    def publish(self):           
+        __message=json.dumps(self.message)
+        print(__message)
+        self.client.publish(topic=self.topic,payload=__message,qos=2)
 
 ################################################################################################################################################
 class thredFunction(object): 
@@ -215,13 +240,30 @@ class thredFunction(object):
             while True:
                 # current_time = datetime.now().time()
                 # if current_time>self.start_time:
-                    self.function.MyPublish()        
+                    self.function.MyPublish("function")
+                    self.function.MyPublish("alive")     
                     time.sleep(15)
                 # else:
                 #     time.sleep(15)
                 
         except KeyboardInterrupt:
                 self.function.stop()
+
+
+class AliveThread(threading.Thread):
+    def __init__(self, threadId, name, config):
+        threading.Thread.__init__(self)
+        self.threadId = threadId
+        self.name = name
+        self.alive = Iamalive(config)
+        
+
+
+    def run(self):
+        self.alive.start_mqtt()
+        while True:
+            self.alive.publish()  
+            time.sleep(5) 
 
 ##############################################################################################################################################à
 # class ThreadServer(object):
@@ -259,30 +301,23 @@ class thredFunction(object):
 #########################################################################################################################################
 if __name__ == "__main__":
 
-    # try:
-        time.sleep(5)
-        # settings,response=start_env_monitoring()
-        settings=json.load(open("configWat.json",'r'))
-        Alive = Iamalive(settings)
-        thread_Alive = threading.Thread(target=Alive.start_mqtt)
-        print("> Starting I am alive...")
-        thread_Alive.start()
-        
-        # webserver= ThreadServer()
-        # thread_server = threading.Thread(target=webserver.start())
-        # print("> Starting thread_server...")
-        # thread_server.start()
+    time.sleep(5)
+    # settings,response=start_env_monitoring()
+    settings=json.load(open("configWat.json",'r'))
+    #thread2 = AliveThread(2, "aliveThread", settings)
+    #thread2.start()
+    # Alive = Iamalive(settings)
+    # thread_Alive = threading.Thread(target=Alive.start_mqtt)
+    #print("> Starting I am alive...")
+    
+    # webserver= ThreadServer()
+    # thread_server = threading.Thread(target=webserver.start())
+    # print("> Starting thread_server...")
+    # thread_server.start()
 
-        tFunction = thredFunction(settings)
-        thread_function = threading.Thread(target=tFunction.RunThred())
-        print("> Starting thread_function...")
-        thread_function.start()
+    tFunction = thredFunction(settings)
+    #thread_function = threading.Thread(target=tFunction.RunThred())
+    print("> Starting thread_function...")
+    tFunction.RunThred()
 
-        # while True:
-        #     time.sleep(3)
-    # except:
-    #     pass
-
-
- 
 

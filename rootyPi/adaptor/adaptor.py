@@ -163,6 +163,7 @@ class MySubscriber:
             url = self.registry_url + "/users"
             response = requests.get(url)
             self.users = json.loads(response.text)
+            self.time = time.time()
 
         def update_users(self):
             url = self.registry_url + "/users"
@@ -184,7 +185,9 @@ class MySubscriber:
         def myOnConnect (self, paho_mqtt, userdata, flags, rc):
             print ("Connected to %s with result code: %d" % (self.messageBroker, rc))
         def checkUserPlantPresence(self, userId, plantCode):
-            self.update_users()
+            if time.time() > self.time + 10:
+                self.update_users()
+                self.time = time.time()
             for user in self.users:
                 if user["userId"] == userId:
                     for plant in user["plants"]:

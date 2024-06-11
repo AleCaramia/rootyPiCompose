@@ -39,8 +39,8 @@ class water_pump(object):
     def control_state(self):
         while True:
             for j,user in enumerate(self.list_of_manual_plant):
-                if time.time() >= user["e"][3]["v"] and \
-                time.time() <= user["e"][4]["v"]:
+                if time.time() >= int(user["e"][3]["v"]) and \
+                time.time() <= int(user["e"][4]["v"]):
                     self.state = 1
                 else:
                     self.state = 0
@@ -52,8 +52,8 @@ class water_pump(object):
         mess = json.loads(msg.payload)
         pump = { "bn": "None","e": [
         {
-            "n": "mass flow rate",
-            "u": "percentage",
+            "n": "Volume of water",
+            "u": "l",
             "t": "None",
             "v": "None"
         },
@@ -191,7 +191,7 @@ class water_pump(object):
                     self.CodeRequest()
                     for code in self.code_db:
                         if code["model_code"] == current_model:
-                            self.max_flow = code["max_Flow"]
+                            self.max_flow = code["max_flow"]
                             return
                     print(f"No plant code found for {current_model}")
         print(f"\nNo plant found for {self.current_user}/{self.current_plant}")

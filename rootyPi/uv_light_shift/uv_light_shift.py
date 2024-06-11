@@ -46,8 +46,8 @@ class light_shift(object):
 
         while True:
             for j,user in enumerate(self.list_of_manual_plant):
-                if time.time() >= user["e"][3]["v"] and \
-                time.time() <= user["e"][4]["v"]:
+                if time.time() >= int(user["e"][3]["v"]) and \
+                time.time() <= int(user["e"][4]["v"]):
                     self.state = 1
                 else:
                     self.state = 0

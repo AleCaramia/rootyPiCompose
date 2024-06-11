@@ -18,7 +18,7 @@ class TankSimulator:
         self.isOn = True
         self.tankCapacity = tankCapacity #liters
         self.tankLevel = tankCapacity #liters
-        self.jarVolumne = jarVolume
+        self.jarVolume = jarVolume
         self.pubTopic = baseTopic + "/tank"
         self.subTopic = baseTopic + "waterPump/+" 
         self.plantCode = plantCode
@@ -160,6 +160,7 @@ class AllPubs(threading.Thread):
         while True:
             update_simulators(self.simulators)
             print(len(self.simulators))
+            litersToGive = 0
             for sim in self.simulators:
                 if not sim.mySub.q.empty():
                     msg = sim.mySub.q.get()
@@ -169,7 +170,7 @@ class AllPubs(threading.Thread):
                         mess = json.loads(msg.payload)
                         litersToGive = mess["e"][0]["v"]
                 if litersToGive < sim.tankLevel:
-                    event = {"n": "irrigation", "u": "l/m^3", "t": str(time.time()), 
+                    event = {"n": "irrigation", "u": "l", "t": str(time.time()), 
                         "v": litersToGive/sim.jarVolume*100}
                     sim.tankLevel -= litersToGive
                     event1 = {"n": "tankLevel", "u": "l", "t": str(time.time()), 

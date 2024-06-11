@@ -103,6 +103,8 @@ class GreenHouseBot:
             self.eval_username(chat_ID,message)
         elif self.uservariables[chat_ID]['chatstatus'] == 'listeningforpwd':
             self.eval_pwd(chat_ID,message)
+        elif self.uservariables[chat_ID]['chatstatus'] == 'listeningforwaterpercentage':
+            self.eval_water_percentage(chat_ID,message)
         elif self.uservariables[chat_ID]['chatstatus'] == 'listeningfortoken':
             self.eval_token(chat_ID,message)
         elif self.uservariables[chat_ID]['chatstatus'] == 'listeningfortransfername':
@@ -399,11 +401,11 @@ class GreenHouseBot:
         self.update_message_to_remove(msg_id,chat_ID)
 
     def get_available_plant_types(self):
-        r = requests.get(self.registry_url+'/valid_plant_types')
+        r = requests.get(self.registry_url+'/valid_plant_types', headers = self.headers)
+        print(f'GET request sent at {self.registry_url}/valid_plant_types')
         output = json.loads(r.text)
         return output
 
-        
 
 #--------------------------------------------------------- New user ----------------------------------------------------
 
@@ -545,9 +547,24 @@ class GreenHouseBot:
 #--------------------------------------------------------- Plant watering --------------------------------------------------------------
 
     def water_plant(self, chat_ID):                  # Activates the watering of the plant and prints tank level
-        msg_id = self.bot.sendMessage(chat_ID, text="You chose to water the plant")['message_id']
+        msg_id = self.bot.sendMessage(chat_ID, text="You chose to water the plant\nsend a percentange between 0 and 10")['message_id']
+        self.uservariables[chat_ID]['chatstatus'] = 'listeningforwaterpercentage'
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
+
+    def eval_water_percentage(self,chat_ID,message):
+        message = message.strip()
+        try:
+            perc_value = int(message)
+            self.uservariables[chat_ID]['chatstatus'] = 'start'
+            msg_id = self.bot.sendMessage(chat_ID,f'{perc_value} is a valid value')['message_id']
+            self.remove_previous_messages(chat_ID)
+            self.update_message_to_remove(msg_id,chat_ID)
+            payload =  {"bn": f'{self.ClientID}',"e":[{ "n": f"{self.ClientID}", "u": "", "t": time.time(), "v":f"{perc_value}" }]}
+            self.paho_mqtt.publish('RootyPy/watertank',json.dumps(payload))
+        except:
+            msg_id = self.bot.sendMessage(chat_ID,f'{message} is an invalid value,try again')['message_id']
+            self.update_message_to_remove(msg_id,chat_ID)
 
 
 #--------------------------------------- Plant Removal ------------------------------------------------------------------------------------
@@ -898,8 +915,8 @@ class GreenHouseBot:
         payload = msg.payload
         print(f"Received message on topic {msg.topic}")
         if 'RootyPy/microservices/report_generator' in msg.topic:
-            user = msg.topic.split('/')[3]
-            plant = msg.topic.split('/')[4]
+            user = msg.topic.split('/')[2]
+            plant = msg.topic.split('/')[3]
             # If the payload is an image, display it
             try:
                 # Decode the JSON payload
