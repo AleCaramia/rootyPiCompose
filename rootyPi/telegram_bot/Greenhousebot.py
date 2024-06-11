@@ -393,7 +393,7 @@ class GreenHouseBot:
         available_plant_types = self.get_available_plant_types()
         buttons = []
         for pt in available_plant_types:
-            button = InlineKeyboardButton(text=pt['type'], callback_data=f'plant_type&{pt['type']}&{plantname}')
+            button = [InlineKeyboardButton(text=f'{pt}', callback_data=f'plant_type&{pt}&{plantname}')]
             buttons.append(button)
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID,text =f'choose plant type:',reply_markup=keyboard)['message_id']
@@ -404,7 +404,10 @@ class GreenHouseBot:
         r = requests.get(self.registry_url+'/valid_plant_types', headers = self.headers)
         print(f'GET request sent at {self.registry_url}/valid_plant_types')
         output = json.loads(r.text)
-        return output
+        plant_types =[]
+        for diz in output:
+            plant_types.append(diz['type'])
+        return plant_types
 
 
 #--------------------------------------------------------- New user ----------------------------------------------------
@@ -492,19 +495,10 @@ class GreenHouseBot:
         print(f'waiting for  pot token from {chat_ID}')
 
     def eval_token(self,chat_ID,message):
-        set_token = set()
-        r = requests.get(self.registry_url+'/plants',headers = self.headers)
-        print(f'GET request sent at \'{self.registry_url}/plants')
-        output = json.loads(r.text)
-        for plant in output:
-            print(plant)
-            set_token.add(plant['plantCode']) 
+        
         message= str(message)
-        if message.strip() in set_token:
-            msg_id = self.bot.sendMessage(chat_ID,text =f'{message} already exists')['message_id']
-            self.remove_previous_messages(chat_ID)
-            self.update_message_to_remove(msg_id,chat_ID)
-        elif '&' in message.strip() or ';' in message.strip() or not (message[0].isalpha() and message[1].isalpha()):
+        if '&' in message.strip() or ';' in message.strip() or not (message[0].isalpha() and message[1].isalpha()) or not all(char.isdigit() for char in message[2:]):
+
             msg_id = self.bot.sendMessage(chat_ID,text =f'{message} is a invalid name contains \'&\' or \';\' ')['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
