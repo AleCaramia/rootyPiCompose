@@ -6,7 +6,7 @@ import json
 import numpy as np
 import requests as req
 import threading
-from datetime import datetime
+from datetime import datetime,timedelta
 
 #devo cambiare il modo in cui prendo la perc intensità
 class EnvMonitoring(object):
@@ -22,7 +22,10 @@ class EnvMonitoring(object):
         ###
         self.url_registry=settings['url_registry']
         self.url_adaptor=settings['url_adaptor']
-
+        #####
+        self.simMode=settings['simMode']
+        self.startedSim=0
+        #self.simVector=[1,2,3,4,5,6,5,4,3,2,1]
 
         # self.envTime=env_time
         ###############################################à
@@ -70,16 +73,31 @@ class EnvMonitoring(object):
 
                     start_time=plant['auto_init']
                     end_time=plant['auto_end']
+                    if self.simMode==0:
+                        current_time = datetime.now().time()
+                        current_datetime = datetime.combine(datetime.today(), current_time)
+                        start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
+                        time_difference = current_datetime - start_datetime
+                        hours_passed = max(round(time_difference.total_seconds() / 3600),1)
 
-                    current_time = datetime.now().time()
-                    current_datetime = datetime.combine(datetime.today(), current_time)
-                    start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
-                    time_difference = current_datetime - start_datetime
-                    hours_passed = max(round(time_difference.total_seconds() / 3600),1)
+                        end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
+                        time_difference = end_datetime - start_datetime
+                        suncycle = round(time_difference.total_seconds() / 3600)
+                    else:
+                        
+                        
+                        print("simMode started")
+                        current_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
+                        self.startedSim+=1
+                        current_datetime += timedelta(hours=self.startedSim)
 
-                    end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
-                    time_difference = end_datetime - start_datetime
-                    suncycle = round(time_difference.total_seconds() / 3600)
+                        start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
+                        time_difference = current_datetime - start_datetime
+                        hours_passed = max(round(time_difference.total_seconds() / 3600),1)
+
+                        end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
+                        time_difference = end_datetime - start_datetime
+                        suncycle = round(time_difference.total_seconds() / 3600)
 
                     lux_to_add,dli_recived_past_hour=self.PlantLuxEstimation(url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp,valid_plant_types)
                     current_msg=self.__message.copy()
@@ -92,6 +110,7 @@ class EnvMonitoring(object):
                     
                     topicDLI=f"{self.base_topic}/{userId}/{plant_code}/DLI"
                     dli_mess=self.dli_rec_message.copy()
+                    
                     dli_mess['e'][0]['t']=time.time()
                     dli_mess['e'][0]['v']=dli_recived_past_hour
                     dli_mess['bn']=topicDLI
@@ -189,7 +208,7 @@ class EnvMonitoring(object):
         if len(mesurments_past_hour)>0:
             for mesure in mesurments_past_hour:
                 lux_past_hour_v.append(mesure['v'])
-            lux_past_hour=np.mean(lux_past_hour_v)
+            lux_past_hour=np.mean(lux_past_hour_v)+(self.startedSim-1)*2000
         else:
             lux_past_hour=0
 
@@ -201,8 +220,12 @@ class EnvMonitoring(object):
             mean_light_intensity=0
 
         if len(DLI_daily_record)>0:
-            for dli in DLI_daily_record:
-                dli_given_today=dli_given_today+dli['v']
+            # if self.simMode==1:
+            #     for dli in DLI_daily_record[:-(self.startedSim-1)]:
+            #         dli_given_today=dli_given_today+dli['v']
+            # else:    
+                for dli in DLI_daily_record:
+                    dli_given_today=dli_given_today+dli['v']
 
         return lux_past_hour,mean_light_intensity,dli_given_today
     
@@ -228,11 +251,11 @@ class EnvMonitoring(object):
         DLIsun_hour=PPFDsun*0.0036
         DLIrecived_hour=max(float(0),PPFDtot*0.0036)
         print(f"DLIrecived_hour: {DLIrecived_hour}")
-        
+        print(f"Dli given today: {dli_given_today}" )
 #################################################################
         #NUOVA VERSIONE DEL CALCOLO: Adesso calcolo il deficit nella giornata fin ora       
         DLIhgoal=DLI_goal/sun_cycle
-        DLI_current_goal=DLIhgoal*hours_passed #cannot evaluate proprely because the hours passed does not grow enough rapidly
+        DLI_current_goal=min(DLI_goal,DLIhgoal*hours_passed) #cannot evaluate proprely because the hours passed does not grow enough rapidly
         print(f"DLI_current_goal: {DLI_current_goal}")
         if dli_given_today<DLI_current_goal:
             DLI_toAdd=DLI_current_goal-dli_given_today

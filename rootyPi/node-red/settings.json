@@ -2,12 +2,31 @@
     "settings":{
         "url_registry":"http://192.68.0.24:8081",
         "light":{
-            "devices":["light","lampLight"],
-            "services":["EnvMonitoring","UV_light_shift"]
+            "lampStatus":{
+                
+                "devices":["lampLight"],
+                "services":["adaptor"]
+                },
+            "AutoMode": {
+
+                "devices":["lampLight","light"],
+                "services":["EnvMonitoring","UV_light_shift"]
+                },
+            "changeMode":{
+                "devices":["lampLight"],
+                "services":["UV_light_shift"]   
+            }
         },
+
         "water":{
-            "devices":["tank","water_irrigator"],
-            "services":["MoistureMonitoring"]
+            "TankLevel":{
+                "devices":["tank"],
+                "services":["adaptor"]
+            },
+            "giveWaterButton":{
+            "devices":["tank"],
+            "services":["water_irrigator","adaptor"]
+            }
         }
     }
 }

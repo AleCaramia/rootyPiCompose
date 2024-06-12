@@ -58,6 +58,7 @@ class light_shift(object):
     def mymessage(self,paho_mqtt,userdata,msg):
         
         mess = json.loads(msg.payload)
+        print(mess)
         lamp = { "bn": "None","e": [
         {
             "n": "current_intensity",

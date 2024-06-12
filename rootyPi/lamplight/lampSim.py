@@ -114,7 +114,7 @@ class MySubscriber:
         self._paho_mqtt.disconnect()
 
     def myOnConnect (self, paho_mqtt, userdata, flags, rc):
-        print ("Connected to %s with result code: %d, subtopic %s, ID %s" % (self.messageBroker, rc,self.topic))
+        print ("Connected to %s with result code: %d, subtopic %s, ID %s" % (self.messageBroker, rc,self.topic,self.clientID))
 
     def myOnMessageReceived (self, paho_mqtt , userdata, msg):
 		# A new message is received
