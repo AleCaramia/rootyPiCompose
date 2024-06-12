@@ -73,7 +73,7 @@ class water_pump(object):
                 pump["e"][0]["v"] = self.flow
                 pump["e"][0]["t"] = time.time()
                 pump["bn"] = "pump_state"
-                self.check_manuals(pump)
+                # self.check_manuals(pump)
                 self.pub_topic = "RootyPy/"+topic_parts[1]+"/"+topic_parts[2]+"/waterPump/manual"
                 print("\nState of the pump :" + str(pump) + "\nstate = " +str(self.state) +\
                     "\n" + str(self.pub_topic) )

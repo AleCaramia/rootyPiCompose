@@ -185,7 +185,7 @@ class EnvMonitoring(object):
     def LuxPastHour(self,mesurments_past_hour,lamp_intensity_past_hour,DLI_daily_record):
         lux_past_hour_v=[]
         lamp_past_hour_v=[]
-        dli_given_today=0
+        dli_given_today=float(0)
         if len(mesurments_past_hour)>0:
             for mesure in mesurments_past_hour:
                 lux_past_hour_v.append(mesure['v'])
@@ -226,7 +226,7 @@ class EnvMonitoring(object):
         print(f"PPFDsun: {PPFDsun}")
         PPFDtot=PPFDsun+PPFDlamp
         DLIsun_hour=PPFDsun*0.0036
-        DLIrecived_hour=max(0,PPFDtot*0.0036)
+        DLIrecived_hour=max(float(0),PPFDtot*0.0036)
         print(f"DLIrecived_hour: {DLIrecived_hour}")
         
 #################################################################
