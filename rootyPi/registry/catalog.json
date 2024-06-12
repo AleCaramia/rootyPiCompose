@@ -33,7 +33,7 @@
     {
       "type": "Succulent",
       "DLI_goal": 50,
-      "moisture_goal": 80
+      "moisture_goal": 110
     },
     {
       "type": "Fruit",
