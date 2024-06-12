@@ -11,7 +11,6 @@ class water_pump(object):
         self.state = 0 # 0 automatic | 1 manual
         self.current_user = None
         self.current_plant = None
-        self.list_of_manual_plant = [] 
         self.max_flow = None # 
         self.clientID = config["ID_water_pump"]
         self.broker = config["broker"]
@@ -52,15 +51,12 @@ class water_pump(object):
         self.state = 0
         self.getpump = self.GetPump()
         if self.getpump == True:
-            for user in self.list_of_manual_plant:
-                if user["e"][1]['v'] == self.current_plant and user["e"][0]["v"] == self.current_user:
-                    self.state = 1 
             self.flow = mess['e'][0]['v']
             if float(self.flow) > 0:
                 self.flow = float(self.flow)
             else: 
                 self.flow = 0
-            if last_part == "automatic" and self.state == 0:
+            if last_part == "automatic":
                 self.pub_topic = "RootyPy/"+topic_parts[1]+"/"+topic_parts[2]+"/waterPump/automatic"
                 pump["e"][0]["v"] = self.flow
                 pump["e"][0]["t"] = time.time()
@@ -78,8 +74,7 @@ class water_pump(object):
                 print("\nState of the pump :" + str(pump) + "\nstate = " +str(self.state) +\
                     "\n" + str(self.pub_topic) )
                 self.publish(pump)
-                self.pub_topic = "RootyPy/waterPump/manual_list"
-                self.publish(self.list_of_manual_plant)
+                
         else: print(f"No pump found for the {self.current_user} and {self.current_plant}")
 
     def myconnect(self,paho_mqtt, userdata, flags, rc):
