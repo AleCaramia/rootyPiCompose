@@ -20,7 +20,7 @@ class LampSimulator:
         self.maxIntensity = self.getMaxLux(models,plantCode) #lux?
         self.percentIntensity = 100
         self.pubTopic = baseTopic + "/lampLight"
-        self.subTopic = baseTopic + "lightShift/+" #check with Simone
+        self.subTopic = baseTopic + "/lightShift/+" #check with Simone
         self.plantCode = plantCode
         self.aliveTopic = baseTopic + "/alive"
         self.aliveBn = "updateCatalogDevice"

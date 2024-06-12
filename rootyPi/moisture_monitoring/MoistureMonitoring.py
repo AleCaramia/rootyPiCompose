@@ -245,7 +245,8 @@ class run(object):
             while True:
                 # current_time = datetime.now().time()
                 # if current_time>self.start_time:
-                    if time.time()-start > 3600:
+                    #if time.time()-start > 3600:
+                    if time.time()-start > 60:
                         self.function.MyPublish("function")
                         start = time.time()
                     self.function.MyPublish("alive")     
