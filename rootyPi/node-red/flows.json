@@ -5743,7 +5743,8 @@
                 "e4dd6fe5aea494e0",
                 "2843ab6368109d23",
                 "e9cecb49144f315a",
-                "5a5d0da0b0965eef"
+                "5a5d0da0b0965eef",
+                "5890db760b78aa32"
             ]
         ]
     },
@@ -6463,7 +6464,7 @@
         "type": "python3-function",
         "z": "420e20ab72977e1d",
         "name": "Message mqtt to UV light",
-        "func": "if msg['state']==\"auto\":\n    mode='automatic'\nelse:\n    mode='manual'\n\nlamp = { \"bn\": \"None\",\"e\": [\n        {\n            \"n\": \"current_intensity\",\n            \"u\": \"percentage\",\n            \"t\": \"None\",\n            \"v\": msg['intensity']\n        },\n        {\n            \"n\": \"init_hour\",\n            \"u\": \"s\",\n            \"t\": \"None\",\n            \"v\": msg['start']\n        },\n        {\n            \"n\": \"final_hour\",\n            \"u\": \"s\",\n            \"t\": \"None\",\n            \"v\": msg['end']\n        }\n    ]\n}\n\nmsg['payload']=lamp\n    \nmsg['topic']=f\"RootyPy/{msg['plant']['userId']}/{msg['plant']['plantCode']}/lux_to_give/{mode}\"\nreturn msg",
+        "func": "if msg['state']==\"auto\":\n    mode='automatic'\nelse:\n    mode='manual'\n\nlamp = { \"bn\": \"None\",\"e\": [\n        {\n            \"n\": \"current_intensity\",\n            \"u\": \"percentage\",\n            \"t\": \"None\",\n            \"v\": msg['intensity']\n        },\n        {\n            \"n\": \"init_hour\",\n            \"u\": \"s\",\n            \"t\": \"None\",\n            \"v\": msg['start']/1000\n        },\n        {\n            \"n\": \"final_hour\",\n            \"u\": \"s\",\n            \"t\": \"None\",\n            \"v\": msg['end']/1000\n        }\n    ]\n}\n\nmsg['payload']=lamp\n    \nmsg['topic']=f\"RootyPy/{msg['plant']['userId']}/{msg['plant']['plantCode']}/lux_to_give/{mode}\"\nreturn msg",
         "outputs": 1,
         "x": 790,
         "y": 1620,
@@ -6712,6 +6713,33 @@
         "wires": [
             [
                 "c3419924c6639675"
+            ]
+        ]
+    },
+    {
+        "id": "5890db760b78aa32",
+        "type": "change",
+        "z": "420e20ab72977e1d",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "manual",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 540,
+        "y": 1140,
+        "wires": [
+            [
+                "9ecff4a9bbcab68d"
             ]
         ]
     },
