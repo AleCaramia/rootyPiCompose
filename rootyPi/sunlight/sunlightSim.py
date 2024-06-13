@@ -128,7 +128,7 @@ class AllPubs(threading.Thread):
                 print(round(time.time()-reference_time))
                 if round(time.time()-reference_time)>=60:
                     reference_time=time.time()
-                    if self.startedSim==0:
+                    if self.startedSim==0 or index==23:
                         index=0
                         self.startedSim=1
                     else:

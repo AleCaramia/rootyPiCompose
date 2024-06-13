@@ -156,10 +156,10 @@ class AllSens(threading.Thread):
     def run(self):
         """Run thread."""
         while True:
-            update_sensors(self.sensors)
+            update_sensors(self.sensors) #controlla se ci sono sens nuovi
             print(len(self.sensors))
-            for sens in self.sensors:
-                if not sens.mySub.q.empty():
+            for sens in self.sensors: #per sensore in lista
+                while not sens.mySub.q.empty(): # se la coda non è vuota
                     msg = sens.mySub.q.get()
                     if msg is None:
                         continue

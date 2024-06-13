@@ -487,6 +487,7 @@ class MySubscriber:
         def myOnMessageReceived (self, paho_mqtt , userdata, msg):
             message = json.loads(msg.payload.decode("utf-8")) #{"bn": updateCatalog<>, "e": [{...}]}
             catalog = Catalog()
+            print(message)
             if message['bn'] == "updateCatalogDevice":            
                 catalog.update_device(message['e'][0])# {"n": PlantCode/deviceName, "t": time.time(), "v": "", "u": IP}
             if message['bn'] == "updateCatalogService":            

@@ -91,10 +91,10 @@ class EnvMonitoring(object):
                     current_datetime = datetime.combine(datetime.today(),datetime.strptime("00:00", '%H:%M').time())
                     self.startedSim+=1
                     current_datetime += timedelta(hours=self.startedSim)
-
+                    print(current_datetime)
                     start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
                     time_difference = current_datetime - start_datetime
-                    hours_passed = max(round(time_difference.total_seconds() / 3600),1)
+                    hours_passed = round(time_difference.total_seconds() / 3600)
 
                     if hours_passed <0:
                         hours_passed=24+hours_passed

@@ -18,7 +18,7 @@ class LampSimulator:
         self.isAuto = True
         self.isOn = True
         self.maxIntensity = self.getMaxLux(models,plantCode) #lux?
-        self.percentIntensity = 100
+        self.percentIntensity = 0
         self.pubTopic = baseTopic + "/lampLight"
         self.subTopic = baseTopic + "/lightShift/+" #check with Simone
         self.plantCode = plantCode
