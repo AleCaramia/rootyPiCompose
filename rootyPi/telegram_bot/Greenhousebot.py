@@ -158,7 +158,7 @@ class GreenHouseBot:
                     function_to_call(chat_ID)
             elif query_list[0] == 'report':
                 function_to_call = self.diz['report'][query_list[1]]
-                function_to_call(chat_ID)
+                function_to_call(chat_ID,query_list[2])
             elif query_list[0] == 'f_settings':
                 self.send_new_report_frequency(chat_ID,query_list[1],query_list[2])
             elif query_list[0] == 'time':
@@ -258,16 +258,16 @@ class GreenHouseBot:
 
     def manage_plant(self,chat_ID,plantcode):                       #generate a report on the status of the plant and allows you to perform change of the led or water
 
-        buttons = [[InlineKeyboardButton(text=f'water 💦', callback_data=f'command&water&{plantcode}'), InlineKeyboardButton(text=f'led light 💥', callback_data=f'command&ledlight&{plantcode}'), InlineKeyboardButton(text=f'report', callback_data=f'command&reportmenu&{plantcode}'),InlineKeyboardButton(text=f'change plant', callback_data='inventory&start')]]
+        buttons = [[InlineKeyboardButton(text=f'water 💦', callback_data=f'command&water&{plantcode}'), InlineKeyboardButton(text=f'led light 💥', callback_data=f'command&ledlight&{plantcode}'), InlineKeyboardButton(text=f'report', callback_data=f'command&reportmenu&{plantcode}'),InlineKeyboardButton(text=f'back ', callback_data='inventory&start')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
 
-    def generate_instant_report(self,chat_ID):
+    def generate_instant_report(self,chat_ID,plantcode):
         print(f'{chat_ID} is asking for a report')
 
-        plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
+        #plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
         r = requests.get(self.report_generator_url+f'/getreport/{plantcode}',headers = self.headers)
         print(f'GET request sent at \'{self.report_generator_url}/getreport/{plantcode}')
         output = json.loads(r.text)
@@ -300,23 +300,23 @@ class GreenHouseBot:
         for plant in output:
             if plant['userId'] == userid:
                 oldsetting = plant['report_frequency']
+                plantid = plant['plantId']
         self.remove_previous_messages(chat_ID)
-        msg_id = self.bot.sendMessage(chat_ID,text = f'actual report frequency for {plantcode} is {oldsetting}')['message_id']
+
+        msg_id = self.bot.sendMessage(chat_ID,text = f'actual report frequency for {plantid} is {oldsetting}')['message_id']
 
         self.update_message_to_remove(msg_id,chat_ID)
         buttons = [[InlineKeyboardButton(text=f'daily', callback_data=f'f_settings&daily&{plantcode}'), InlineKeyboardButton(text=f'weekly', callback_data=f'f_settings&weekly&{plantcode}'), InlineKeyboardButton(text='biweekly', callback_data=f'f_settings&biweekly&{plantcode}'),InlineKeyboardButton(text=f'monthly', callback_data=f'f_settings&monthly&{plantcode}')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID, text=f'when do you want to receive a report for {plantcode}', reply_markup=keyboard)['message_id']
         self.update_message_to_remove(msg_id,chat_ID)
-        self.manage_plant(chat_ID,plantcode)
 
 
     def send_new_report_frequency(self,chat_ID,newfrequency,plantcode):
 
         print(f'updating {chat_ID} report frequency')
         userid = self.get_username_for_chat_ID(chat_ID)
-
-        body = {"userId":userid, 'plantCode':plantcode,'report_frequency':newfrequency}
+        body = {'plantCode':plantcode,'report_frequency':newfrequency}
         print(body)
         r = requests.put(self.registry_url+'/setreportfrequency',headers = self.headers,json = body)
         flag_keep_mex = self.manage_invalid_request(chat_ID,json.loads(r.text))
@@ -437,7 +437,7 @@ class GreenHouseBot:
 
         #self.uservariables[chat_ID]['first'] = True
         self.uservariables[chat_ID]['chatstatus'] = 'listeningforuser'
-        buttons = [[InlineKeyboardButton(text=f'back', callback_data='newuser&back')]]
+        buttons = [[InlineKeyboardButton(text=f'🔙', callback_data='newuser&back')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID, text='Choose a username',reply_markup=keyboard)['message_id']
         self.remove_previous_messages(chat_ID)
@@ -462,7 +462,7 @@ class GreenHouseBot:
 
     def add_passwd(self,chat_ID,username):
 
-        buttons = [[InlineKeyboardButton(text=f'back', callback_data='newuser&back')]]
+        buttons = [[InlineKeyboardButton(text=f'🔙', callback_data='newuser&back')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID, text='Choose a password',reply_markup=keyboard)['message_id']
         self.remove_previous_messages(chat_ID)
@@ -667,9 +667,9 @@ class GreenHouseBot:
             self.uservariables[chat_ID]['messages_to_remove'] = []
 
 
-    def set_frequency_or_generate(self,chat_ID):
+    def set_frequency_or_generate(self,chat_ID,plantcode):
 
-        buttons = [[ InlineKeyboardButton(text=f'generate report', callback_data='report&generate'), InlineKeyboardButton(text=f'settings', callback_data='report&settings')]]
+        buttons = [[ InlineKeyboardButton(text=f'generate report', callback_data=f'report&generate&{plantcode}'), InlineKeyboardButton(text=f'settings', callback_data=f'report&settings&{plantcode}'), InlineKeyboardButton(text=f'🔙', callback_data='plant&back')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
         self.update_message_to_remove(msg_id,chat_ID)        
@@ -680,7 +680,7 @@ class GreenHouseBot:
         msg_id = self.bot.sendMessage(chat_ID, text="You chose to manage the LED")['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
-        buttons = [[ InlineKeyboardButton(text=f'switch off 🔌', callback_data=f'led&off&{plantcode}'), InlineKeyboardButton(text=f'led manual 💡', callback_data=f'led&setpercentage&{plantcode}'),InlineKeyboardButton(text=f'🔙', callback_data='plant&back'),InlineKeyboardButton(text=f'daylight monitoring', callback_data=f'led&change&{plantcode}')]]
+        buttons = [[ InlineKeyboardButton(text=f'switch off 🔌', callback_data=f'led&off&{plantcode}'), InlineKeyboardButton(text=f'led manual 💡', callback_data=f'led&setpercentage&{plantcode}'),InlineKeyboardButton(text=f'daylight monitoring', callback_data=f'led&change&{plantcode}'),InlineKeyboardButton(text=f'🔙', callback_data='plant&back')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
         self.update_message_to_remove(msg_id,chat_ID)
