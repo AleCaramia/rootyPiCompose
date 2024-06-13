@@ -139,8 +139,8 @@ class light_shift(object):
                 print("\nState of the lamp :" + str(lamp) + "\nstate = " +str(self.state) +\
                     "\n" + str(self.pub_topic) + "\nmax lux: " + str(self.max_lux))#"\ncode: " + str(self.code_db)
                 self.publish(lamp)
-                self.pub_topic = "RootyPy/lightShift/manual_list"
-                self.publish(self.list_of_manual_plant)
+                # self.pub_topic = "RootyPy/lightShift/manual_list"
+                # self.publish(self.list_of_manual_plant)
 
         else: print(f"No lamp found for the {self.current_user} and {self.current_plant}")
 

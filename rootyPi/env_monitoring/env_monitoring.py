@@ -86,7 +86,8 @@ class EnvMonitoring(object):
                     suncycle = round(time_difference.total_seconds() / 3600) #is the periodt defined by the user at wich the auto mode is activated
                 else:
                     
-                    
+                    if self.startedSim>=24:
+                        self.startedSim=0
                     print("simMode started")
                     current_datetime = datetime.combine(datetime.today(),datetime.strptime("00:00", '%H:%M').time())
                     self.startedSim+=1

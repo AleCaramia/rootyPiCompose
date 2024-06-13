@@ -4359,7 +4359,7 @@
         "height": 0,
         "gtype": "gage",
         "title": "Light intensity",
-        "label": "% di intensità",
+        "label": "% of lamp intensity",
         "format": "{{msg.payload}}",
         "min": 0,
         "max": "100",
@@ -4539,10 +4539,10 @@
         "type": "python3-function",
         "z": "420e20ab72977e1d",
         "name": "Message mqtt to UV light",
-        "func": "import time\nif msg['state']==\"auto\":\n    msg['start']=time.time()\n    msg[\"end\"]= time.time()+10\nelse:\n    msg['start']=msg['start']/1000\n    msg[\"end\"]= msg['end']/1000\n\nlamp = { \"bn\": \"ModeChange\",\"e\": [\n        {\n            \"n\": \"current_intensity\",\n            \"u\": \"percentage\",\n            \"t\": \"None\",\n            \"v\": msg['intensity']\n        },\n        {\n            \"n\": \"init_hour\",\n            \"u\": \"s\",\n            \"t\": \"None\",\n            \"v\": msg['start']\n        },\n        {\n            \"n\": \"final_hour\",\n            \"u\": \"s\",\n            \"t\": \"None\",\n            \"v\": msg['end']\n        }\n    ]\n}\n\nmsg['payload']=lamp\n    \nmsg['topic']=f\"RootyPy/{msg['plant']['userId']}/{msg['plant']['plantCode']}/lux_to_give/manual\"\nreturn msg",
+        "func": "import time\nif msg['state']==\"auto\":\n    msg['start']=time.time()\n    msg[\"end\"]= time.time()+10\n\n\nlamp = { \"bn\": \"ModeChange\",\"e\": [\n        {\n            \"n\": \"current_intensity\",\n            \"u\": \"percentage\",\n            \"t\": \"None\",\n            \"v\": msg['intensity']\n        },\n        {\n            \"n\": \"init_hour\",\n            \"u\": \"s\",\n            \"t\": \"None\",\n            \"v\": msg['start']\n        },\n        {\n            \"n\": \"final_hour\",\n            \"u\": \"s\",\n            \"t\": \"None\",\n            \"v\": msg['end']\n        }\n    ]\n}\n\nmsg['payload']=lamp\n    \nmsg['topic']=f\"RootyPy/{msg['plant']['userId']}/{msg['plant']['plantCode']}/lux_to_give/manual\"\nreturn msg",
         "outputs": 1,
-        "x": 1990,
-        "y": 920,
+        "x": 2370,
+        "y": 900,
         "wires": [
             [
                 "c8254cbb0ab04454",
@@ -4615,8 +4615,8 @@
         "correl": "",
         "expiry": "",
         "broker": "8957198026b47e18",
-        "x": 2380,
-        "y": 880,
+        "x": 2660,
+        "y": 860,
         "wires": []
     },
     {
@@ -4675,10 +4675,10 @@
         "id": "d083bd287d0dd92b",
         "type": "python3-function",
         "z": "420e20ab72977e1d",
-        "name": "convert from unix",
+        "name": "convert from node-red time format",
         "func": "import datetime\n\n# Il timestamp fornito\nstart = msg['start']\nend = msg['end']\n\n# Convertire il timestamp da millisecondi a secondi\nstart = start / 1000\nend = end / 1000\n# Convertire il timestamp in un oggetto datetime\ndate_start = datetime.datetime.utcfromtimestamp(start)\ndate_end = datetime.datetime.utcfromtimestamp(end)\n\n# Estrarre l'ora dall'oggetto datetime\nmsg['start'] = date_start.strftime('%H:%M')\nmsg['end'] = date_end.strftime('%H:%M')\nreturn msg",
         "outputs": 1,
-        "x": 1930,
+        "x": 1860,
         "y": 800,
         "wires": [
             [
@@ -4712,8 +4712,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 2380,
-        "y": 980,
+        "x": 2660,
+        "y": 960,
         "wires": []
     },
     {
@@ -4777,7 +4777,7 @@
         "type": "python3-function",
         "z": "420e20ab72977e1d",
         "name": "Check if mode change is possible",
-        "func": "light_settings=msg['settings']['settings']['light']\nserv_needed=light_settings[\"changeMode\"]['services']\ndev_needed=light_settings[\"changeMode\"]['devices']\nservices_online=msg['services_online']\non_serv = [s[\"serviceID\"] for s in services_online]\non_dev = [d for d in msg[\"devices_online\"]]\nsnot=[]\ndnot=[]\n    \nresult=0\n    \nfor serv in serv_needed:\n    if serv not in on_serv:\n        snot.append(serv)\n        result=1\n        \n            \nfor dev in dev_needed:\n    if dev not in on_dev:\n        dnot.append(dev)\n        result=1\n        \nmsg['snot']=snot\nmsg['dnot']=dnot\nmsg['result']=result\nreturn msg",
+        "func": "light_settings=msg['settings']['settings']['light']\nserv_needed=light_settings[\"changeMode\"]['services']\ndev_needed=light_settings[\"changeMode\"]['devices']\nservices_online=msg['services_online']\non_serv = [s[\"serviceID\"] for s in services_online]\non_dev = [d for d in msg[\"devices_online\"]]\nsnot=[]\ndnot=[]\n    \nresult=0\n    \nfor serv in serv_needed:\n    if serv not in on_serv:\n        snot.append(serv)\n        result=1\n        \n            \nfor dev in dev_needed:\n    if dev not in on_dev:\n        dnot.append(dev)\n        result=1\n        \n\nif msg['start']>msg[\"end\"]:\n    result=2\n\nmsg['snot']=snot\nmsg['dnot']=dnot\nmsg['result']=result\n\nreturn msg",
         "outputs": 1,
         "x": 940,
         "y": 1040,
@@ -4801,12 +4801,19 @@
                 "vt": "num"
             },
             {
-                "t": "else"
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "num"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 2,
+        "outputs": 3,
         "x": 1190,
         "y": 1040,
         "wires": [
@@ -4815,6 +4822,9 @@
             ],
             [
                 "6d00d92c9d608559"
+            ],
+            [
+                "c7fdf8068e4040c6"
             ]
         ]
     },
@@ -4878,8 +4888,8 @@
         "y": 940,
         "wires": [
             [
-                "98016c850354edb7",
-                "d083bd287d0dd92b"
+                "d083bd287d0dd92b",
+                "775d7697efa8fb02"
             ],
             [
                 "3dd7774f3a7a4def"
@@ -5446,6 +5456,57 @@
         "wires": []
     },
     {
+        "id": "775d7697efa8fb02",
+        "type": "python3-function",
+        "z": "420e20ab72977e1d",
+        "name": "convert from node-red time format to unix",
+        "func": "from datetime import datetime, time\n\n# Il timestamp fornito\nstart = msg['start']\nend = msg['end']\n\n#secods\nstart_s = start / 1000\nend_s = end / 1000\n#hours\nstart_h=int(start_s//3600)\nend_h=int(end_s//3600)\n#minutes\nstart_m=int((start_s % 3600)//60)\nend_m=int((end_s % 3600)//60)\n\ncurrent_date=datetime.today().date()\n\ncombined_start=time(hour=start_h,minute=start_m)\ncombined_end=time(hour=end_h,minute=end_m)\n\ncombined_date_time_start=datetime.combine(current_date,combined_start)\ncombined_date_time_end=datetime.combine(current_date,combined_end)\n\nunix_start=int(combined_date_time_start.timestamp())\nunix_end=int(combined_date_time_end.timestamp())\n\n# Estrarre l'ora dall'oggetto datetime\nmsg['start'] = unix_start\nmsg['end'] = unix_end\n\n\nreturn msg",
+        "outputs": 1,
+        "x": 2020,
+        "y": 900,
+        "wires": [
+            [
+                "98016c850354edb7"
+            ]
+        ]
+    },
+    {
+        "id": "c7fdf8068e4040c6",
+        "type": "python3-function",
+        "z": "420e20ab72977e1d",
+        "name": "Message change not possible",
+        "func": "msg['payload']=f\"Starting hour cannot be after the final\"\nreturn msg",
+        "outputs": 1,
+        "x": 1430,
+        "y": 1160,
+        "wires": [
+            [
+                "cefd57bd59534426"
+            ]
+        ]
+    },
+    {
+        "id": "cefd57bd59534426",
+        "type": "ui_toast",
+        "z": "420e20ab72977e1d",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "",
+        "x": 1650,
+        "y": 1160,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "e9be20f99306515c",
         "type": "ui_text",
         "z": "7345f09d639edea5",
@@ -5656,7 +5717,7 @@
         "height": 0,
         "gtype": "gage",
         "title": "Tank level",
-        "label": "% di intensità",
+        "label": "% of water in tank",
         "format": "{{msg.payload}}",
         "min": 0,
         "max": "100",
