@@ -7,5 +7,5 @@
     "url_adaptor": "http://192.68.0.25:8080",
     "default_time":{"start":"08:00","stop":"20:00"},
     "publishInterval":60,
-    "simMode": 0
+    "simMode": 1
 }

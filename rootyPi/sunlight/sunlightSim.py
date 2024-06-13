@@ -16,7 +16,7 @@ def gaussian(x, mu, sig):
         1.0 / (np.sqrt(2.0 * np.pi) * sig) * np.exp(-np.power((x - mu) / sig, 2.0) / 2)
     )
 def sunnyDaySim():#total lux daily 47000 with peak at 13
-    out = 50000*gaussian(np.linspace(0, 24, 24), 13, 3)
+    out = 80000*gaussian(np.linspace(0, 24, 24), 13, 3)
     return out.tolist()
 
 class SunlightSimulator:
@@ -112,12 +112,29 @@ class AllPubs(threading.Thread):
         self.name = name
         #load all sensors
         self.simulators = []
+        self.simMode=1
+        self.startedSim=0
+        
 
     def run(self):
         """Run thread."""
+        if self.simMode==1:
+            index=0
+            reference_time=time.time()
         while True:
             update_simulators(self.simulators)
-            index = datetime.now().hour
+            # index = datetime.now().hour
+            if self.simMode==1:
+                print(round(time.time()-reference_time))
+                if round(time.time()-reference_time)>=60:
+                    reference_time=time.time()
+                    if self.startedSim==0:
+                        index=0
+                        self.startedSim=1
+                    else:
+                        index+=1
+            else:
+                index = datetime.now().hour
             print(len(self.simulators))
             for sim in self.simulators:
                 event = {"n": "sunlight", "u": "lux", "t": str(time.time()), "v": float(sim.luxList[index])}

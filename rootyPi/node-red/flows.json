@@ -1,12 +1,5 @@
 [
     {
-        "id": "f857e0827ca4bf08",
-        "type": "tab",
-        "label": "Flow 1",
-        "disabled": false,
-        "info": ""
-    },
-    {
         "id": "075376242320f0ef",
         "type": "tab",
         "label": "Log in",
@@ -61,19 +54,6 @@
         "disabled": false,
         "info": "",
         "env": []
-    },
-    {
-        "id": "abef47bed1338c6e",
-        "type": "tab",
-        "label": "Flow 2",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "a16d4bc57e6d3071",
-        "type": "tab",
-        "label": "Flow 2"
     },
     {
         "id": "e1bab6a23adfa149",
@@ -131,7 +111,7 @@
             "59d92917eea4e404"
         ],
         "x": 14,
-        "y": 99,
+        "y": 39,
         "w": 2312,
         "h": 722
     },
@@ -672,587 +652,6 @@
         "height": 1
     },
     {
-        "id": "67dee425b78fd237",
-        "type": "comment",
-        "z": "f857e0827ca4bf08",
-        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
-        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
-        "x": 350,
-        "y": 80,
-        "wires": []
-    },
-    {
-        "id": "82d291689bf99c4f",
-        "type": "mqtt in",
-        "z": "f857e0827ca4bf08",
-        "name": "provaMQTT",
-        "topic": "Health/band/temperature",
-        "qos": "2",
-        "datatype": "json",
-        "broker": "8957198026b47e18",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 250,
-        "y": 440,
-        "wires": [
-            [
-                "1980eee03f99e119"
-            ]
-        ]
-    },
-    {
-        "id": "b8960f5841d3fa79",
-        "type": "debug",
-        "z": "f857e0827ca4bf08",
-        "name": "debug 1",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 680,
-        "y": 340,
-        "wires": []
-    },
-    {
-        "id": "9aad5d4234b635ec",
-        "type": "http request",
-        "z": "f857e0827ca4bf08",
-        "name": "req",
-        "method": "GET",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "http://127.0.0.1:8080/anna",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 350,
-        "y": 640,
-        "wires": [
-            [
-                "e6d568d475879aee"
-            ]
-        ]
-    },
-    {
-        "id": "20a54d4a3c369066",
-        "type": "inject",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 80,
-        "y": 640,
-        "wires": [
-            [
-                "9aad5d4234b635ec"
-            ]
-        ]
-    },
-    {
-        "id": "ccdf5cbf29621a6f",
-        "type": "change",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "method",
-                "pt": "msg",
-                "to": "get",
-                "tot": "str"
-            },
-            {
-                "t": "set",
-                "p": "url",
-                "pt": "msg",
-                "to": "127.0.0.1:8080/anna",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 300,
-        "y": 540,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "e6d568d475879aee",
-        "type": "debug",
-        "z": "f857e0827ca4bf08",
-        "name": "debug 2",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 640,
-        "y": 640,
-        "wires": []
-    },
-    {
-        "id": "cc62838c3791d61a",
-        "type": "inject",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            },
-            {
-                "p": "options",
-                "v": "[\"Choice 1\",\"Choice 2\",{\"Choice 3\":\"3\"}]",
-                "vt": "json"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 140,
-        "y": 1220,
-        "wires": [
-            [
-                "45ec146c33f12735"
-            ]
-        ]
-    },
-    {
-        "id": "6102f1d7aa423b46",
-        "type": "function",
-        "z": "f857e0827ca4bf08",
-        "name": "function 1",
-        "func": "// Generate list of elements\nmsg.payload = ['Button 1', 'Button 2', 'Button 3'];\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 280,
-        "y": 860,
-        "wires": [
-            [
-                "48c4f878b548335b"
-            ]
-        ]
-    },
-    {
-        "id": "3330954dcd4cc23b",
-        "type": "split",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "splt": "\\n",
-        "spltType": "str",
-        "arraySplt": 1,
-        "arraySpltType": "len",
-        "stream": false,
-        "addname": "",
-        "x": 450,
-        "y": 800,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "16df25af42413339",
-        "type": "split",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "splt": "\\n",
-        "spltType": "str",
-        "arraySplt": 1,
-        "arraySpltType": "len",
-        "stream": false,
-        "addname": "",
-        "x": 350,
-        "y": 1080,
-        "wires": [
-            [
-                "9de0dd4783285a7b"
-            ]
-        ]
-    },
-    {
-        "id": "8c9fccbd55ba7391",
-        "type": "inject",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "{\"op1\":1,\"op2\":2}",
-        "payloadType": "json",
-        "x": 160,
-        "y": 1080,
-        "wires": [
-            [
-                "16df25af42413339"
-            ]
-        ]
-    },
-    {
-        "id": "8cccce022f0f945c",
-        "type": "http request",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "method": "GET",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "http://192.68.0.24:8080/getUsers",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 270,
-        "y": 1340,
-        "wires": [
-            [
-                "1cb1cf9aead3714c"
-            ]
-        ]
-    },
-    {
-        "id": "4f9b8c96cda187b5",
-        "type": "inject",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 100,
-        "y": 1340,
-        "wires": [
-            [
-                "8cccce022f0f945c"
-            ]
-        ]
-    },
-    {
-        "id": "1cb1cf9aead3714c",
-        "type": "debug",
-        "z": "f857e0827ca4bf08",
-        "name": "debug 3",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 480,
-        "y": 1340,
-        "wires": []
-    },
-    {
-        "id": "1980eee03f99e119",
-        "type": "python3-function",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "func": "import json\ntemp={}\ntemp[\"topic\"]=\"prova\"\ntemp[\"payload\"]=msg[\"payload\"][\"e\"][0][\"v\"]\n\n#p=msg[\"payload\"][\"e\"][0][\"v\"]\nreturn temp",
-        "outputs": 1,
-        "x": 470,
-        "y": 440,
-        "wires": [
-            [
-                "b8960f5841d3fa79",
-                "b794fa97e79ad23a"
-            ]
-        ]
-    },
-    {
-        "id": "457e29492e0a18fe",
-        "type": "ui_button",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "group": "",
-        "order": 2,
-        "width": "2",
-        "height": "1",
-        "passthru": false,
-        "label": "msg.payload.label",
-        "tooltip": "",
-        "color": "green",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "msg.payload.payload",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 550,
-        "y": 740,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "9de0dd4783285a7b",
-        "type": "ui_button",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "group": "",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "button",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 510,
-        "y": 1080,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "9b41cf6d525a7606",
-        "type": "ui_dropdown",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "label": "",
-        "tooltip": "",
-        "place": "Select option",
-        "group": "",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "passthru": true,
-        "multiple": false,
-        "options": [
-            {
-                "label": "",
-                "value": "",
-                "type": "str"
-            }
-        ],
-        "payload": "",
-        "topic": "topic",
-        "topicType": "msg",
-        "className": "",
-        "x": 180,
-        "y": 720,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "45ec146c33f12735",
-        "type": "ui_dropdown",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "label": "",
-        "tooltip": "",
-        "place": "Select option",
-        "group": "",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "passthru": true,
-        "multiple": false,
-        "options": [],
-        "payload": "",
-        "topic": "topic",
-        "topicType": "msg",
-        "className": "",
-        "x": 320,
-        "y": 1220,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b794fa97e79ad23a",
-        "type": "ui_chart",
-        "z": "f857e0827ca4bf08",
-        "name": "",
-        "group": "",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "label": "chart",
-        "chartType": "line",
-        "legend": "false",
-        "xformat": "HH:mm:ss",
-        "interpolate": "linear",
-        "nodata": "",
-        "dot": false,
-        "ymin": "35",
-        "ymax": "40",
-        "removeOlder": 1,
-        "removeOlderPoints": "",
-        "removeOlderUnit": "60",
-        "cutout": 0,
-        "useOneColor": false,
-        "useUTC": false,
-        "colors": [
-            "#1f77b4",
-            "#aec7e8",
-            "#ff7f0e",
-            "#2ca02c",
-            "#98df8a",
-            "#d62728",
-            "#ff9896",
-            "#9467bd",
-            "#c5b0d5"
-        ],
-        "outputs": 1,
-        "useDifferentColor": false,
-        "className": "",
-        "x": 690,
-        "y": 420,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "48c4f878b548335b",
-        "type": "ui_template",
-        "z": "f857e0827ca4bf08",
-        "group": "",
-        "name": "",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "format": "<md-button style=\"display:inline-block\" ng-repeat=\"(key, value) in msg.payload\"\n    ng-click=\"send({payload: value.number})\">{{value.name}}</md-button>",
-        "storeOutMessages": true,
-        "fwdInMessages": true,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "className": "",
-        "x": 600,
-        "y": 920,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "555508eff9bd9bba",
-        "type": "inject",
-        "z": "075376242320f0ef",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            },
-            {
-                "p": "options",
-                "v": "[ \"Choice 1\", \"Choice 2\", {\"Choice 3\":\"3\"} ]",
-                "vt": "json"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 120,
-        "y": 40,
-        "wires": [
-            [
-                "4c8fc453479270a6"
-            ]
-        ]
-    },
-    {
-        "id": "4c8fc453479270a6",
-        "type": "ui_dropdown",
-        "z": "075376242320f0ef",
-        "name": "",
-        "label": "",
-        "tooltip": "",
-        "place": "Select option",
-        "group": "",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "passthru": true,
-        "multiple": false,
-        "options": [],
-        "payload": "",
-        "topic": "topic",
-        "topicType": "msg",
-        "className": "",
-        "x": 340,
-        "y": 40,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "47d971684c51b6fc",
         "type": "comment",
         "z": "075376242320f0ef",
@@ -1301,7 +700,7 @@
         "splitLayout": false,
         "className": "",
         "x": 110,
-        "y": 280,
+        "y": 220,
         "wires": [
             [
                 "a2575c9248f7c543",
@@ -1319,7 +718,7 @@
         "func": "#deve vedere se il nome inserito è nella lista utenti\nsubbed_users=msg['payload']\npot_user=msg['user']\npot_user_name=pot_user['usr']\npot_user_pwd=pot_user['pwd']\nresult=0\n\nfor user in subbed_users:\n    username=user['userId']\n    \n    \n    if username==pot_user_name:\n        password=user['password']\n        if password == pot_user_pwd:\n            result=1\n            msg['payload']={'username':pot_user_name,'plants':user['plants']}\n        break\n\n    \nmsg['result']=result\n\n\n\nreturn msg",
         "outputs": 1,
         "x": 820,
-        "y": 280,
+        "y": 220,
         "wires": [
             [
                 "90d34be1bca09fc8",
@@ -1336,7 +735,7 @@
         "func": "\ninformation=msg['payload']\n\nusr=information['usr']\npwd=information['pwd']\ncpwd=information['cpwd']\nspecial_characters = {' ', ':', '/', ';', ',', '\"', \"'\",\"{\",\"}\",\"[\",\"]\"}\nresult=0\nif pwd!=cpwd:\n    result=1 #pwd e cpwd non combaciano\n    msg['payload']=f\"There are password inputs inconsistencies:Please try again\"\nelif any(char in special_characters for char in usr):\n    msg['payload']=f\"user or password cannot contain the following: {special_characters}\"\n    result=2\nelif any(char in special_characters for char in pwd):\n    msg['payload']=f\"user or password cannot contain the following: {special_characters}\"\n    result=2\n\n    \nmsg['result']=result\nif result <1:\n    msg['payload']={'userId':usr,'password':pwd}        \n \n\n\n\n\nreturn msg\n",
         "outputs": 1,
         "x": 290,
-        "y": 660,
+        "y": 600,
         "wires": [
             [
                 "5432efde2a8d6982"
@@ -1358,7 +757,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 290,
-        "y": 340,
+        "y": 280,
         "wires": []
     },
     {
@@ -1379,7 +778,7 @@
         "senderr": false,
         "headers": [],
         "x": 620,
-        "y": 180,
+        "y": 120,
         "wires": [
             [
                 "b3b2fc173a919a27",
@@ -1403,7 +802,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 820,
-        "y": 140,
+        "y": 80,
         "wires": []
     },
     {
@@ -1428,7 +827,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 130,
-        "y": 560,
+        "y": 500,
         "wires": [
             [
                 "4c154482d932806f"
@@ -1459,7 +858,7 @@
         "repair": false,
         "outputs": 2,
         "x": 1030,
-        "y": 280,
+        "y": 220,
         "wires": [
             [
                 "ab73415461727f6e",
@@ -1487,7 +886,7 @@
         "topic": "",
         "name": "User not found",
         "x": 1560,
-        "y": 400,
+        "y": 340,
         "wires": [
             []
         ]
@@ -1510,7 +909,7 @@
         "senderr": false,
         "headers": [],
         "x": 810,
-        "y": 380,
+        "y": 320,
         "wires": [
             []
         ]
@@ -1536,7 +935,7 @@
         "to": "",
         "reg": false,
         "x": 290,
-        "y": 280,
+        "y": 220,
         "wires": [
             []
         ]
@@ -1557,7 +956,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1020,
-        "y": 180,
+        "y": 120,
         "wires": []
     },
     {
@@ -1576,7 +975,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1000,
-        "y": 340,
+        "y": 280,
         "wires": []
     },
     {
@@ -1622,7 +1021,7 @@
         "to": "",
         "reg": false,
         "x": 1320,
-        "y": 280,
+        "y": 200,
         "wires": [
             []
         ]
@@ -1644,7 +1043,7 @@
         "topic": "",
         "name": "Welcome to Rootypy",
         "x": 1520,
-        "y": 180,
+        "y": 120,
         "wires": [
             [
                 "45006b35b49531a3"
@@ -1660,7 +1059,7 @@
         "func": "user=msg['payload']['username']\nmsg['payload']=f\"Welcome to Rootypy {user}\"\nreturn msg",
         "outputs": 1,
         "x": 1290,
-        "y": 180,
+        "y": 120,
         "wires": [
             [
                 "d6305b1fa39c6fd7"
@@ -1676,7 +1075,7 @@
         "func": "msg['payload']=f\"Username or password NOT found:\\nPlease try again\"\nreturn msg\n",
         "outputs": 1,
         "x": 1280,
-        "y": 400,
+        "y": 340,
         "wires": [
             [
                 "9291dc66265b4327"
@@ -1702,7 +1101,7 @@
         "fontSize": "24",
         "color": "#000000",
         "x": 130,
-        "y": 380,
+        "y": 320,
         "wires": []
     },
     {
@@ -1719,7 +1118,7 @@
         "finalize": "",
         "libs": [],
         "x": 1760,
-        "y": 180,
+        "y": 120,
         "wires": [
             [
                 "a346b3d266193707"
@@ -1734,7 +1133,7 @@
         "name": "",
         "events": "change",
         "x": 1960,
-        "y": 180,
+        "y": 120,
         "wires": [
             [
                 "02177c4d978732d7"
@@ -1752,7 +1151,7 @@
             "3fc5788391be0480"
         ],
         "x": 2085,
-        "y": 180,
+        "y": 120,
         "wires": []
     },
     {
@@ -1764,7 +1163,7 @@
         "func": "msg['payload']={'tab': 'Registration',\n    \"tabs\": {\n        \"hide\": 'Access',\n        \"show\": 'Registration'\n    }}\nreturn msg;\n",
         "outputs": 1,
         "x": 370,
-        "y": 560,
+        "y": 500,
         "wires": [
             [
                 "e915590860d77cce"
@@ -1818,7 +1217,7 @@
         "splitLayout": "",
         "className": "",
         "x": 110,
-        "y": 660,
+        "y": 600,
         "wires": [
             [
                 "d4eaa710b712159f"
@@ -1833,7 +1232,7 @@
         "name": "",
         "events": "all",
         "x": 580,
-        "y": 560,
+        "y": 500,
         "wires": [
             []
         ]
@@ -1857,7 +1256,7 @@
         "fontSize": 16,
         "color": "#000000",
         "x": 120,
-        "y": 780,
+        "y": 720,
         "wires": []
     },
     {
@@ -1889,7 +1288,7 @@
         "repair": false,
         "outputs": 3,
         "x": 450,
-        "y": 660,
+        "y": 600,
         "wires": [
             [
                 "8159290f41537664"
@@ -1919,7 +1318,7 @@
         "topic": "",
         "name": "Pwd inconsistencies",
         "x": 660,
-        "y": 620,
+        "y": 560,
         "wires": [
             []
         ]
@@ -1933,7 +1332,7 @@
         "func": "username=msg['payload']['userId']\npassword=msg['payload']['password']\nmsg['url']=msg['url']+'/addu'\nmsg['payload']={ 'userId': username, 'password': password,\"chatID\":None}\nreturn msg\n",
         "outputs": 1,
         "x": 840,
-        "y": 700,
+        "y": 640,
         "wires": [
             [
                 "3c55c5bf32045f5c"
@@ -1957,7 +1356,7 @@
         "topic": "",
         "name": "User taken",
         "x": 630,
-        "y": 660,
+        "y": 600,
         "wires": [
             []
         ]
@@ -1980,7 +1379,7 @@
         "senderr": false,
         "headers": [],
         "x": 1040,
-        "y": 700,
+        "y": 640,
         "wires": [
             [
                 "b325a033e170665d",
@@ -2003,7 +1402,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1220,
-        "y": 780,
+        "y": 720,
         "wires": []
     },
     {
@@ -2023,7 +1422,7 @@
         "topic": "",
         "name": "Completed registration",
         "x": 1780,
-        "y": 660,
+        "y": 600,
         "wires": [
             [
                 "a9e0ba359818474c"
@@ -2039,7 +1438,7 @@
         "func": "msg['payload']=f\"Registration complete\"\nreturn msg\n",
         "outputs": 1,
         "x": 1520,
-        "y": 660,
+        "y": 600,
         "wires": [
             [
                 "52760fe5192a6b17"
@@ -2068,7 +1467,7 @@
         "repair": false,
         "outputs": 2,
         "x": 1270,
-        "y": 700,
+        "y": 640,
         "wires": [
             [
                 "1a89b1fd344d79eb"
@@ -2092,7 +1491,7 @@
         "finalize": "",
         "libs": [],
         "x": 2040,
-        "y": 660,
+        "y": 600,
         "wires": [
             [
                 "b6a70f63c6a2d291"
@@ -2107,7 +1506,7 @@
         "name": "",
         "events": "all",
         "x": 2240,
-        "y": 660,
+        "y": 600,
         "wires": [
             []
         ]
@@ -2121,7 +1520,7 @@
         "func": "msg['payload']=f\"Username was already taken. Please try with a different name\"\nreturn msg\n",
         "outputs": 1,
         "x": 1540,
-        "y": 740,
+        "y": 680,
         "wires": [
             [
                 "c987c8111d037a82"
@@ -2145,7 +1544,7 @@
         "topic": "",
         "name": "User already taken",
         "x": 1810,
-        "y": 740,
+        "y": 680,
         "wires": [
             []
         ]
@@ -2164,7 +1563,7 @@
         "finalize": "",
         "libs": [],
         "x": 830,
-        "y": 220,
+        "y": 160,
         "wires": [
             [
                 "ef98da3bc152d665",
@@ -2194,7 +1593,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 110,
-        "y": 740,
+        "y": 680,
         "wires": [
             [
                 "43302dd10b5655e7"
@@ -2210,7 +1609,7 @@
         "func": "msg['payload']={'tab': 'Access',\n    \"tabs\": {\n        \"hide\": 'Registration',\n        \"show\": 'Access'\n    }}\nreturn msg;",
         "outputs": 1,
         "x": 260,
-        "y": 740,
+        "y": 680,
         "wires": [
             [
                 "46b5902210627630"
@@ -2225,7 +1624,7 @@
         "name": "Return to log in",
         "events": "change",
         "x": 440,
-        "y": 740,
+        "y": 680,
         "wires": [
             []
         ]
@@ -2251,7 +1650,7 @@
         "to": "",
         "reg": false,
         "x": 230,
-        "y": 180,
+        "y": 120,
         "wires": [
             [
                 "3d34fe96cb41e340"
@@ -2267,7 +1666,7 @@
         "func": "msg['url']=msg['url']+'/users'\nreturn msg",
         "outputs": 1,
         "x": 410,
-        "y": 180,
+        "y": 120,
         "wires": [
             [
                 "adbf2c75cb48dcfa"
@@ -2295,7 +1694,7 @@
         "to": "",
         "reg": false,
         "x": 630,
-        "y": 700,
+        "y": 640,
         "wires": [
             [
                 "3688461ce0b4fb80",
@@ -5140,7 +4539,7 @@
         "type": "python3-function",
         "z": "420e20ab72977e1d",
         "name": "Message mqtt to UV light",
-        "func": "if msg['state']==\"auto\":\n    mode='automatic'\nelse:\n    mode='manual'\n\nlamp = { \"bn\": \"None\",\"e\": [\n        {\n            \"n\": \"current_intensity\",\n            \"u\": \"percentage\",\n            \"t\": \"None\",\n            \"v\": msg['intensity']\n        },\n        {\n            \"n\": \"init_hour\",\n            \"u\": \"s\",\n            \"t\": \"None\",\n            \"v\": msg['start']/1000\n        },\n        {\n            \"n\": \"final_hour\",\n            \"u\": \"s\",\n            \"t\": \"None\",\n            \"v\": msg['end']/1000\n        }\n    ]\n}\n\nmsg['payload']=lamp\n    \nmsg['topic']=f\"RootyPy/{msg['plant']['userId']}/{msg['plant']['plantCode']}/lux_to_give/{mode}\"\nreturn msg",
+        "func": "import time\nif msg['state']==\"auto\":\n    msg['start']=time.time()\n    msg[\"end\"]= time.time()+10\nelse:\n    msg['start']=msg['start']/1000\n    msg[\"end\"]= msg['end']/1000\n\nlamp = { \"bn\": \"ModeChange\",\"e\": [\n        {\n            \"n\": \"current_intensity\",\n            \"u\": \"percentage\",\n            \"t\": \"None\",\n            \"v\": msg['intensity']\n        },\n        {\n            \"n\": \"init_hour\",\n            \"u\": \"s\",\n            \"t\": \"None\",\n            \"v\": msg['start']\n        },\n        {\n            \"n\": \"final_hour\",\n            \"u\": \"s\",\n            \"t\": \"None\",\n            \"v\": msg['end']\n        }\n    ]\n}\n\nmsg['payload']=lamp\n    \nmsg['topic']=f\"RootyPy/{msg['plant']['userId']}/{msg['plant']['plantCode']}/lux_to_give/manual\"\nreturn msg",
         "outputs": 1,
         "x": 1990,
         "y": 920,
@@ -7511,459 +6910,6 @@
         "wires": [
             [
                 "0f89cc51864af531"
-            ]
-        ]
-    },
-    {
-        "id": "325e3026faa04e0a",
-        "type": "inject",
-        "z": "abef47bed1338c6e",
-        "name": "Input 1",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "value1",
-        "payloadType": "str",
-        "x": 170,
-        "y": 140,
-        "wires": [
-            [
-                "801b9b669188423a"
-            ]
-        ]
-    },
-    {
-        "id": "c609274e7af8355e",
-        "type": "inject",
-        "z": "abef47bed1338c6e",
-        "name": "Input 2",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "input2",
-        "payload": "value2",
-        "payloadType": "str",
-        "x": 170,
-        "y": 190,
-        "wires": [
-            [
-                "801b9b669188423a"
-            ]
-        ]
-    },
-    {
-        "id": "2a87a1f75b1d0e5d",
-        "type": "inject",
-        "z": "abef47bed1338c6e",
-        "name": "Input 3",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "input3",
-        "payload": "value3",
-        "payloadType": "str",
-        "x": 170,
-        "y": 240,
-        "wires": [
-            [
-                "801b9b669188423a"
-            ]
-        ]
-    },
-    {
-        "id": "801b9b669188423a",
-        "type": "join",
-        "z": "abef47bed1338c6e",
-        "name": "Join Inputs",
-        "mode": "custom",
-        "build": "object",
-        "property": "payload",
-        "propertyType": "msg",
-        "key": "topic",
-        "joiner": "\\n",
-        "joinerType": "str",
-        "accumulate": false,
-        "timeout": "",
-        "count": "3",
-        "reduceRight": false,
-        "reduceExp": "",
-        "reduceInit": "",
-        "reduceInitType": "",
-        "reduceFixup": "",
-        "x": 370,
-        "y": 190,
-        "wires": [
-            [
-                "30fd929e69713b7a"
-            ]
-        ]
-    },
-    {
-        "id": "30fd929e69713b7a",
-        "type": "function",
-        "z": "abef47bed1338c6e",
-        "name": "Process Combined Message",
-        "func": "msg.payload = {\n    input1: msg.payload.input1,\n    input2: msg.payload.input2,\n    input3: msg.payload.input3\n};\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 570,
-        "y": 190,
-        "wires": [
-            [
-                "e9c98a1f2dc48e40"
-            ]
-        ]
-    },
-    {
-        "id": "e9c98a1f2dc48e40",
-        "type": "ui_button",
-        "z": "abef47bed1338c6e",
-        "name": "Submit Button",
-        "group": "",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Submit",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "",
-        "x": 820,
-        "y": 200,
-        "wires": [
-            [
-                "b4c3921cc69d3a44"
-            ]
-        ]
-    },
-    {
-        "id": "b4c3921cc69d3a44",
-        "type": "debug",
-        "z": "abef47bed1338c6e",
-        "name": "Debug",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "x": 970,
-        "y": 190,
-        "wires": []
-    },
-    {
-        "id": "fb1c58f2a3fe45be",
-        "type": "ui_text",
-        "z": "abef47bed1338c6e",
-        "group": "",
-        "order": 4,
-        "width": 0,
-        "height": 0,
-        "name": "",
-        "label": "ENABLED?",
-        "format": "{{msg.payload}}",
-        "layout": "row-spread",
-        "className": "",
-        "style": false,
-        "font": "",
-        "fontSize": "",
-        "color": "#000000",
-        "x": 630,
-        "y": 720,
-        "wires": []
-    },
-    {
-        "id": "b4d67f99f3171c38",
-        "type": "inject",
-        "z": "abef47bed1338c6e",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "value",
-        "payload": "",
-        "payloadType": "date",
-        "x": 300,
-        "y": 620,
-        "wires": [
-            [
-                "efa0683ec02925a2"
-            ]
-        ]
-    },
-    {
-        "id": "2dd17f1315c91e6f",
-        "type": "inject",
-        "z": "abef47bed1338c6e",
-        "name": "Enable",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "state",
-        "payload": "true",
-        "payloadType": "bool",
-        "x": 290,
-        "y": 700,
-        "wires": [
-            [
-                "efa0683ec02925a2"
-            ]
-        ]
-    },
-    {
-        "id": "ee102d5833566caf",
-        "type": "inject",
-        "z": "abef47bed1338c6e",
-        "name": "Disable",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "state",
-        "payload": "false",
-        "payloadType": "bool",
-        "x": 290,
-        "y": 740,
-        "wires": [
-            [
-                "efa0683ec02925a2"
-            ]
-        ]
-    },
-    {
-        "id": "efa0683ec02925a2",
-        "type": "join",
-        "z": "abef47bed1338c6e",
-        "name": "",
-        "mode": "custom",
-        "build": "object",
-        "property": "payload",
-        "propertyType": "msg",
-        "key": "topic",
-        "joiner": "\\n",
-        "joinerType": "str",
-        "accumulate": true,
-        "timeout": "",
-        "count": "1",
-        "reduceRight": false,
-        "reduceExp": "",
-        "reduceInit": "",
-        "reduceInitType": "",
-        "reduceFixup": "",
-        "x": 470,
-        "y": 660,
-        "wires": [
-            [
-                "7811acf031472572"
-            ]
-        ]
-    },
-    {
-        "id": "7811acf031472572",
-        "type": "function",
-        "z": "abef47bed1338c6e",
-        "name": "Combine state and value",
-        "func": "if (typeof msg.payload.state != \"undefined\") {\n    msg.enabled = msg.payload.state\n}\nmsg.payload = msg.payload.value\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 670,
-        "y": 660,
-        "wires": [
-            [
-                "fb1c58f2a3fe45be"
-            ]
-        ]
-    },
-    {
-        "id": "6fab70c3067dc2cd",
-        "type": "ui_switch",
-        "z": "a16d4bc57e6d3071",
-        "name": "",
-        "label": "switch",
-        "tooltip": "",
-        "group": "",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "passthru": true,
-        "decouple": "false",
-        "topic": "switch",
-        "topicType": "str",
-        "style": "",
-        "onvalue": "true",
-        "onvalueType": "bool",
-        "onicon": "",
-        "oncolor": "",
-        "offvalue": "false",
-        "offvalueType": "bool",
-        "officon": "",
-        "offcolor": "",
-        "animate": true,
-        "className": "",
-        "x": 230,
-        "y": 60,
-        "wires": [
-            [
-                "f3ca6dc68d3a05d0"
-            ]
-        ]
-    },
-    {
-        "id": "f3ca6dc68d3a05d0",
-        "type": "function",
-        "z": "a16d4bc57e6d3071",
-        "name": "state",
-        "func": "var state = context.get('state') || false;\n\nif (msg.topic == 'switch') {\n    state = msg.payload;\n    context.set('state', state);\n}\n\n// put your other code here, state contains the state of the switch\n// for example:\nif (msg.payload == 'get state') {\n    return {payload: state};\n}\n\nreturn;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 390,
-        "y": 120,
-        "wires": [
-            [
-                "31219bb3a58a1bdb"
-            ]
-        ]
-    },
-    {
-        "id": "18ef9d311cbd7c63",
-        "type": "inject",
-        "z": "a16d4bc57e6d3071",
-        "name": "",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "topic": "",
-        "payload": "get state",
-        "payloadType": "str",
-        "x": 100,
-        "y": 160,
-        "wires": [
-            [
-                "f3ca6dc68d3a05d0"
-            ]
-        ]
-    },
-    {
-        "id": "31219bb3a58a1bdb",
-        "type": "debug",
-        "z": "a16d4bc57e6d3071",
-        "name": "state",
-        "active": true,
-        "console": "false",
-        "complete": "payload",
-        "x": 530,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "27dd26f3a872487b",
-        "type": "inject",
-        "z": "a16d4bc57e6d3071",
-        "name": "on",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": "",
-        "topic": "",
-        "payload": "true",
-        "payloadType": "bool",
-        "x": 70,
-        "y": 40,
-        "wires": [
-            [
-                "6fab70c3067dc2cd"
-            ]
-        ]
-    },
-    {
-        "id": "e6b77870949acd1a",
-        "type": "inject",
-        "z": "a16d4bc57e6d3071",
-        "name": "off",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "topic": "",
-        "payload": "false",
-        "payloadType": "bool",
-        "x": 90,
-        "y": 80,
-        "wires": [
-            [
-                "6fab70c3067dc2cd"
             ]
         ]
     }
