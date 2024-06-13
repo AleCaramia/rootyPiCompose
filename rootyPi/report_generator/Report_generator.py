@@ -401,25 +401,25 @@ class Report_generator(object):
         moisture = {"Time": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "Value": [15.28, 45.34, 23.12, 54.87, 31.94, 41.07, 57.23, 11.75, 29.66, 37.14]}
         
         #lux_sensor =  json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurement":'light',"duration":duration}).text)
-        self.lux_absorbed_timestamps = lux_sensor['Time']
-        lux_sensor = lux_sensor['Value']
+        lux_sunlight_timestamps = lux_sensor['Time']
+        lux_absorbed_values = lux_sensor['Value']
         #lux_emitted =  json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurement":'lamplight',"duration":duration}).text)
-        self.lux_emitted_timestamps = lux_emitted['Time']
-        self.lux_emitted_values = lux_emitted['Value']
-        self.lux_absorbed_values = [a - b for a, b in zip(lux_sensor, self.lux_emitted_values)]
+        lux_emitted_timestamps = lux_emitted['Time']
+        lux_emitted_values = lux_emitted['Value']
+        lux_sunlight_values = [a - b for a, b in zip(lux_absorbed_values, lux_emitted_values)]
         #moisture =   json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurement":'moisture',"duration":duration}).text)
-        self.moisture_timestamps = moisture['Time']
-        self.moisture_values = moisture['Value']
+        moisture_timestamps = moisture['Time']
+        moisture_values = moisture['Value']
         
-        self.lux_absorbed_timestamps = convert_timestamps(self.lux_absorbed_timestamps,duration)
-        self.lux_emitted_timestamps = convert_timestamps(self.lux_emitted_timestamps,duration)
-        self.lux_moisture_timestamps = convert_timestamps(self.lux_moisture_timestamps,duration)
+        lux_sunlight_timestamps = convert_timestamps(lux_sunlight_timestamps,duration)
+        lux_emitted_timestamps = convert_timestamps(lux_emitted_timestamps,duration)
+        moisture_timestamps = convert_timestamps(moisture_timestamps,duration)
 
-        combined_image = self.create_image(self.lux_absorbed_timestamps, self.lux_absorbed_values, self.lux_emitted_timestamps, self.lux_emitted_values, self.moisture_timestamps, self.moisture_values)
-        dli = self.calculate_dli(self.lux_absorbed_values)
-        light_fluctuation = self.calculate_light_fluctuation(self.lux_absorbed_values)
-        water_absorption = self.calculate_water_absorption(self.moisture_values)
-        tips = self.analyze_plant_conditions(dli, light_fluctuation, self.moisture_values, water_absorption)
+        combined_image = self.create_image(lux_sunlight_timestamps, lux_sunlight_values, lux_emitted_timestamps, lux_emitted_values, moisture_timestamps, moisture_values)
+        dli = self.calculate_dli(lux_sunlight_values)
+        light_fluctuation = self.calculate_light_fluctuation(lux_sunlight_values)
+        water_absorption = self.calculate_water_absorption(moisture_values)
+        tips = self.analyze_plant_conditions(dli, light_fluctuation, moisture_values, water_absorption)
         if not instant:
             self.publish_image_via_mqtt(combined_image, tips, self.broker, self.port, f'Rootypy/report_generator/{user}/{plant}')
         else:
