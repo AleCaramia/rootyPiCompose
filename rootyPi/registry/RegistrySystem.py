@@ -392,13 +392,12 @@ class Webserver(object):
         elif uri[0] == 'setreportfrequency':
             body = json.loads(cherrypy.request.body.read())  # Read body data
             cat = Catalog()
-            userid = body['userId']
-            plantid = body['plantId']
+            plantCode = body['plantCode']
             reportf = body['report_frequency']
             found = False
             print(json.dumps(body))
             for plant in cat.catalog['plants']:
-                if plant['userId'] == userid and plant['plantId'] == plantid:
+                if plant['plantCode'] == plantCode:
                     found = True
                     plant['report_frequency'] = reportf
                     cat.write_catalog()
