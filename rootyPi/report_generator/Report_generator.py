@@ -343,9 +343,9 @@ class Report_generator(object):
         client.loop_stop()
         client.disconnect()
 
-    def create_image(self,sunlight_timestamps, sunlight_lux, lamp_timestamps, lamp_lux, moisture_timestamps, moisture_values):
-        lux_plot = self.plot_lux_intensity(self.lux_absorbed_timestamps, self.lux_absorbed_values, self.lux_emitted_timestamps, self.lux_emitted_values)
-        moisture_plot = self.plot_soil_moisture(self.moisture_timestamps, self.moisture_values)
+    def create_image(self,sunlight_timestamps, sunlight_values, lamp_timestamps, lamp_lux, moisture_timestamps, moisture_values):
+        lux_plot = self.plot_lux_intensity(sunlight_timestamps, sunlight_values, lamp_timestamps, lamp_lux)
+        moisture_plot = self.plot_soil_moisture(moisture_timestamps, moisture_values)
         combined_plot = self.concatenate_images_vertically(lux_plot,moisture_plot)
 
         return combined_plot
