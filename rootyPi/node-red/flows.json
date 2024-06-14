@@ -156,9 +156,9 @@
             "f64e64a2ef64c852",
             "b96219db0aeefd29"
         ],
-        "x": 34,
+        "x": 44,
         "y": 159,
-        "w": 1572,
+        "w": 1562,
         "h": 262
     },
     {
@@ -1790,8 +1790,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1180,
-        "y": 100,
+        "x": 860,
+        "y": 40,
         "wires": []
     },
     {
@@ -1863,11 +1863,10 @@
         "name": "To plant log",
         "links": [
             "02177c4d978732d7",
-            "4ceec963bc87e85e",
             "648567d6b13c3f30"
         ],
-        "x": 45,
-        "y": 100,
+        "x": 205,
+        "y": 40,
         "wires": [
             [
                 "890463be03cb6168"
@@ -1931,6 +1930,13 @@
                 "pt": "msg",
                 "to": "settings.settings.url_registry",
                 "tot": "global"
+            },
+            {
+                "t": "set",
+                "p": "choice",
+                "pt": "global",
+                "to": "choice",
+                "tot": "msg"
             }
         ],
         "action": "",
@@ -2507,8 +2513,8 @@
         "payloadType": "str",
         "topic": "topic",
         "topicType": "msg",
-        "x": 1520,
-        "y": 180,
+        "x": 740,
+        "y": 140,
         "wires": [
             [
                 "48b32af69ada68a2"
@@ -2520,13 +2526,14 @@
         "type": "link in",
         "z": "785f53d943d8482e",
         "name": "To refresh",
-        "links": [],
-        "x": 1335,
-        "y": 180,
+        "links": [
+            "4ceec963bc87e85e",
+            "d5129feb0f116564"
+        ],
+        "x": 955,
+        "y": 80,
         "wires": [
-            [
-                "8951968a0b682fbf"
-            ]
+            []
         ]
     },
     {
@@ -2537,9 +2544,9 @@
         "rules": [
             {
                 "t": "set",
-                "p": "selected_plant",
+                "p": "choice",
                 "pt": "msg",
-                "to": "selected_plant",
+                "to": "choice",
                 "tot": "global"
             }
         ],
@@ -2548,11 +2555,11 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1700,
-        "y": 220,
+        "x": 900,
+        "y": 140,
         "wires": [
             [
-                "8951968a0b682fbf"
+                "c8eea8aa3cf00822"
             ]
         ]
     },
@@ -2926,7 +2933,7 @@
         "className": "",
         "topic": "",
         "name": "Succesful add",
-        "x": 1560,
+        "x": 1580,
         "y": 420,
         "wires": [
             [
@@ -2962,7 +2969,7 @@
         "z": "d8e05e37459eb50e",
         "g": "1167eb289c340144",
         "name": "Plant sub res",
-        "func": "response=msg['payload']\nsub_status=response['status']\n\nif sub_status == \"OK\":\n    result=1\n    msg['payload']=\"Plant was added to list\"\n    \nelse:\n    result=0\n    msg['payload']=\"Could not add plant to list. Try again\"\nmsg['result']=result\nreturn msg",
+        "func": "response=msg['payload']\nsub_status=response['status']\n\nif sub_status == \"OK\":\n    result=1\n    msg['payload']=\"Plant was added to list. Devices will soon be registred, refresh page if you don't see them\"\n    \nelse:\n    result=0\n    msg['payload']=\"Could not add plant to list. Try again\"\nmsg['result']=result\nreturn msg",
         "outputs": 1,
         "x": 1230,
         "y": 500,
@@ -3009,8 +3016,8 @@
         "name": "Exit page",
         "func": "msg['payload']={'tab': 'Plant status',\n    \"tabs\": {\n        \"hide\": 'Plant registration',\n        \"show\": 'Plant status'\n    }}\nreturn msg;",
         "outputs": 1,
-        "x": 1780,
-        "y": 480,
+        "x": 1820,
+        "y": 420,
         "wires": [
             [
                 "68126b66041a1b9f",
@@ -4693,7 +4700,7 @@
         "name": "From light settings selection",
         "mode": "link",
         "links": [
-            "3fc5788391be0480"
+            "c138598e6bb2c9f8"
         ],
         "x": 2825,
         "y": 740,
@@ -5919,7 +5926,8 @@
         "wires": [
             [
                 "eec8c706e191cb25",
-                "ba1fe345e8c1505a"
+                "ba1fe345e8c1505a",
+                "792bbad75aca354a"
             ]
         ]
     },
@@ -6106,6 +6114,54 @@
                 "1b03faf833bf850a"
             ]
         ]
+    },
+    {
+        "id": "0c33da3532b2a21e",
+        "type": "ui_toast",
+        "z": "7345f09d639edea5",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "",
+        "x": 2220,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "792bbad75aca354a",
+        "type": "python3-function",
+        "z": "7345f09d639edea5",
+        "name": "user awareness",
+        "func": "msg['payload']=\"Watering command sent!\"\nreturn msg",
+        "outputs": 1,
+        "x": 1900,
+        "y": 580,
+        "wires": [
+            [
+                "d5129feb0f116564",
+                "0c33da3532b2a21e"
+            ]
+        ]
+    },
+    {
+        "id": "d5129feb0f116564",
+        "type": "link out",
+        "z": "7345f09d639edea5",
+        "name": "From watering plant",
+        "mode": "link",
+        "links": [
+            "c138598e6bb2c9f8"
+        ],
+        "x": 2185,
+        "y": 520,
+        "wires": []
     },
     {
         "id": "1314dcec3ebab8b8",
@@ -6658,7 +6714,7 @@
         "legend": "true",
         "xformat": "HH:mm:ss",
         "interpolate": "linear",
-        "nodata": "",
+        "nodata": "DLI mesures not yet produced",
         "dot": false,
         "ymin": "0",
         "ymax": "",
@@ -6823,7 +6879,7 @@
         "legend": "true",
         "xformat": "HH:mm:ss",
         "interpolate": "linear",
-        "nodata": "",
+        "nodata": "Moisture mesures not yet produced",
         "dot": false,
         "ymin": "0",
         "ymax": "",

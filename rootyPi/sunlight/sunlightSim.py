@@ -118,6 +118,7 @@ class AllPubs(threading.Thread):
 
     def run(self):
         """Run thread."""
+       
         if self.simMode==1:
             index=0
             reference_time=time.time()
