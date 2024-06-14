@@ -26,6 +26,7 @@ class GreenHouseBot:
         self.uservariables = {}
         self.registry_url = json_config_bot['url_registry']
         self.report_generator_url = json_config_bot['url_report_generator']
+        self.adaptor_url = json_config_bot['url_adaptor']
         #self.registry_url = "http://127.0.0.1:8080"
         #self.report_generator_url = 'http://127.0.0.1:8081'
         self.ClientID =  json_config_bot['ID']
@@ -258,6 +259,34 @@ class GreenHouseBot:
 
     def manage_plant(self,chat_ID,plantcode):                       #generate a report on the status of the plant and allows you to perform change of the led or water
 
+        userid = self.get_username_for_chat_ID(chat_ID)
+        lux_sensor =  json.loads(requests.get(f'{self.adaptor_url}/getData/{userid}/{plantcode}',params={"measurament":'light',"duration":1}).text)
+        lamp_emission =  json.loads(requests.get(f'{self.adaptor_url}/getData/{userid}/{plantcode}',params={"measurament":'current_intensity',"duration":1}).text)
+        moisture =  json.loads(requests.get(f'{self.adaptor_url}/getData/{userid}/{plantcode}',params={"measurament":'moisture',"duration":1}).text)
+        tank_level =  json.loads(requests.get(f'{self.adaptor_url}/getData/{userid}/{plantcode}',params={"measurament":'tankLevel',"duration":1}).text)
+        if len(lux_sensor) > 0:
+            actual_lux = lux_sensor[-1]['v']
+            str_lux = f'light received: {actual_lux} lux'
+        else:
+            str_lux = 'no sensor data for light sensor'
+        if len(lamp_emission) > 0:
+            actual_emission = lamp_emission[-1]['v']
+            str_lamp = f'current lamp intensity: {actual_emission} lux'
+        else:
+            str_lamp = f'no data on lamp intensity'
+        if len(moisture) > 0:
+            actual_moisture = moisture[-1]['v']
+            str_moisture = f'moisture received: {actual_moisture} '
+        else:
+            str_moisture = f'no sensor data on moisture'
+        if len(tank_level) > 0:
+            actual_tank_level = tank_level[-1]['v']
+            str_tank = f'actual tank level {actual_tank_level}'
+        else:
+            str_tank = 'no sensor data on tank level'
+        msg_id = self.bot.sendMessage(chat_ID,text = str_lux+'\n'+str_lamp+'\n'+str_moisture+'\n'+str_tank)['message_id']
+
+        self.update_message_to_remove(msg_id,chat_ID)
         buttons = [[InlineKeyboardButton(text=f'water 💦', callback_data=f'command&water&{plantcode}'), InlineKeyboardButton(text=f'led light 💥', callback_data=f'command&ledlight&{plantcode}'), InlineKeyboardButton(text=f'report', callback_data=f'command&reportmenu&{plantcode}'),InlineKeyboardButton(text=f'back ', callback_data='inventory&start')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
@@ -287,10 +316,8 @@ class GreenHouseBot:
 
             # Send the image using the bot
         msg_id = self.bot.sendPhoto(chat_ID, bio, caption=message)
-        self.choose_plant(chat_ID)
-        self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
-
+        self.choose_plant(chat_ID)
 
     def set_report_frequency(self,chat_ID,plantcode):
         print('choosing report frequency')
@@ -315,7 +342,6 @@ class GreenHouseBot:
     def send_new_report_frequency(self,chat_ID,newfrequency,plantcode):
 
         print(f'updating {chat_ID} report frequency')
-        userid = self.get_username_for_chat_ID(chat_ID)
         body = {'plantCode':plantcode,'report_frequency':newfrequency}
         print(body)
         r = requests.put(self.registry_url+'/setreportfrequency',headers = self.headers,json = body)
@@ -569,7 +595,7 @@ class GreenHouseBot:
         except:
             msg_id = self.bot.sendMessage(chat_ID,f'{message} is an invalid value,try again')['message_id']
             self.update_message_to_remove(msg_id,chat_ID)
-
+        
 
 #--------------------------------------- Plant Removal ------------------------------------------------------------------------------------
 
