@@ -264,14 +264,28 @@ class GreenHouseBot:
         lamp_emission =  json.loads(requests.get(f'{self.adaptor_url}/getData/{userid}/{plantcode}',params={"measurament":'current_intensity',"duration":1}).text)
         moisture =  json.loads(requests.get(f'{self.adaptor_url}/getData/{userid}/{plantcode}',params={"measurament":'moisture',"duration":1}).text)
         tank_level =  json.loads(requests.get(f'{self.adaptor_url}/getData/{userid}/{plantcode}',params={"measurament":'tankLevel',"duration":1}).text)
-        actual_lux = lux_sensor[-1]['v']
-        actual_emission = lamp_emission[-1]['v']
-        actual_moisture = moisture[-1]['v']
-        actual_tank_level = tank_level[-1]['v']
-        self.bot.sendMessage(chat_ID,text = f'light received: {actual_lux} lux\ncurrent lamp intensity: {actual_emission}\ncurrent moisure: {actual_moisture}\ncurrent tank level: {actual_tank_level}')
-        #print(lux_sensor)
-        #actual_lux = lux_sensor['Value']
-        #msg_id = self.bot.sendMessage(chat_ID, text=f'Actual lux received is {actual_lux}')['message_id']
+        if len(lux_sensor) > 0:
+            actual_lux = lux_sensor[-1]['v']
+            str_lux = f'light received: {actual_lux} lux'
+        else:
+            str_lux = 'no sensor data for light sensor'
+        if len(lamp_emission) > 0:
+            actual_emission = lamp_emission[-1]['v']
+            str_lamp = f'current lamp intensity: {actual_emission} lux'
+        else:
+            str_lamp = f'no data on lamp intensity'
+        if len(moisture) > 0:
+            actual_moisture = moisture[-1]['v']
+            str_moisture = f'moisture received: {actual_moisture} '
+        else:
+            str_moisture = f'no sensor data on moisture'
+        if len(tank_level) > 0:
+            actual_tank_level = tank_level[-1]['v']
+            str_tank = f'actual tank level {actual_tank_level}'
+        else:
+            str_tank = 'no sensor data on tank level'
+        msg_id = self.bot.sendMessage(chat_ID,text = str_lux+'\n'+str_lamp+'\n'+str_moisture+'\n'+str_tank)['message_id']
+
         self.update_message_to_remove(msg_id,chat_ID)
         buttons = [[InlineKeyboardButton(text=f'water 💦', callback_data=f'command&water&{plantcode}'), InlineKeyboardButton(text=f'led light 💥', callback_data=f'command&ledlight&{plantcode}'), InlineKeyboardButton(text=f'report', callback_data=f'command&reportmenu&{plantcode}'),InlineKeyboardButton(text=f'back ', callback_data='inventory&start')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
