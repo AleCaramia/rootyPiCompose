@@ -8,7 +8,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from io import BytesIO
 from PIL import Image
-import paho.mqtt.client as mqtt
 import base64
 import threading
 import cherrypy
@@ -310,7 +309,7 @@ class Report_generator(object):
         :param mqtt_topic: MQTT topic to publish to.
         :param message: Message to include with the image.
         """
-        client = mqtt.Client()
+        client = pahoMQTT.Client()
 
         # Assign the on_connect callback function
         client.on_connect = self.on_connect
@@ -396,20 +395,20 @@ class Report_generator(object):
             self.stop_event.set()
 
     def generate_report(self,user,plant,duration = 24,instant = False):
-        lux_sensor =  {"Time": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "Value": [753.28, 423.11, 598.56, 729.18, 444.72, 385.96, 301.67, 529.88, 676.92, 773.53]}
-        lux_emitted = {"Time": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "Value": [459.45, 142.22, 361.34, 233.16, 389.65, 421.54, 283.64, 119.98, 249.29, 391.77]}
-        moisture = {"Time": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "Value": [15.28, 45.34, 23.12, 54.87, 31.94, 41.07, 57.23, 11.75, 29.66, 37.14]}
+        lux_sensor =  {"t": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "v": [753.28, 423.11, 598.56, 729.18, 444.72, 385.96, 301.67, 529.88, 676.92, 773.53]}
+        lux_emitted = {"t": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "v": [459.45, 142.22, 361.34, 233.16, 389.65, 421.54, 283.64, 119.98, 249.29, 391.77]}
+        moisture = {"t": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "v": [15.28, 45.34, 23.12, 54.87, 31.94, 41.07, 57.23, 11.75, 29.66, 37.14]}
         
         #lux_sensor =  json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurement":'light',"duration":duration}).text)
-        lux_sunlight_timestamps = lux_sensor['Time']
-        lux_absorbed_values = lux_sensor['Value']
+        lux_sunlight_timestamps = lux_sensor['t']
+        lux_absorbed_values = lux_sensor['v']
         #lux_emitted =  json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurement":'lamplight',"duration":duration}).text)
-        lux_emitted_timestamps = lux_emitted['Time']
-        lux_emitted_values = lux_emitted['Value']
+        lux_emitted_timestamps = lux_emitted['t']
+        lux_emitted_values = lux_emitted['v']
         lux_sunlight_values = [a - b for a, b in zip(lux_absorbed_values, lux_emitted_values)]
         #moisture =   json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurement":'moisture',"duration":duration}).text)
-        moisture_timestamps = moisture['Time']
-        moisture_values = moisture['Value']
+        moisture_timestamps = moisture['t']
+        moisture_values = moisture['v']
         
         lux_sunlight_timestamps = convert_timestamps(lux_sunlight_timestamps,duration)
         lux_emitted_timestamps = convert_timestamps(lux_emitted_timestamps,duration)
@@ -439,8 +438,8 @@ class Report_generator(object):
     def translate_uv_lamp_values(self,lux_emitted):
         uv_translated_timestamps = []
         uv_translated_values = []
-        lux_emitted_timestamps = lux_emitted['Time']
-        lux_emitted_values = lux_emitted['Value']
+        lux_emitted_timestamps = lux_emitted['t']
+        lux_emitted_values = lux_emitted['v']
         for i in range(len(lux_emitted_timestamps)-1):
             translated_timestamp = hourly_timestamps_unix(lux_emitted_timestamps[i])
             translated_value = lux_emitted_values['e'][0]["v"]
