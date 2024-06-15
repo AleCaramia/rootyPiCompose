@@ -1,6 +1,7 @@
 import threading
 import paho.mqtt.client as mqtt
 import json
+from requests.exceptions import HTTPError
 import time
 import requests
 
@@ -32,6 +33,18 @@ class water_pump(object):
         for topic in self.sub_topic:
             self.client.subscribe(topic, 2)
 
+    def get_response(url):
+        for i in range(15):
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                return json.loads(response.content.text)
+            except HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
+            except Exception as err:
+                print(f"Other error occurred: {err}")
+            time.sleep(1)
+        return []
    
     def mymessage(self,paho_mqtt,userdata,msg):
         mess = json.loads(msg.payload)
@@ -85,7 +98,10 @@ class water_pump(object):
        self.client.publish(self.pub_topic,pump,2)
 
     def CodeRequest(self):
-        self.code_db=json.loads((requests.get(self.url_models)).text) 
+
+        self.code_db=self.get_response(f"{self.url_models}")
+
+        # self.code_db=json.loads((requests.get(self.url_models)).text) 
 
         # with open("fake_catalogue.json",'r') as file:
         #         catalogue = json.loads(file.read())
@@ -93,21 +109,18 @@ class water_pump(object):
 
     def GetPump(self):
         try:
-            req_pump = requests.get(self.url_devices)
-            req_pump.raise_for_status()  # Verifica lo stato della risposta
-            self.pump = json.loads(req_pump.text)
-            req_plants = requests.get(self.url_plants)
-            req_plants.raise_for_status()  # Verifica lo stato della risposta
-            self.plants = json.loads(req_plants.text)
+            self.pump = self.get_response(self.url_devices)
+            self.plants = self.get_response(self.url_plants)
 
-            # with open("fake_catalogue.json",'r') as file:
-            #     catalogue = json.loads(file.read())
-            # self.pump = catalogue['devices']
-            # self.plants = catalogue['plants']
-            
+            # req_pump = requests.get(self.url_devices)
+            # req_pump.raise_for_status()  # Verifica lo stato della risposta
+            # self.pump = json.loads(req_pump.text)
+            # req_plants = requests.get(self.url_plants)
+            # req_plants.raise_for_status()  # Verifica lo stato della risposta
+            # self.plants = json.loads(req_plants.text)
 
-            # self.pump = json.load(open("UV_light/devices.json",'r'))
-            # self.plants = json.load(open("UV_light/temp_plants.json",'r'))
+
+
             for lamp in self.pump:
                 ID = lamp["deviceID"]
                 ID_split = ID.split("/")
@@ -132,27 +145,6 @@ class water_pump(object):
             return False
 
 
-    # def get_plant_jar(self):
-
-    #     self.plants = json.loads(requests.get(self.url_plants).text) 
-    #     # with open("fake_catalogue.json",'r') as file:
-    #     #         catalogue = json.loads(file.read())
-    #     # self.plants = catalogue['plants']
-
-    #     for plant in self.plants:
-    #         if plant['userId'] == self.current_user:
-    #             if plant['plantCode'] == self.current_plant:
-    #                 current_code = plant['plantCode']
-    #                 current_model = current_code[0:2]
-    #                 self.CodeRequest()
-    #                 for code in self.code_db:
-    #                     if code["model_code"] == current_model:
-    #                         print(f"Find a pump for {current_model}")
-    #                         return
-    #                 print(f"No plant code found for {current_model}")
-    #     print(f"\nNo plant found for {self.current_user}/{self.current_plant}")
-
-    
     
         
 class run():
