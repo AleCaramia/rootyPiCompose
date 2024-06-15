@@ -19,7 +19,33 @@ def get_response(url):
         try:
             response = requests.get(url)
             response.raise_for_status()
-            return response.content
+            return response
+        except HTTPError as http_err:
+            print(f"HTTP error occurred: {http_err}")
+        except Exception as err:
+            print(f"Other error occurred: {err}")
+        #time.sleep(0.1)
+    return None
+
+def put_response(url,body):
+    for i in range(15):
+        try:
+            response = requests.put(url,json = body)
+            response.raise_for_status()
+            return response
+        except HTTPError as http_err:
+            print(f"HTTP error occurred: {http_err}")
+        except Exception as err:
+            print(f"Other error occurred: {err}")
+        #time.sleep(0.1)
+    return None
+
+def post_response(url,body):
+    for i in range(15):
+        try:
+            response = requests.post(url,json = body)
+            response.raise_for_status()
+            return response
         except HTTPError as http_err:
             print(f"HTTP error occurred: {http_err}")
         except Exception as err:
@@ -400,7 +426,8 @@ class GreenHouseBot:
         print(f'updating {chat_ID} report frequency')
         body = {'plantCode':plantcode,'report_frequency':newfrequency}
         print(body)
-        r = requests.put(self.registry_url+'/setreportfrequency',headers = self.headers,json = body)
+        #r = requests.put(self.registry_url+'/setreportfrequency',headers = self.headers,json = body)
+        r = put_response(self.registry_url+'/setreportfrequency',body)
         flag_keep_mex = self.manage_invalid_request(chat_ID,json.loads(r.text))
         self.choose_plant(chat_ID,flag_keep_mex)
 
@@ -622,7 +649,8 @@ class GreenHouseBot:
             if user['userId'] == username and user['password'] == pwd:
                 f = True
                 body = {"userId":username, 'chatID':chat_ID}
-                r = requests.put(self.registry_url+'/transferuser',headers = self.headers,json = body)
+                #r = requests.put(self.registry_url+'/transferuser',headers = self.headers,json = body)
+                r = put_response(self.registry_url+'/transferuser',body)
                 if self.manage_invalid_request(chat_ID,json.loads(r.text)):
                     msg_id = self.bot.sendMessage(chat_ID,'something went wrong try restarting the bot with /start')
                     self.update_message_to_remove(msg_id,chat_ID)
@@ -730,7 +758,8 @@ class GreenHouseBot:
             msg_id = self.bot.sendMessage(chat_ID,text = 'unable to get plant code, action blocked')
             self.update_message_to_remove(msg_id,chat_ID)
         body = {"plantCode":plant_code,'new_name':newname}
-        r = requests.put(self.registry_url+'/modifyPlant',headers=self.headers,json = body)
+        r = put_response(self.registry_url+'/modifyPlant',body)
+        #r = requests.put(self.registry_url+'/modifyPlant',headers=self.headers,json = body)
         print(f'PUT requesrt sent at {self.registry_url+'/modifyPlant'} with {body}')
         output = json.loads(r.text)
         flag_remove_mex = self.manage_invalid_request(chat_ID,output)
@@ -981,7 +1010,8 @@ class GreenHouseBot:
         state = "manual"
         init = time.time()
         body = {"plantCode":plantcode,'state':state,'init':init,'end':m_mode_duration}
-        r = requests.put(self.registry_url+'/updateInterval',headers=self.headers,json = body)
+        r = put_response(self.registry_url+'/updateInterval',body)
+        #r = requests.put(self.registry_url+'/updateInterval',headers=self.headers,json = body)
         output = json.loads(r.text)
         self.manage_invalid_request(chat_ID,output)
         mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":float(percentage) },{"n": "init_time", "u": "s", "t": time.time(), "v":init },{"n": "final_time", "u": "s", "t": time.time(), "v": m_mode_duration } ]}
@@ -997,7 +1027,8 @@ class GreenHouseBot:
         init = time.time()
         end = time.time()+10
         body = {"plantCode":plantcode,'state':state,'init':init,'end':end}
-        r = requests.put(self.registry_url+'/updateInterval',headers=self.headers,json = body)
+        r = put_response(self.registry_url+'/updateInterval',body)
+        #r = requests.put(self.registry_url+'/updateInterval',headers=self.headers,json = body)
         output = json.loads(r.text)
         self.manage_invalid_request(chat_ID,output)
         mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":0.0 },{"n": "final_time", "u": "s", "t": time.time(), "v":end} ]}
