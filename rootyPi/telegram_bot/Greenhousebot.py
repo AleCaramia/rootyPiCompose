@@ -12,8 +12,49 @@ import numpy as np
 import base64
 from PIL import Image
 from io import BytesIO
+from requests.exceptions import HTTPError
 
+def get_response(url):
+    for i in range(15):
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            return response.content
+        except HTTPError as http_err:
+            print(f"HTTP error occurred: {http_err}")
+        except Exception as err:
+            print(f"Other error occurred: {err}")
+        #time.sleep(0.1)
+    return None
 
+'''
+
+def safe_request(RESTreq,url,n_trials,body = ''):
+    
+    if RESTreq == 'get':
+        function_to_call = requests.get
+    elif RESTreq == 'put':
+        function_to_call = requests.put
+    elif RESTreq == 'post':
+        function_to_call = requests.post
+    elif RESTreq == 'delete':
+        function_to_call = requests.delete
+
+    i = 0
+    flagNone = True
+    while i < n_trials and flagNone == True:
+        if RESTreq == 'get' or RESTreq == 'delete':
+            r = function_to_call(url)
+        else:
+            r = function_to_call(url,body)
+        i = i+1
+        if r.text != None:
+            flagNone = False
+    if i < n_trials:
+        return json.loads(r.text)
+    else:
+        return 
+'''
 class GreenHouseBot:
     def __init__(self, token,config_bot):
         # Local token
@@ -207,11 +248,19 @@ class GreenHouseBot:
 
     def choose_plant(self,chat_ID,keep_prev = False):                       #creates plants from the inventory of the user
         buttons = []
-        user_plants = self.get_plant_for_chatID(chat_ID)
+        try:
+            user_plants = self.get_plant_for_chatID(chat_ID)
+        except:
+            msg_id = self.bot.sendMessage(chat_ID,text = 'unable to get your plants, action blocked')
+            self.update_message_to_remove(msg_id,chat_ID)
         userid = self.get_username_for_chat_ID(chat_ID)
         print(user_plants)
         for element in user_plants:
-            element_code = self.get_plant_code_from_plant_name(userid,element)
+            try:
+                element_code = self.get_plant_code_from_plant_name(userid,element)
+            except:
+                msg_id = self.bot.sendMessage(chat_ID,text = 'unable to get full plant list, try again later')
+                self.update_message_to_remove(msg_id,chat_ID)
             buttons.append(InlineKeyboardButton(text=f'{element}', callback_data='plant&'+element_code))
         buttons.append(InlineKeyboardButton(text=f'add plant', callback_data='plant&add'))
         buttons.append(InlineKeyboardButton(text=f'remove plant', callback_data='removeplant&choose'))
@@ -236,12 +285,9 @@ class GreenHouseBot:
         plant_list = []     
         userid = self.get_username_for_chat_ID(chatID)
         f = True
-        while f == True:
-            r = requests.get(self.registry_url+'/plants',headers = self.headers)
-            print(f'GET request sent at {self.registry_url}/plants')
-            print('##########################################################################'+r.status_code)
-            if r.text != None:
-                f = False
+        r = get_response(self.registry_url+'/plants')
+        print(f'GET request sent at {self.registry_url}/plants')
+
         output =json.loads(r.text)
         for diz in output:
             if diz['userId'] == userid:
@@ -267,10 +313,11 @@ class GreenHouseBot:
     def manage_plant(self,chat_ID,plantcode):                       #generate a report on the status of the plant and allows you to perform change of the led or water
 
         userid = self.get_username_for_chat_ID(chat_ID)
-        lux_sensor =  json.loads(requests.get(f'{self.adaptor_url}/getData/{userid}/{plantcode}',params={"measurament":'light',"duration":1}).text)
-        lamp_emission =  json.loads(requests.get(f'{self.adaptor_url}/getData/{userid}/{plantcode}',params={"measurament":'current_intensity',"duration":1}).text)
-        moisture =  json.loads(requests.get(f'{self.adaptor_url}/getData/{userid}/{plantcode}',params={"measurament":'moisture',"duration":1}).text)
-        tank_level =  json.loads(requests.get(f'{self.adaptor_url}/getData/{userid}/{plantcode}',params={"measurament":'tankLevel',"duration":1}).text)
+
+        lux_sensor = json.loads(get_response(f'{self.adaptor_url}/getData/{userid}/{plantcode}?measurament=light&duration=1').text)
+        lamp_emission =  json.loads(get_response(f'{self.adaptor_url}/getData/{userid}/{plantcode}?measurament=current_intensity&duration=1').text)
+        moisture =  json.loads(get_response(f'{self.adaptor_url}/getData/{userid}/{plantcode}?measurament=moisture&duration=1').text)
+        tank_level =  json.loads(get_response(f'{self.adaptor_url}/getData/{userid}/{plantcode}?measurament=tankLevel&duration=1').text)
         if len(lux_sensor) > 0:
             actual_lux = lux_sensor[-1]['v']
             str_lux = f'light received: {actual_lux} lux'
@@ -304,7 +351,8 @@ class GreenHouseBot:
         print(f'{chat_ID} is asking for a report')
 
         #plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
-        r = requests.get(self.report_generator_url+f'/getreport/{plantcode}',headers = self.headers)
+        r = get_response(self.report_generator_url+f'/getreport/{plantcode}')
+        #r = requests.get(self.report_generator_url+f'/getreport/{plantcode}',headers = self.headers)
         print(f'GET request sent at \'{self.report_generator_url}/getreport/{plantcode}')
         output = json.loads(r.text)
             # Extract the base64-encoded image and decode it
@@ -329,7 +377,8 @@ class GreenHouseBot:
     def set_report_frequency(self,chat_ID,plantcode):
         print('choosing report frequency')
         userid = self.get_username_for_chat_ID(chat_ID)
-        r = requests.get(self.registry_url+f'/plants')
+        r = get_response(self.registry_url+f'/plants')
+        #r = requests.get(self.registry_url+f'/plants')
         output = json.loads(r.text)
         for plant in output:
             if plant['userId'] == userid:
@@ -362,8 +411,11 @@ class GreenHouseBot:
         self.uservariables[chat_ID]['chatstatus'] = f'listeningforplantname&create&{token}'
 
     def eval_plant_name(self,chat_ID,mex,mode,plant = ''):              #Checks if the name is already used or other exceptions and makes you confirm
-
-        user_plants = self.get_plant_for_chatID(chat_ID)
+        try:
+            user_plants = self.get_plant_for_chatID(chat_ID)
+        except:
+            msg_id = self.bot.sendMessage(chat_ID,text = 'unable to get plant code, action blocked')
+            self.update_message_to_remove(msg_id,chat_ID)
         name_set = set(user_plants)
         if mex.strip() in name_set:
             msg_id = self.bot.sendMessage(chat_ID,text =f'{mex} already exists')['message_id']
@@ -411,7 +463,8 @@ class GreenHouseBot:
 
     def get_username_for_chat_ID(self,chat_ID):
 
-        r = requests.get(self.registry_url+'/users',headers = self.headers)
+        #r = requests.get(self.registry_url+'/users',headers = self.headers)
+        r = get_response(self.registry_url+'/users')
         print(f'GET request sent at \'{self.registry_url}/users')
         output = json.loads(r.text)
         for diz in output:
@@ -435,7 +488,8 @@ class GreenHouseBot:
         self.update_message_to_remove(msg_id,chat_ID)
 
     def get_available_plant_types(self):
-        r = requests.get(self.registry_url+'/valid_plant_types', headers = self.headers)
+        #r = requests.get(self.registry_url+'/valid_plant_types', headers = self.headers)
+        r = get_response(self.registry_url+'/valid_plant_types')
         print(f'GET request sent at {self.registry_url}/valid_plant_types')
         output = json.loads(r.text)
         plant_types =[]
@@ -449,7 +503,8 @@ class GreenHouseBot:
     def is_new_user(self,chat_ID):
         f = 0
         print('checking if the user is new')
-        r = requests.get(self.registry_url+'/users',headers = self.headers)
+        #r = requests.get(self.registry_url+'/users',headers = self.headers)
+        r = get_response(self.registry_url+'/users')
         print(json.loads(r.text))
         print(f'GET request sent at {self.registry_url}/users')
 
@@ -612,7 +667,11 @@ class GreenHouseBot:
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
         buttons = []
-        plant_list = self.get_plant_for_chatID(chat_ID)
+        try:
+            plant_list = self.get_plant_for_chatID(chat_ID)
+        except:
+            msg_id = self.bot.sendMessage(chat_ID,text = 'unable to get plant code, action blocked')
+            self.update_message_to_remove(msg_id,chat_ID)
         for element in plant_list:
             buttons.append(InlineKeyboardButton(text=f'{element}', callback_data='removeplant&'+element))
         buttons.append(InlineKeyboardButton(text=f'🔙', callback_data='plant&inventory'))
@@ -625,7 +684,11 @@ class GreenHouseBot:
     def confirmed_remove_plant(self,chat_ID,plantname):#*
         print(f'removing from {chat_ID} plant formerly named {plantname}')
         userid = self.get_username_for_chat_ID(chat_ID)
-        plantcode = self.get_plant_code_from_plant_name(userid,plantname)
+        try:
+            plantcode = self.get_plant_code_from_plant_name(userid,plantname)
+        except:
+            msg_id = self.bot.sendMessage(chat_ID,text = 'unable to get plant code, action blocked')
+            self.update_message_to_remove(msg_id,chat_ID)
         r = requests.delete(self.registry_url+f'/rmp/{userid}/{plantcode}',headers = self.headers)
         print(f'delete request sent at {self.registry_url}/rmp')
         output = json.dumps(r.text)
@@ -638,7 +701,11 @@ class GreenHouseBot:
     
     def change_plant_name(self,chat_ID):   
         buttons = []
-        plant_list = self.get_plant_for_chatID(chat_ID)
+        try:
+            plant_list = self.get_plant_for_chatID(chat_ID)
+        except:
+            msg_id = self.bot.sendMessage(chat_ID,text = 'unable to get plant code, action blocked')
+            self.update_message_to_remove(msg_id,chat_ID)
         for element in plant_list:
             buttons.append(InlineKeyboardButton(text=f'{element}', callback_data='changeplantname&'+element))
         buttons.append(InlineKeyboardButton(text=f'🔙', callback_data='plant&inventory'))
@@ -657,7 +724,11 @@ class GreenHouseBot:
     def remove_old_name_add_new(self,chat_ID,newname,oldname):
         print(f'changing plant name from {oldname} to  {newname}')
         userid = self.get_username_for_chat_ID(chat_ID)
-        plant_code = self.get_plant_code_from_plant_name(userid,oldname)
+        try:
+            plant_code = self.get_plant_code_from_plant_name(userid,oldname)
+        except:
+            msg_id = self.bot.sendMessage(chat_ID,text = 'unable to get plant code, action blocked')
+            self.update_message_to_remove(msg_id,chat_ID)
         body = {"plantCode":plant_code,'new_name':newname}
         r = requests.put(self.registry_url+'/modifyPlant',headers=self.headers,json = body)
         print(f'PUT requesrt sent at {self.registry_url+'/modifyPlant'} with {body}')
@@ -669,7 +740,10 @@ class GreenHouseBot:
 
 
     def get_plant_code_from_plant_name(self,userid,plantname):
-        r = requests.get(self.registry_url+'/plants',headers=self.headers)
+        r = get_response(self.registry_url+'/plants')
+            #r = requests.get(self.registry_url+'/plants',headers=self.headers)
+        print(f'GET request sent at {self.registry_url}/plants')
+
         output = json.loads(r.text)
         for diz in output:
             if diz['userId'] == userid and diz['plantId'] == plantname:
@@ -843,7 +917,8 @@ class GreenHouseBot:
         self.update_message_to_remove(msg_id,chat_ID)
 
     def get_time_start_and_time_end_from_chatId(self,userid):
-        r = requests.get(self.registry_url+'/plants',headers = self.headers)
+        #r = requests.get(self.registry_url+'/plants',headers = self.headers)
+        r = get_response(self.registry_url+'/plants')
         print(f'GET request sent at \'{self.registry_url}/plants')
         output = json.loads(r.text)
         for plant in output:
@@ -988,7 +1063,8 @@ class GreenHouseBot:
 
     def get_chatID_for_username(self,userid):
 
-        r = requests.get(self.registry_url+'/users',headers = self.headers)
+        #r = requests.get(self.registry_url+'/users',headers = self.headers)
+        r = get_response(self.registry_url+'/users')
         print(f'GET request sent at \'{self.registry_url}/users')
         output = json.loads(r.text)
         for diz in output:
