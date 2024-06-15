@@ -42,10 +42,11 @@ def hourly_timestamps_unix(start_time, end_time):
 
 def convert_timestamps(timestamps, duration):
     """
-    Converts a list of Unix timestamps into hours or days based on the duration.
-    
+    Converts a list of timestamps from the format '%Y-%m-%d %H:%M:%S' into 
+    '%m-%d' or '%m-%d-%H:%M:%S' based on the duration.
+
     Parameters:
-    timestamps (list of int): List of Unix timestamps.
+    timestamps (list of str): List of timestamps in the format '%Y-%m-%d %H:%M:%S'.
     duration (int): The duration to determine the format of conversion.
 
     Returns:
@@ -53,19 +54,16 @@ def convert_timestamps(timestamps, duration):
     """
     converted_timestamps = []
     
-    if duration > 6*24:
-        # Convert to days format
+    if duration > 6 * 24:
+        # Convert to '%m-%d' format
         for ts in timestamps:
-            dt = datetime.utcfromtimestamp(ts)
-            converted_timestamps.append(dt.strftime('%Y-%m-%d'))
-    elif duration > 25:
-        # Convert to hours format
-        for ts in timestamps:
-            dt = datetime.utcfromtimestamp(ts)
-            converted_timestamps.append(dt.strftime('%Y-%m-%d %H:%M:%S'))
+            dt = ts[:10]
+            converted_timestamps.append(dt)
     else:
-        # Return timestamps as is (Unix format)
-        converted_timestamps = timestamps
+        # Convert to '%m-%d-%H:%M:%S' format
+        for ts in timestamps:
+            dt = ts[11:]
+            converted_timestamps.append(dt)
     
     return converted_timestamps
 
@@ -76,6 +74,7 @@ class Report_generator(object):
     def __init__(self,config_path,stop_event):
         config =  json.load(open(config_path,'r'))
         self.registry_url = config['url_registry']
+        self.url_adaptor = config['url_adaptor']
         #self.registry_url = 'http://127.0.0.1:8080'
         self.headers = config['headers']
         self.ID = config['ID']
@@ -127,16 +126,40 @@ class Report_generator(object):
         plt.ylabel('Lux Intensity')
         plt.legend()
         plt.grid(True)
+        
+        # Adjust x-axis ticks based on the number of samples
+        max_samples = max(len(sunlight_timestamps), len(lamp_timestamps))
+
+        if max_samples > 200000:
+            step = 8000
+        elif max_samples > 80000:
+            step = 300
+        elif max_samples > 43000:
+            step = 1500
+        elif max_samples > 5000:
+            step = 60
+        elif max_samples > 300:
+            step = 10
+        elif max_samples > 50:
+            step = 7
+        elif max_samples > 20:
+            step = 2
+        else:
+            step = 1
+
+        ax = plt.gca()
+        ax.set_xticks(ax.get_xticks()[::step])
+        
         plt.xticks(rotation=45)
         plt.tight_layout()
-        
+
         # Save the plot to a BytesIO object
         buffer = BytesIO()
         plt.savefig(buffer, format='png')
         buffer.seek(0)
         
-        # Display the plot
-        #plt.show()
+        # Optionally, you can display the plot with plt.show()
+        # plt.show()
         
         return buffer
 
@@ -348,7 +371,46 @@ class Report_generator(object):
         combined_plot = self.concatenate_images_vertically(lux_plot,moisture_plot)
 
         return combined_plot
-        
+
+    def subtract_series(self,data1, data2, fill_method='nearest', fill_value=0):
+        """
+        Subtract two data series with different timestamps and lengths.
+
+        Parameters:
+        - data1: dict, first data series with keys 'timestamp' and 'value1'
+        - data2: dict, second data series with keys 'timestamp' and 'value2'
+        - fill_method: str, method to align timestamps ('nearest', 'ffill', 'bfill')
+        - fill_value: numeric, value to fill missing data (default is 0)
+
+        Returns:
+        - pd.DataFrame: DataFrame with aligned timestamps and subtracted values
+        """
+
+        # Convert to DataFrame
+        df1 = pd.DataFrame(data1)
+        df2 = pd.DataFrame(data2)
+
+        # Convert timestamps to datetime
+        df1['t'] = pd.to_datetime(df1['t'])
+        df2['t'] = pd.to_datetime(df2['t'])
+
+        # Set the timestamp as the index
+        df1.set_index('t', inplace=True)
+        df2.set_index('t', inplace=True)
+
+        df1.rename(columns={'v':'v1'},inplace=True)
+        df2.rename(columns={'v':'v2'},inplace=True)
+        # Merge the two DataFrames on the index (timestamps)
+        df_merged = pd.merge_asof(df1, df2, left_index=True, right_index=True, direction=fill_method)
+
+        # Handle missing values
+        df_merged.fillna(fill_value, inplace=True)
+
+        # Subtract the series
+        df_merged['result'] = df_merged['v1'] - df_merged['v2']
+
+        return df_merged
+            
 
     def schedule_and_send_messages(self):
         plants = requests.get(self.registry_url+'/plants')
@@ -357,10 +419,11 @@ class Report_generator(object):
         try:
             while True:
                 now = datetime.datetime.now()
+                print(now)
                 current_time = now.time()
                 current_day = now.weekday()  # Monday is 0 and Sunday is 6
                 # Check if it's 5 PM
-                if current_time.hour == 23 and current_time.minute == 24:
+                if current_time.hour == 14 and current_time.minute == 6:
                     for plant in plants:
                         user = plant['userId']
                         chatID = self.get_chatID_from_user(user) 
@@ -395,20 +458,35 @@ class Report_generator(object):
             self.stop_event.set()
 
     def generate_report(self,user,plant,duration = 24,instant = False):
-        lux_sensor =  {"t": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "v": [753.28, 423.11, 598.56, 729.18, 444.72, 385.96, 301.67, 529.88, 676.92, 773.53]}
-        lux_emitted = {"t": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "v": [459.45, 142.22, 361.34, 233.16, 389.65, 421.54, 283.64, 119.98, 249.29, 391.77]}
-        moisture = {"t": [1717691400, 1717695000, 1717698600, 1717702200, 1717705800, 1717709400, 1717713000, 1717716600, 1717720200, 1717723800], "v": [15.28, 45.34, 23.12, 54.87, 31.94, 41.07, 57.23, 11.75, 29.66, 37.14]}
-        
-        #lux_sensor =  json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurement":'light',"duration":duration}).text)
-        lux_sunlight_timestamps = lux_sensor['t']
-        lux_absorbed_values = lux_sensor['v']
-        #lux_emitted =  json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurement":'lamplight',"duration":duration}).text)
-        lux_emitted_timestamps = lux_emitted['t']
-        lux_emitted_values = lux_emitted['v']
-        lux_sunlight_values = [a - b for a, b in zip(lux_absorbed_values, lux_emitted_values)]
-        #moisture =   json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurement":'moisture',"duration":duration}).text)
-        moisture_timestamps = moisture['t']
-        moisture_values = moisture['v']
+        #lux_sensor =  {"t": ['2024-06-06, 16-30-00','2024-06-06, 17-30-00','2024-06-06, 18-30-00','2024-06-06, 19-30-00','2024-06-06, 20-30-00','2024-06-06, 21-30-00','2024-06-06, 22-30-00','2024-06-06, 23-30-00','2024-06-07, 00-30-00','2024-06-07, 01-30-00'], "v": [753.28, 423.11, 598.56, 729.18, 444.72, 385.96, 301.67, 529.88, 676.92, 773.53]}
+        #lux_emitted = {"t": ['2024-06-06, 16-30-00','2024-06-06, 17-30-00','2024-06-06, 18-30-00','2024-06-06, 19-30-00','2024-06-06, 20-30-00','2024-06-06, 21-30-00','2024-06-06, 22-30-00','2024-06-06, 23-30-00','2024-06-07, 00-30-00','2024-06-07, 01-30-00'], "v": [459.45, 142.22, 361.34, 233.16, 389.65, 421.54, 283.64, 119.98, 249.29, 391.77]}
+        #moisture = {"t":['2024-06-06, 16-30-00','2024-06-06, 17-30-00','2024-06-06, 18-30-00','2024-06-06, 19-30-00','2024-06-06, 20-30-00','2024-06-06, 21-30-00','2024-06-06, 22-30-00','2024-06-06, 23-30-00','2024-06-07, 00-30-00','2024-06-07, 01-30-00'], "v": [15.28, 45.34, 23.12, 54.87, 31.94, 41.07, 57.23, 11.75, 29.66, 37.14]}
+
+
+        lux_sensor =  json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurament":'light',"duration":duration}).text)
+
+
+        lux_emitted =  json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurament":'current_intensity',"duration":duration}).text)
+        lux_emitted_timestamps = []
+        lux_emitted_values = []
+        for datapoint in lux_emitted:
+            lux_emitted_timestamps.append(datapoint['t'])
+            lux_emitted_values.append(datapoint['v'])
+
+        lux_sunlight_values = self.subtract_series(lux_sensor,lux_emitted)
+        lux_sunlight_timestamps = []
+        lux_sunlight_values = []
+        for datapoint in lux_sensor:
+            lux_sunlight_timestamps.append(datapoint['t'])
+            lux_sunlight_values.append(datapoint['v'])
+        #lux_sunlight_values = [a - b for a, b in zip(lux_sunlight_values, lux_emitted_values)]
+        moisture_timestamps = []
+        moisture_values = []
+        moisture =   json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurament":'moisture',"duration":duration}).text)
+        for datapoint in moisture:
+            moisture_timestamps.append(datapoint['t'])
+            moisture_values.append(datapoint['v'])
+
         
         lux_sunlight_timestamps = convert_timestamps(lux_sunlight_timestamps,duration)
         lux_emitted_timestamps = convert_timestamps(lux_emitted_timestamps,duration)
@@ -478,7 +556,7 @@ class Report_generator(object):
                     print('trovato')
                     found = True
                     userid = diz['userId']
-                    plantname = diz['plantId']
+                    plantname = diz['plantCode']
                     body =self.generate_report(userid,plantname,instant =True)
             if not found:   
                 response = {"status": "NOT_OK", "code": 400, "message": "Invalid user"}
