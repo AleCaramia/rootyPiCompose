@@ -61,7 +61,7 @@ class GreenHouseBot:
         while True:
             time.sleep(5)
             iamalive.check_and_publish()
-            self.uservariables = user_checker.updating_user_timer(self.uservariables)
+            self.uservariables = user_checker.updating_user_timer(self.uservariables,self)
 
         #messageloop manages the messages by using a certain function
         #specified in the dictionary on the basis of the flavour of the message.
@@ -138,6 +138,8 @@ class GreenHouseBot:
                         function_to_call(chat_ID,query_list[2],query_list[3])
                     elif query_list[1] == 'choose':
                         function_to_call(chat_ID,query_list[2],query_list[3])
+                    elif query_list[1] == 'back':
+                        function_to_call(chat_ID,query_list[2])
                     else:
                         function_to_call(chat_ID)
             elif query_list[0] == 'command':
@@ -284,6 +286,7 @@ class GreenHouseBot:
             str_tank = f'actual tank level {actual_tank_level}'
         else:
             str_tank = 'no sensor data on tank level'
+    
         msg_id = self.bot.sendMessage(chat_ID,text = str_lux+'\n'+str_lamp+'\n'+str_moisture+'\n'+str_tank)['message_id']
 
         self.update_message_to_remove(msg_id,chat_ID)
@@ -514,7 +517,7 @@ class GreenHouseBot:
         self.add_planttoken(chat_ID)
 
     def add_planttoken(self,chat_ID):
-        msg_id = self.bot.sendMessage(chat_ID, text='Insert the token of your pot')['message_id']
+        msg_id = self.bot.sendMessage(chat_ID, text='Insert the token of your pot, it\'s writtend on the bottom of the pot, it starts with two letters followed by a series of numbers')['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
         self.uservariables[chat_ID]['chatstatus'] = 'listeningfortoken'
@@ -525,7 +528,7 @@ class GreenHouseBot:
         message= str(message)
         if not (message[0].isalpha() and message[1].isalpha()) and not all(char.isdigit() for char in message[2:]):
 
-            msg_id = self.bot.sendMessage(chat_ID,text =f'{message} is a invalid token')['message_id']
+            msg_id = self.bot.sendMessage(chat_ID,text =f'{message} is a invalid plant-code')['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
         else:
@@ -654,12 +657,10 @@ class GreenHouseBot:
         print(f'PUT requesrt sent at {self.registry_url+'/modifyPlant'} with {body}')
         output = json.loads(r.text)
         flag_remove_mex = self.manage_invalid_request(chat_ID,output)
-        self.choose_plant(chat_ID)
+        self.choose_plant(chat_ID,flag_remove_mex)
         msg_id = self.bot.sendMessage(chat_ID, text=f'You changed name to {oldname} into {newname}')['message_id']
-        self.remove_previous_messages(chat_ID,flag_remove_mex)
         self.update_message_to_remove(msg_id,chat_ID)
-        time.sleep(2)
-        self.choose_plant(chat_ID)
+
 
     def get_plant_code_from_plant_name(self,userid,plantname):
         r = requests.get(self.registry_url+'/plants',headers=self.headers)
@@ -694,7 +695,7 @@ class GreenHouseBot:
 
     def set_frequency_or_generate(self,chat_ID,plantcode):
 
-        buttons = [[ InlineKeyboardButton(text=f'generate report', callback_data=f'report&generate&{plantcode}'), InlineKeyboardButton(text=f'settings', callback_data=f'report&settings&{plantcode}'), InlineKeyboardButton(text=f'🔙', callback_data='plant&back')]]
+        buttons = [[ InlineKeyboardButton(text=f'generate report', callback_data=f'report&generate&{plantcode}'), InlineKeyboardButton(text=f'settings', callback_data=f'report&settings&{plantcode}'), InlineKeyboardButton(text=f'🔙', callback_data=f'plant&back&{plantcode}')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
         self.update_message_to_remove(msg_id,chat_ID)        
@@ -705,7 +706,7 @@ class GreenHouseBot:
         msg_id = self.bot.sendMessage(chat_ID, text="You chose to manage the LED")['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
-        buttons = [[ InlineKeyboardButton(text=f'switch off 🔌', callback_data=f'led&off&{plantcode}'), InlineKeyboardButton(text=f'led manual 💡', callback_data=f'led&setpercentage&{plantcode}'),InlineKeyboardButton(text=f'daylight monitoring', callback_data=f'led&change&{plantcode}'),InlineKeyboardButton(text=f'🔙', callback_data='plant&back')]]
+        buttons = [[ InlineKeyboardButton(text=f'switch off 🔌', callback_data=f'led&off&{plantcode}'), InlineKeyboardButton(text=f'led manual 💡', callback_data=f'led&setpercentage&{plantcode}'),InlineKeyboardButton(text=f'daylight monitoring', callback_data=f'led&change&{plantcode}'),InlineKeyboardButton(text=f'🔙', callback_data=f'plant&back&{plantcode}')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
         self.update_message_to_remove(msg_id,chat_ID)
@@ -830,7 +831,7 @@ class GreenHouseBot:
         msg_id = self.bot.sendMessage(chat_ID, text=f"start time {time_start}'\nend time {time_end}")['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
-        buttons = [[InlineKeyboardButton(text=f'change start ⏰', callback_data=f'time&start&{plantcode}'), InlineKeyboardButton(text=f'change stop ⏰', callback_data=f'time&end&{plantcode}'),InlineKeyboardButton(text=f'🔙', callback_data='plant&back')]]
+        buttons = [[InlineKeyboardButton(text=f'change start ⏰', callback_data=f'time&start&{plantcode}'), InlineKeyboardButton(text=f'change stop ⏰', callback_data=f'time&end&{plantcode}'),InlineKeyboardButton(text=f'🔙', callback_data=f'plant&back&{plantcode}')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID, text='What do you want to change?', reply_markup=keyboard)['message_id']
         self.update_message_to_remove(msg_id,chat_ID)
@@ -1047,7 +1048,7 @@ class Active_user_checker():
 
     # Decrement the timer for each user in the chatstatus dictionary by the given interval.
     # Remove the user's status if the timer reaches or passes 0.
-    def updating_user_timer(self,diz):
+    def updating_user_timer(self,diz,bot):
 
         keys_to_remove = []
         for key in diz.keys():
@@ -1056,11 +1057,12 @@ class Active_user_checker():
                 # If the timer reaches or passes 0, remove the user's status
                 keys_to_remove.append(key)
         for key in keys_to_remove:
-            self.delete_user_status(diz,key)
+            self.delete_user_status(diz,key,bot)
         return diz
 
     # Remove the status of a user identified by chat_ID from the chatstatus dictionary.
-    def delete_user_status(self,diz, chat_ID):
+    def delete_user_status(self,diz, chat_ID,bot):
+        bot.remove_previous_messages(chat_ID)
         del diz[chat_ID]  # Remove the entry for the user from the chatstatus dictionary
         print(f'{chat_ID} disconnected ')
 
