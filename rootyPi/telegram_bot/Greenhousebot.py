@@ -235,8 +235,13 @@ class GreenHouseBot:
 
         plant_list = []     
         userid = self.get_username_for_chat_ID(chatID)
-        r = requests.get(self.registry_url+'/plants',headers = self.headers)
-        print(f'GET request sent at {self.registry_url}/plants')
+        f = True
+        while f == True:
+            r = requests.get(self.registry_url+'/plants',headers = self.headers)
+            print(f'GET request sent at {self.registry_url}/plants')
+            print('##########################################################################'+r.status_code)
+            if r.text != None:
+                f = False
         output =json.loads(r.text)
         for diz in output:
             if diz['userId'] == userid:
@@ -583,12 +588,13 @@ class GreenHouseBot:
             perc_value = float(message)
             if perc_value <= 10 and perc_value > 0:
                 plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
+                #MOLTIPLICARE PERC VALUE PER LA TANK 
                 self.uservariables[chat_ID]['chatstatus'] = 'start'
                 msg_id = self.bot.sendMessage(chat_ID,f'{perc_value} is a valid value')['message_id']
                 self.remove_previous_messages(chat_ID)
                 self.update_message_to_remove(msg_id,chat_ID)
                 userid = self.get_username_for_chat_ID(chat_ID)
-                payload =  {"bn": f'{self.ClientID}',"e":[{ "n": f"{self.ClientID}", "u": "", "t": time.time(), "v":f"{perc_value}" }]}
+                payload =  {"bn": f'{'Pump'}',"e":[{ "n": f"{self.ClientID}", "u": "l", "t": time.time(), "v":f"{perc_value}" }]}
                 self.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/waterPump/manual',json.dumps(payload))
                 self.manage_plant(chat_ID,plantcode)
             else:
@@ -903,7 +909,7 @@ class GreenHouseBot:
         r = requests.put(self.registry_url+'/updateInterval',headers=self.headers,json = body)
         output = json.loads(r.text)
         self.manage_invalid_request(chat_ID,output)
-        mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":float(percentage) },{"n": "final_time", "u": "s", "t": time.time(), "v": m_mode_duration } ]}
+        mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":float(percentage) },{"n": "init_time", "u": "s", "t": time.time(), "v":init },{"n": "final_time", "u": "s", "t": time.time(), "v": m_mode_duration } ]}
         self.publish(f'RootyPy/{userid}/{plantcode}/lux_to_give/manual',json.dumps(mex_mqtt))
         print('SENT MESSAGE')
         self.manage_plant(chat_ID,plantcode)
