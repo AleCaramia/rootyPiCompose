@@ -11,32 +11,20 @@ services:
     env_file:
       - .env
     entrypoint: ["./entrypoint.sh"]
-    restart: on-failure:10
+    restart: always
     ports:
       - ${DOCKER_INFLUXDB_INIT_PORT}:8086
     networks:
       net:
         ipv4_address: 192.68.0.21
-  grafana:
-    image: grafana/grafana-oss:latest
-    volumes:
-      - grafana-storage:/var/lib/grafana:rw
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=programmingforIOT
-      - GF_SECURITY_ADMIN_USER=AleCaramia
-    depends_on:
-      - influxdb
-    ports:
-      - ${GRAFANA_PORT}:3000
-    networks:
-      net:
-        ipv4_address: 192.68.0.23
+
   registry:
     build: registry
     volumes:
       - registry-storage:/var/lib/registry:rw
     ports:
       - 8081:8081
+    restart: always
     networks:
       net:
         ipv4_address: 192.68.0.24
@@ -51,6 +39,7 @@ services:
       - influxdb
     ports:
       - 8080:8080
+    restart: always
     networks:
       net:
         ipv4_address: 192.68.0.25
@@ -61,6 +50,7 @@ services:
     depends_on:
       - adaptor
       - registry
+    restart: always
     networks:
       net:
         ipv4_address: 192.68.0.26
@@ -71,6 +61,7 @@ services:
     depends_on:
       - adaptor
       - registry
+    restart: always
     networks:
       net:
         ipv4_address: 192.68.0.27
@@ -88,6 +79,7 @@ services:
     build: light
     links:
       - registry
+    restart: always
     depends_on:
       - adaptor
       - registry
@@ -98,6 +90,7 @@ services:
     build: tank
     links:
       - registry
+    restart: always
     depends_on:
       - adaptor
       - registry
@@ -110,6 +103,7 @@ services:
       - TZ=Europe/Amsterdam
     ports:
       - "1880:1880"
+    restart: always
     depends_on:
       - registry
       - adaptor
@@ -127,6 +121,7 @@ services:
     links:
       - registry
       - adaptor
+    restart: always
     depends_on:
       - registry
       - adaptor
@@ -143,7 +138,7 @@ services:
     depends_on:
       - registry
       - adaptor
-    
+    restart: always  
     networks:
       net:
         ipv4_address: 192.68.0.32
@@ -159,6 +154,7 @@ services:
       - registry
       - report_generator
       - adaptor
+    restart: always
     networks:
       net:
         ipv4_address: 192.68.0.11
@@ -173,6 +169,7 @@ services:
     depends_on:
       - registry
       - adaptor
+    restart: always
     networks:
       net:
         ipv4_address: 192.68.0.33
@@ -187,7 +184,7 @@ services:
     depends_on:
       - registry
       - adaptor
-    
+    restart: always
     networks:
       net:
         ipv4_address: 192.68.0.82
@@ -202,7 +199,7 @@ services:
     depends_on:
       - registry
       - adaptor
-    
+    restart: always
     networks:
       net:
         ipv4_address: 192.68.0.20
@@ -215,7 +212,7 @@ services:
       - adaptor
     depends_on:
       - adaptor
-    
+    restart: always
     networks:
       net:
         ipv4_address: 192.68.0.34
