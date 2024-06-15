@@ -72,6 +72,7 @@ services:
     depends_on:
       - adaptor
       - registry
+    restart: always
     networks:
       net:
         ipv4_address: 192.68.0.30
