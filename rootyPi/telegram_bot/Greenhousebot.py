@@ -1014,7 +1014,7 @@ class GreenHouseBot:
         #r = requests.put(self.registry_url+'/updateInterval',headers=self.headers,json = body)
         output = json.loads(r.text)
         self.manage_invalid_request(chat_ID,output)
-        mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":float(percentage) },{"n": "init_time", "u": "s", "t": time.time(), "v":init },{"n": "final_time", "u": "s", "t": time.time(), "v": m_mode_duration } ]}
+        mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":float(percentage) },{"n": "init_hour", "u": "s", "t": time.time(), "v":init },{"n": "final_hour", "u": "s", "t": time.time(), "v": m_mode_duration } ]}
         self.publish(f'RootyPy/{userid}/{plantcode}/lux_to_give/manual',json.dumps(mex_mqtt))
         print('SENT MESSAGE')
         self.manage_plant(chat_ID,plantcode)
