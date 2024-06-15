@@ -9,9 +9,23 @@ import threading
 from pathlib import Path
 import os
 import requests
+from requests.exceptions import HTTPError
 
 P = Path(__file__).parent.absolute()
 SETTINGS = P / "settings.json"
+
+def get_request(url):
+    for i in range(15):
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                return json.loads(response.text)
+            except HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
+            except Exception as err:
+                print(f"Other error occurred: {err}")
+            time.sleep(1)
+    return []
 
 def senmlToInflux(senml, plantId):
     output = []   
@@ -43,8 +57,7 @@ class Adaptor(object):
         
     def loadUsers(self):
         url = self.registryBaseUrl + "/users"
-        input = requests.get(url)
-        self.users = json.loads(input._content)
+        self.users = get_request(url)
     def checkUserPresent(self, userId):
         self.loadUsers()
         for user in self.users:
@@ -161,14 +174,12 @@ class MySubscriber:
             self.org = data["influx_org"]
             self.registry_url = data["registry_url"]
             url = self.registry_url + "/users"
-            response = requests.get(url)
-            self.users = json.loads(response.text)
+            self.users = get_request(url)
             self.time = time.time()
 
         def update_users(self):
             url = self.registry_url + "/users"
-            response = requests.get(url)
-            self.users = json.loads(response.text)
+            self.users = get_request(url)
 
         def start (self):
             #manage connection to broker
