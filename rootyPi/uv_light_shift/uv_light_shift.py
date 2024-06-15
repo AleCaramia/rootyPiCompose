@@ -145,12 +145,12 @@ class light_shift(object):
 
         else: print(f"No lamp found for the {self.current_user} and {self.current_plant}")
 
-    def get_response(url):
+    def get_response(self,url):
         for i in range(15):
             try:
                 response = requests.get(url)
                 response.raise_for_status()
-                return json.loads(response.content.text)
+                return json.loads(response.text)
             except HTTPError as http_err:
                 print(f"HTTP error occurred: {http_err}")
             except Exception as err:

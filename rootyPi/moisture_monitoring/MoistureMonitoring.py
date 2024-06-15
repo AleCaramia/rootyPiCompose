@@ -44,12 +44,12 @@ class MoistureMonitoring(object):
     def MyOnConnect(self,paho_mqtt,userdata,flags,rc):
         print(f"MoistureMonitoring: Connected to {self.broker} with result code {rc} \n subtopic {None}, pubtopic PROVA")
 
-    def get_response(url):
+    def get_response(self,url):
         for i in range(15):
             try:
                 response = req.get(url)
                 response.raise_for_status()
-                return json.loads(response.content.text)
+                return json.loads(response.text)
             except HTTPError as http_err:
                 print(f"HTTP error occurred: {http_err}")
             except Exception as err:
