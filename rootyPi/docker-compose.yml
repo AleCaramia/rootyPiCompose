@@ -206,6 +206,19 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.20
+
+  watertankalert:
+    build: watertankalert
+    volumes:
+      - watertankalert-storage:/var/lib/watertankalert:rw
+    links:
+      - adaptor
+    depends_on:
+      - adaptor
+    
+    networks:
+      net:
+        ipv4_address: 192.68.0.34
 volumes:
   grafana-storage:
   influxdb-storage:
@@ -218,6 +231,7 @@ volumes:
   report_generator-storage:
   moisture_monitoring-storage:
   water_irrigator-storage:
+  watertankalert-storage:
 networks:
   net:
     ipam: 
