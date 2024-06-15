@@ -7,6 +7,7 @@ import numpy as np
 import requests as req
 import threading
 from datetime import datetime,timedelta
+from requests.exceptions import HTTPError
 
 #devo cambiare il modo in cui prendo la perc intensità
 class EnvMonitoring(object):
@@ -49,8 +50,12 @@ class EnvMonitoring(object):
     def MyPublish(self):
         # try:
             #requesting info needed from registry
-            plants,url_adptor,models,valid_plant_types=self.RequestsToRegistry() 
-            
+            plants,url_adptor,models,valid_plant_types=self.RequestsToRegistry()
+            if self.simMode==1:
+                if self.startedSim>=24:
+                    self.startedSim=0
+                else:
+                    self.startedSim+=1
             #for each plant in registry
             for plant in plants:
                     
@@ -86,11 +91,9 @@ class EnvMonitoring(object):
                     suncycle = round(time_difference.total_seconds() / 3600) #is the periodt defined by the user at wich the auto mode is activated
                 else:
                     
-                    if self.startedSim>=24:
-                        self.startedSim=0
                     print("simMode started")
                     current_datetime = datetime.combine(datetime.today(),datetime.strptime("00:00", '%H:%M').time())
-                    self.startedSim+=1
+                    
                     current_datetime += timedelta(hours=self.startedSim)
                     print(current_datetime)
                     start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
@@ -147,6 +150,7 @@ class EnvMonitoring(object):
         # except:
         #     return "Error reqesting from registry"
     
+
     def PublishAlive(self):
         '''
         This function publish the alive message to Registry to tell them that service is working.
@@ -158,21 +162,34 @@ class EnvMonitoring(object):
         print(__message)
         self._paho_mqtt.publish(topic=self.alive_topic,payload=__message,qos=2)
 
+
+
+    def get_response(self,url):
+        
+        for i in range(15):
+            try:
+                response = req.get(url)
+                response.raise_for_status()
+                return json.loads(response.text)
+            except HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
+            except Exception as err:
+                print(f"Other error occurred: {err}")
+            # time.sleep(1)
+        return []
+
+
     def RequestsToRegistry(self):        
         '''
         Request are needed info from the Registry
         returns: all plant registerd, the models, the types of plant and the adaptor url
         
         '''
-        response=req.get(f"{self.url_registry}/plants") #plant request
-  
-        plants=json.loads(response.text)
-        models=json.loads((req.get(f"{self.url_registry}/models")).text) #models request
-        
-        valid_plant_types=json.loads((req.get(f"{self.url_registry}/valid_plant_types")).text) #plant types request
-
-        active_services=json.loads(req.get(f"{self.url_registry}/services").text) #request all online services
-        
+        plants=self.get_response(f"{self.url_registry}/plants")
+        models=self.get_response(f"{self.url_registry}/models")
+        valid_plant_types=self.get_response(f"{self.url_registry}/valid_plant_types")
+        active_services=self.get_response(f"{self.url_registry}/services")
+        # response=req.get(f"{self.url_registry}/plants") #plant request        
         #find if adaptor is online
         for service in active_services:
             if service['serviceID']=="adaptor":
