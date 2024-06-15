@@ -21,11 +21,13 @@ class Catalog(object):
         self.load_file()
     
     def load_file(self):
-        try:
-            with open(self.filename_catalog, "r") as fs:                
-                self.catalog = json.loads(fs.read())            
-        except Exception:
-            print("Problem in loading catalog")
+        for i in range(10):
+            try:
+                with open(self.filename_catalog, "r") as fs:                
+                    self.catalog = json.loads(fs.read())
+                return            
+            except Exception:
+                print("Problem in loading catalog")
 
         #self.broker_ip = self.service["broker"]["IP"]
         #self.mqtt_port = self.service["broker"]["mqtt_port"]
