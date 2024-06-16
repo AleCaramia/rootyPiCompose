@@ -168,7 +168,10 @@ class AllPubs(threading.Thread):
                         continue
                     else:
                         mess = json.loads(msg.payload)
-                        litersToGive = mess["e"][0]["v"]
+                        if mess['bn'] == "refillTank":
+                            sim.tankLevel = sim.tankCapacity
+                        else:
+                            litersToGive = mess["e"][0]["v"]
                 if litersToGive < sim.tankLevel:
                     event = {"n": "irrigation", "u": "VWC", "t": str(time.time()), 
                         "v": litersToGive/sim.jarVolume*100}
