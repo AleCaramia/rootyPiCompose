@@ -18,7 +18,6 @@ class MoistureMonitoring(object):
         self.port=settings['port']
         self.broker=settings['broker']
         self.clientID=settings['ID_moistureMonitoring']
-        self.moisture_goals = None
         self.default_time=settings['default_time'] 
         self.url_registry=settings['url_registry']
         self.url_adaptor=settings['url_adaptor']
@@ -34,17 +33,27 @@ class MoistureMonitoring(object):
         
 
     def start(self):
+        # Connect to MQTT broker and start the MQTT loop
         self._paho_mqtt.connect(self.broker,self.port)
         self._paho_mqtt.loop_start()
 
     def stop(self):
+        # Stop the MQTT loop and disconnect from the broker
         self._paho_mqtt.loop_stop()
         self._paho_mqtt.disconnect()
 
     def MyOnConnect(self,paho_mqtt,userdata,flags,rc):
+        # Callback function when connected to MQTT broker
         print(f"MoistureMonitoring: Connected to {self.broker} with result code {rc} \n subtopic {None}, pubtopic PROVA")
 
     def get_response(self,url):
+        """
+        Sends a GET request to the specified URL and returns the response.
+        It tries 15 times to get the response, if it fails it returns an empty list.
+
+        Args:
+            url (str): The URL to send the GET request to.
+        """
         for i in range(15):
             try:
                 response = req.get(url)
@@ -66,43 +75,30 @@ class MoistureMonitoring(object):
                     
                     plant_type=plant['type']
                     plantId=plant['plantId']
-                    #print(plantId)
                     userId=plant['userId']
                     plant_code=plant["plantCode"]
                     
 
-                    jar_volume=self.retriveMaxFlowPumpAndJarVolume(plant_code,models)
+                    jar_volume=self.retriveJarVolume(plant_code,models)
                     
-                    # start_time=plant['auto_init']
-                    # end_time=plant['auto_end']
-
-                    # current_time = datetime.now().time()
-                    # current_datetime = datetime.combine(datetime.today(), current_time)
-                    # start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
-                    # time_difference = current_datetime - start_datetime
-                    # hours_passed = round(time_difference.total_seconds() / 3600)
-
-                    # end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
-                    # time_difference = end_datetime - start_datetime
-                    # suncycle = round(time_difference.total_seconds() / 3600)
 
                     water_to_add = self.PlantWaterEstimation(url_adptor,plant_code,plant_type,userId,jar_volume)
-                    if water_to_add>0:
 
-                        current_msg=self.__message.copy()
-                        
-                        current_topic=f"{self.base_topic}/{userId}/{plant_code}/water_to_give/automatic"
+                    current_msg=self.__message.copy()
+                    
+                    current_topic=f"{self.base_topic}/{userId}/{plant_code}/water_to_give/automatic"
 
-                        current_msg['e'][0]['t']=time.time()
-                        current_msg['e'][0]['v']=water_to_add
-                        current_msg['bn']=current_topic
-                        
+                    current_msg['e'][0]['t']=time.time()
+                    current_msg['e'][0]['v']=water_to_add
+                    current_msg['bn']=current_topic
+                    
 
 
-                        __message=json.dumps(current_msg)
-                        print(__message)
-                        self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)
-                        
+                    __message=json.dumps(current_msg)
+                    print(__message)
+                    print(current_topic)
+                    self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)
+            print("\n\n\n")          
 
             return 
         else:
@@ -111,21 +107,19 @@ class MoistureMonitoring(object):
 
     
     def RequestsToRegistry(self):
-        #Devo farla al registry
+    # Send HTTP GET requests to the registry and return the responses as JSON
 
         plants=self.get_response(f"{self.url_registry}/plants")
         models=self.get_response(f"{self.url_registry}/models")
-        active_services=self.get_response(f"{self.url_registry}/services")
 
-        # response=req.get(f"{self.url_registry}/plants")
-        # plants=json.loads(response.text)
-        # models=json.loads((req.get(f"{self.url_registry}/models")).text)
-        # active_services=json.loads(req.get(f"{self.url_registry}/services").text)
+
 
         url_adaptor=self.url_adaptor
         return plants,url_adaptor,models
     
-    def retriveMaxFlowPumpAndJarVolume(self,plant_code,models):
+    def retriveJarVolume(self,plant_code,models):
+        # Retrieve the jar volume based on the plant code
+
         vase_type=plant_code[:2]
         for model in models:
             if model['model_code']==vase_type:
@@ -134,42 +128,37 @@ class MoistureMonitoring(object):
         return jar_volume
 
     def PlantWaterEstimation(self,url_adptor,plant_code,plant_type,userId,jar_volume): 
+ # Estimate the amount of water to add to the plant based on the moisture goals and past measurements
+        valid_plants_types= self.get_response(f"{self.url_registry}/valid_plant_types")
 
-        plants_type= self.get_response(f"{self.url_registry}/valid_plant_types")
 
-        # plants_type=json.loads((req.get(f"{self.url_registry}/valid_plant_types")).text)
-
-        for plant in plants_type:
+        for plant in valid_plants_types:
             if plant_type == plant["type"]:
-                self.moisture_goals=float(plant["moisture_goal"])
+                moisture_goals=float(plant["moisture_goal"])
+                print(f"Moisture goals for {plant_type}: {moisture_goals}")
                 break
-        mesurements_past_hour=self.PlantSpecificGetReq(url_adptor,userId,plant_code)#aggiungo i dli dati fin ora
+        mesurements_past_hour=self.PlantSpecificGetReq(url_adptor,userId,plant_code,moisture_goals)
         mesurements_past_hour_moisture = []
         for mesure in mesurements_past_hour:
                 mesurements_past_hour_moisture.append(mesure['v'])
         mean_moisture_past_hour= np.mean(mesurements_past_hour_moisture)
-
-        ##################################################################
-        ##################################################################
         # mean_moisture_past_hour = float(mesurements_past_hour_moisture[-1])
-        ##################################################################
-        ##################################################################
-        
-        if self.moisture_goals - mean_moisture_past_hour > 0:
-            water_to_add = (self.moisture_goals - mean_moisture_past_hour)/100 * jar_volume
+
+
+        if moisture_goals - mean_moisture_past_hour > 0:
+            water_to_add = (moisture_goals - mean_moisture_past_hour)/100 * jar_volume
         else:
             water_to_add = 0
     
         return water_to_add
 
-    def PlantSpecificGetReq(self,url_adaptor,userId,plant_code):
-
+    def PlantSpecificGetReq(self,url_adaptor,userId,plant_code,moisture_goals):
+    # Send HTTP GET request to the adaptor to get plant-specific data about the optimal moisture level
         mesurements_past_hour=self.get_response(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=moisture&duration=1")
         
-        # mesurements_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=moisture&duration=1").text)
 
         if len(mesurements_past_hour)==0:
-            mesurements_past_hour = [{"t": f"{datetime.now()}, {time.time()}", "v": self.moisture_goals + 1}]
+            mesurements_past_hour = [{"t": f"{datetime.now()}, {time.time()}", "v": moisture_goals + 1}]
             return mesurements_past_hour
         else: 
             return mesurements_past_hour
@@ -180,14 +169,17 @@ class run(object):
         
         self.function = MoistureMonitoring(settings)
         self.function.start()
+        self.update_time=float(settings['update_time'])
+
         
     def run(self):
         
         try:
             start = time.time()
             while True:
-
-                    if time.time()-start > 60:
+                    ##################################################################
+                    if time.time()-start > self.update_time: #3600
+                    ##################################################################
                         self.function.MyPublish("function")
                         start = time.time()
                     self.function.MyPublish("alive")     
@@ -203,7 +195,7 @@ if __name__ == "__main__":
     time.sleep(5)
     settings=json.load(open("configWat.json",'r'))
     tFunction = run(settings)
-    print("> Starting thread_function...")
+    print("> Starting moisture monitoring function...")
     tFunction.run()
 
 

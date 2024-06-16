@@ -12,7 +12,7 @@
     "url_adaptor": "http://192.68.0.25:8080",
     "pub_topic_Iamalive": "RootyPy/microservices/moistureMonitoring",
     "sub_topic_Iamalive": null,
-    "default_time":{"start":"08:00","stop":"20:00"}
-
+    "default_time":{"start":"08:00","stop":"20:00"},
+    "update_time":30
 
 }

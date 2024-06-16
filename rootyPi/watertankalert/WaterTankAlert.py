@@ -6,7 +6,20 @@ import paho.mqtt.client as pahoMQTT
 import cherrypy
 import requests
 import threading
+from requests.exceptions import HTTPError
 
+def get_response(url):
+    for i in range(15):
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            return response
+        except HTTPError as http_err:
+            print(f"HTTP error occurred: {http_err}")
+        except Exception as err:
+            print(f"Other error occurred: {err}")
+        #time.sleep(0.1)
+    return None
 
 class WaterTankAlert(object):
 
@@ -20,7 +33,7 @@ class WaterTankAlert(object):
         self.broker = config['broker']
         self.port = config['port']
         self.starting_time_tank = time.time()
-        self.interval_tank = config['tank_interval']
+        self.interval_tank =10# config['tank_interval']
         self.pub_topic = config['pub_topic']
         self.paho_mqtt = pahoMQTT.Client(self.ID,True)
         self.paho_mqtt.on_connect = self.myconnect_live
@@ -29,42 +42,59 @@ class WaterTankAlert(object):
         self.start_mqtt()
 
     def check_water_level(self):
-        try:
+        #try:
             while True:
                 actual_time = time.time()
                 if actual_time > self.starting_time_tank + self.interval_tank:
-                    r = requests.get(self.registry_url+'/models')
+                    print('time trigger triggered')
+                    #r = requests.get(self.registry_url+'/models')
+                    r = get_response(self.registry_url+'/models')
                     models = json.loads(r.text)
-                    r = requests.get(self.registry_url+'/users')
+                    print('GET request sent at /models')
+                    #r = requests.get(self.registry_url+'/users')
+                    r = get_response(self.registry_url+'/users')
                     users = json.loads(r.text)
+                    print('GET request sent at /users')
                     userwithchatid = []
+                    print(users)
                     for user in users:
-                        if user['chat_ID'] != None:
-                            userwithchatid.append(user)
-                    r = requests.get(self.registry_url+'/plants')
+                        print( user['chatID'] != None)
+                        if user['chatID'] != None:
+                            print(user['chatID'])
+                            userwithchatid.append(user['userId'])
+                    print(userwithchatid)
+                    #r = requests.get(self.registry_url+'/plants')
+                    r = get_response(self.registry_url+'/plants')
                     plants = json.loads(r.text)
+                    print('GET request sent at /plants')
                     plantwithchatid = []
-                    for user in userwithchatid:
-                        for plant_diz in plants:
-                            if plant_diz['userId'] in userwithchatid:    
-                                plantwithchatid.append((plant_diz['plantCode'],user['userId']))
+                    for plant_diz in plants:
+                        if plant_diz['userId'] in userwithchatid:    
+                            plantwithchatid.append((plant_diz['plantCode'],plant_diz['userId']))
+                    print(plantwithchatid)
                     for plant_u_tuple in plantwithchatid:
-                        tank_level_series=  json.loads(requests.get(f'{self.adaptor_url}/getData/{plant_u_tuple[1]}/{plant_u_tuple[0]}',params={"measurement":'tankLevel',"duration":1}).text)
-                        actual_tank_level = tank_level_series[-1]["v"]
-                        curr_model = plant_u_tuple[0][:2]
-                        for model in models:
-                            if model['model_code'] == curr_model:
-                                tank_capacity = model['tank_capacity']
-                        tank_level_th = 0.1 * tank_capacity
-                        if actual_tank_level < tank_level_th:
-                            topic = self.pub_topic+f'/{plant_u_tuple[1]}/{plant_u_tuple[0]}'
-                            message = {"bn": self.ID,"e":[{ "n": f"{plant_diz['plantCode']}", "u": "", "t": time.time(), "v":"alert" }]}
-                            self.publish(topic,message)
+                        tank_level_series=  json.loads(requests.get(f'{self.adaptor_url}/getData/{plant_u_tuple[1]}/{plant_u_tuple[0]}',params={"measurament":'tankLevel',"duration":1}).text)
+                        print(f'get request sent at {self.adaptor_url}/getData/{plant_u_tuple[1]}/{plant_u_tuple[0]}')
+                        if len(tank_level_series) > 0:
+                            actual_tank_level = tank_level_series[-1]["v"]
+                            curr_model = plant_u_tuple[0][:2]
+                            for model in models:
+                                if model['model_code'] == curr_model:
+                                    print(f'found {model['model_code']}')
+                                    tank_capacity = model['tank_capacity']
+                            tank_level_th = 0.1 * tank_capacity
+                            if actual_tank_level < tank_level_th:
+                                topic = self.pub_topic+f'/{plant_u_tuple[1]}/{plant_u_tuple[0]}'
+                                message = {"bn": self.ID,"e":[{ "n": f"{plant_diz['plantCode']}", "u": "", "t": time.time(), "v":"alert" }]}
+                                self.publish(topic,message)
+                                print(f'sent {json.dumps(message)} at {topic}')
+                        else:
+                            pass
                     #print(f'{self.interval} seconds passed sending i am alive message at {self.pub_topic}')
                     self.starting_time_tank = actual_time
-        except Exception as e:
-            print('Water tank level stopped working')
-            self.stop_event.set()
+        #except Exception as e:
+        #    print('Water tank level stopped working')
+        #    self.stop_event.set()
 
     def start_mqtt(self):
         print('>starting i am alive')
@@ -74,10 +104,10 @@ class WaterTankAlert(object):
     def myconnect_live(self,paho_mqtt, userdata, flags, rc):
        print(f"report generator: Connected to {self.broker} with result code {rc}")
 
-    def publish(self,message):
+    def publish(self,topic,message):
         __message=json.dumps(message)
         #print(f'message sent at {time.time()} to {self.pub_topic}')
-        self.paho_mqtt.publish(topic=self.pub_topic,payload=__message,qos=2)
+        self.paho_mqtt.publish(topic,payload=__message,qos=2)
 
 
 class Iamalive(object):
