@@ -7,7 +7,7 @@
     "pub_topic":"RootyPy/iamalive/ReportGenerator",
     "url_registry":"http://192.68.0.24:8081",
     "url_adaptor" : "http://192.68.0.25:8080",
-    "alive_topic":"Rootypy/microservices/Report_generator",
+    "alive_topic":"RootyPy/microservices/Report_generator",
     "update_time":10,
     "headers":{
        "content-type":"application/json; charset=UTF-8"

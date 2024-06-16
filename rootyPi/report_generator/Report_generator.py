@@ -608,7 +608,7 @@ class Iamalive(object):
 
     def publish(self):
         __message=json.dumps(self.message)
-        #print(f'message sent at {time.time()} to {self.pub_topic}')
+        print(f'message sent at {time.time()} to {self.pub_topic}')
         self.paho_mqtt.publish(topic=self.pub_topic,payload=__message,qos=2)
 
 class ThreadManager:
