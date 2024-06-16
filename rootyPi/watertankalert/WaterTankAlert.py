@@ -85,7 +85,7 @@ class WaterTankAlert(object):
                             tank_level_th = 0.1 * tank_capacity
                             if actual_tank_level < tank_level_th:
                                 topic = self.pub_topic+f'/{plant_u_tuple[1]}/{plant_u_tuple[0]}'
-                                message = {"bn": self.ID,"e":[{ "n": f"{plant_diz['plantCode']}", "u": "", "t": time.time(), "v":"alert" }]}
+                                message = {"bn": self.ID,"e":[{ "n": plant_diz['plantCode'], "u": "", "t": time.time(), "v":"alert" }]}
                                 self.publish(topic,message)
                                 print(f'sent {json.dumps(message)} at {topic}')
                         else:
