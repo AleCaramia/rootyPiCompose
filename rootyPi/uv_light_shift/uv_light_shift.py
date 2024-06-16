@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 import json
 import numpy as np
+from requests.exceptions import HTTPError
 import time
 import datetime
 import threading
@@ -9,8 +10,8 @@ import requests
 class light_shift(object):
 
     def __init__(self , config):
-        self.manual_init_hour = 0
-        self.manual_final_hour = 0
+        self.manual_init_hour = 0.0
+        self.manual_final_hour = 0.0
         self.state = 0 # 0 automatic | 1 manual
         self.current_user = None
         self.current_plant = None
@@ -95,7 +96,7 @@ class light_shift(object):
                 if user["e"][1]['v'] == self.current_plant and user["e"][0]["v"] == self.current_user:
                     self.state = 1 
             
-            self.intensity = mess['e'][0]['v']
+            self.intensity = float(mess['e'][0]['v'])
             # print(mess)
             if last_part == "automatic" and self.state == 0:
 
@@ -105,11 +106,11 @@ class light_shift(object):
                     else:
                         self.intensity = float(self.intensity)
                 else: 
-                    self.intensity = 0
+                    self.intensity = 0.0
                 self.pub_topic = "RootyPy/"+topic_parts[1]+"/"+topic_parts[2]+"/lightShift/automatic"
-                lamp["e"][0]["v"] = int(round(self.intensity*100/self.max_lux))
-                lamp["e"][1]["v"] = 0
-                lamp["e"][2]["v"] = 0
+                lamp["e"][0]["v"] = float(round(self.intensity*100/self.max_lux))
+                lamp["e"][1]["v"] = 0.0
+                lamp["e"][2]["v"] = 0.0
                 lamp["e"][0]["t"] = time.time()
                 lamp["e"][1]["t"] = time.time()
                 lamp["e"][2]["t"] = time.time()
@@ -121,8 +122,8 @@ class light_shift(object):
 
             elif last_part == "manual":
 
-                self.manual_init_hour = mess["e"][1]["v"]
-                self.manual_final_hour = mess["e"][2]["v"]
+                self.manual_init_hour = float(mess["e"][1]["v"])
+                self.manual_final_hour = float(mess["e"][2]["v"])
                 lamp["e"][0]["v"] = self.intensity
                 lamp["e"][1]["v"] = self.manual_init_hour
                 lamp["e"][2]["v"] = self.manual_final_hour
@@ -144,6 +145,19 @@ class light_shift(object):
 
         else: print(f"No lamp found for the {self.current_user} and {self.current_plant}")
 
+    def get_response(self,url):
+        for i in range(15):
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                return json.loads(response.text)
+            except HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
+            except Exception as err:
+                print(f"Other error occurred: {err}")
+            time.sleep(1)
+        return []
+
     def myconnect(self,paho_mqtt, userdata, flags, rc):
        print(f"light shift: Connected to {self.broker} with result code {rc} \n subtopic {self.sub_topic}, pubtopic {self.pub_topic}")
 
@@ -153,17 +167,25 @@ class light_shift(object):
 
     
     def CodeRequest(self):
-        self.code_db=json.loads((requests.get(self.url_models)).text) 
-        # self.code_db = json.load(open("UV_light/code_db.json",'r'))
+
+        self.code_db = self.get_response(self.url_models)
+
+        # self.code_db=json.loads((requests.get(self.url_models)).text) 
 
     def GetLamp(self):
         try:
-            req_lamp = requests.get(self.url_devices)
-            req_lamp.raise_for_status()  # Verifica lo stato della risposta
-            self.lamp = json.loads(req_lamp.text)
-            req_plants = requests.get(self.url_plants)
-            req_plants.raise_for_status()  # Verifica lo stato della risposta
-            self.plants = json.loads(req_plants.text)
+
+            self.lamp = self.get_response(self.url_devices)
+            self.plants = self.get_response(self.url_plants)
+
+
+            # req_lamp = requests.get(self.url_devices)
+            # req_lamp.raise_for_status()  # Verifica lo stato della risposta
+            # self.lamp = json.loads(req_lamp.text)
+            # req_plants = requests.get(self.url_plants)
+            # req_plants.raise_for_status()  # Verifica lo stato della risposta
+            # self.plants = json.loads(req_plants.text)
+
             # print("lamp: ",self.lamp)
             # print("Plants: ",self.plants)
             
@@ -195,7 +217,11 @@ class light_shift(object):
 
 
     def get_plant_jar(self):
-        self.plants = json.loads(requests.get(self.url_plants).text) 
+
+        self.plants = self.get_response(self.url_plants)
+
+        # self.plants = json.loads(requests.get(self.url_plants).text) 
+
         # self.plants = json.load(open("UV_light/temp_plants.json",'r'))
         for plant in self.plants:
             if plant['userId'] == self.current_user:

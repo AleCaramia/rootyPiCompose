@@ -7,9 +7,23 @@ import datetime
 from datetime import datetime
 import json
 import requests
+from requests.exceptions import HTTPError
 
 P = Path(__file__).parent.absolute()
 SETTINGS = P / 'settings.json'
+
+def get_request(url):
+    for i in range(15):
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                return json.loads(response.text)
+            except HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
+            except Exception as err:
+                print(f"Other error occurred: {err}")
+            time.sleep(1)
+    return []
 
 class LampSimulator:
     def __init__(self, simId,  baseTopic, plantCode,models):
@@ -129,11 +143,9 @@ def update_simulators(simulators):
     except Exception:
         print("Problem in loading settings")
     url = settings["registry_url"] + "/plants"
-    response = requests.get(url)
-    plants = json.loads(response.text)
+    plants = get_request(url)
 
-    req_models = requests.get(settings["registry_url"] + "/models")
-    models = json.loads(req_models.text)
+    models = get_request(settings["registry_url"] + "/models")
 
     for plant in plants:
         simId = plant["plantCode"]

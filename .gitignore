@@ -36814,3 +36814,4 @@ rootyPi/.venv_deb/share/man/man1/ttx.1
 .venv_win/Lib/site-packages/yarl-1.9.4.dist-info/RECORD
 .venv_win/Lib/site-packages/yarl-1.9.4.dist-info/top_level.txt
 .venv_win/Lib/site-packages/yarl-1.9.4.dist-info/WHEEL
+fake_catalogue.json
