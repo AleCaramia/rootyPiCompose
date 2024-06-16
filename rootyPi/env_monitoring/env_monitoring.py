@@ -233,11 +233,13 @@ class EnvMonitoring(object):
         input: url of the adaptor, the user id (plant owner), the specifc code of the vase, the time passed from the start time of auto mode
         returns: light mesurements in past hour, the intensity percentege of the lamp in past hour, All DLI records from start of auto mode 
         '''
-        
-        mesurements_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=light&duration=1").text)
-        lamp_intensity_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=current_intensity&duration=1").text)
+        mesurements_past_hour=self.get_response(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=light&duration=1")
+        # mesurements_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=light&duration=1").text)
+        lamp_intensity_past_hour=self.get_response(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=current_intensity&duration=1")
+        # lamp_intensity_past_hour=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=current_intensity&duration=1").text)
         print(hours_passed)
-        DLI_daily_record=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=DLI&duration={hours_passed}").text)
+        DLI_daily_record=self.get_response(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=DLI&duration={hours_passed}")
+        # DLI_daily_record=json.loads(req.get(f"{url_adaptor}/getData/{userId}/{plant_code}?measurament=DLI&duration={hours_passed}").text)
         return mesurements_past_hour,DLI_daily_record,lamp_intensity_past_hour
 
     def LuxPastHour(self,mesurments_past_hour,lamp_intensity_past_hour,DLI_daily_record):
