@@ -123,7 +123,6 @@ class GreenHouseBot:
 
         
         self.paho_mqtt.on_message = self.on_message
-
         self.paho_mqtt.subscribe('RootyPy/microservices/report_generator/#',2)
         self.paho_mqtt.subscribe('RootyPy/WaterTankAlert/#',2)
         while True:
@@ -156,6 +155,10 @@ class GreenHouseBot:
                 self.new_user_management(chat_ID)
             else:
                 self.choose_plant(chat_ID)
+        elif '/fill_tank' in message: #for simulation purposes
+            userid = self.get_username_for_chat_ID(chat_ID)
+            plantcode = self.get_plant_code_from_plant_name(message.split('_')[2])
+            self.paho_mqtt.publish("RootyPy/" + userid + "/" + plantcode +"/waterPump/refill",json.dumps({"bn": "refillTank", "e": []}))
         elif  'listeningfortime' in self.uservariables[chat_ID]['chatstatus']:
             self.confirm_manual_mode_duration(message,chat_ID)
         elif "listeningforobswindow" in self.uservariables[chat_ID]['chatstatus'] :
