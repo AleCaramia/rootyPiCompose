@@ -105,6 +105,7 @@ class GreenHouseBot:
         self.user_check_interval = json_config_bot['user_check_interval']
         self.iamalive_topic = json_config_bot["iamalive_topic"]
         self.update_time = json_config_bot["update_time"]
+        self.time_zone_correction = -2
         #Dictionaries with the function to perform after a certain specification which will be written in query_list[1]
         diz_plant = {'inventory':self.choose_plant,'add':self.add_planttoken,'back':self.manage_plant,'create':self.choose_plant_type,'change':self.change_plant_name,'choose':self.remove_old_name_add_new}  #managing plants
         diz_actions = { 'water':self.water_plant, 'ledlight':self.led_management,'reportmenu':self.set_frequency_or_generate}   #actions to take care of the plant
@@ -124,7 +125,7 @@ class GreenHouseBot:
         self.paho_mqtt.on_message = self.on_message
 
         self.paho_mqtt.subscribe('RootyPy/microservices/report_generator/#',2)
-        self.paho_mqtt.subscribe('RootyPy/microservices/tank_alert/#',2)
+        self.paho_mqtt.subscribe('RootyPy/WaterTankAlert/#',2)
         while True:
             time.sleep(5)
             iamalive.check_and_publish()
@@ -351,7 +352,7 @@ class GreenHouseBot:
             str_lux = 'no sensor data for light sensor'
         if len(lamp_emission) > 0:
             actual_emission = lamp_emission[-1]['v']
-            str_lamp = f'current lamp intensity: {actual_emission} lux'
+            str_lamp = f'current lamp intensity: {actual_emission} %'
         else:
             str_lamp = f'no data on lamp intensity'
         if len(moisture) > 0:
@@ -671,15 +672,38 @@ class GreenHouseBot:
             perc_value = float(message)
             if perc_value <= 10 and perc_value > 0:
                 plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
-                #MOLTIPLICARE PERC VALUE PER LA TANK 
+                r =get_response(self.registry_url+'/models')
+                models = json.loads(r.text)
+                for model in models:
+                    if model["model_code"] == plantcode[0:2]:
+                        tank_max = model["tank_capacity"]
+
+                water_volume = tank_max*perc_value/100
                 self.uservariables[chat_ID]['chatstatus'] = 'start'
                 msg_id = self.bot.sendMessage(chat_ID,f'{perc_value} is a valid value')['message_id']
                 self.remove_previous_messages(chat_ID)
                 self.update_message_to_remove(msg_id,chat_ID)
                 userid = self.get_username_for_chat_ID(chat_ID)
-                payload =  {"bn": f'{'Pump'}',"e":[{ "n": f"{self.ClientID}", "u": "l", "t": time.time(), "v":f"{perc_value}" }]}
-                self.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/waterPump/manual',json.dumps(payload))
+                payload =  {"bn": f'{'Pump'}',"e":[{ "n": f"{self.ClientID}", "u": "l", "t": time.time(), "v":water_volume }]}
+                self.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/water_to_give/manual',json.dumps(payload),2)
                 self.manage_plant(chat_ID,plantcode)
+            elif perc_value == 100:           #DA TOGLIERE ASSOLUTAMENTE BACKDOOR PER SVUOTARE TANICA
+                plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
+                r =get_response(self.registry_url+'/models')
+                models = json.loads(r.text)
+                for model in models:
+                    if model["model_code"] == plantcode[0:2]:
+                        tank_max = model["tank_capacity"]
+
+                water_volume = tank_max*perc_value/100
+                self.uservariables[chat_ID]['chatstatus'] = 'start'
+                msg_id = self.bot.sendMessage(chat_ID,f'{perc_value} is a valid value')['message_id']
+                self.remove_previous_messages(chat_ID)
+                self.update_message_to_remove(msg_id,chat_ID)
+                userid = self.get_username_for_chat_ID(chat_ID)
+                payload =  {"bn": f'{'Pump'}',"e":[{ "n": f"{self.ClientID}", "u": "l", "t": time.time(), "v":water_volume }]}
+                self.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/water_to_give/manual',json.dumps(payload),2)
+                self.manage_plant(chat_ID,plantcode)                
             else:
                 msg_id = self.bot.sendMessage(chat_ID,f'{perc_value} is a invalid value, senda a value between 0 and 10')['message_id']
                 self.update_message_to_remove(msg_id,chat_ID)
@@ -858,7 +882,7 @@ class GreenHouseBot:
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
 
-    def get_next_occurrence_unix_timestamp(self,time_str):
+    def get_next_occurrence_unix_timestamp(self,time_str,time_zone_correction):
         # Parse the input time string into hours and minutes
         hours, minutes = map(int, time_str.split(":"))
         
@@ -899,9 +923,9 @@ class GreenHouseBot:
                 current_time.tm_isdst  # Daylight saving time flag
             ))
             target_timestamp_tomorrow = time.mktime(target_time_tomorrow)
-            return target_timestamp_tomorrow
+            return target_timestamp_tomorrow + time_zone_correction*3600
         
-        return target_timestamp_today
+        return target_timestamp_today + time_zone_correction*3600
 
     def confirm_manual_mode_duration(self,mex,chat_ID):
         mex=mex.strip()
@@ -918,7 +942,7 @@ class GreenHouseBot:
                 self.remove_previous_messages(chat_ID)
                 self.update_message_to_remove(msg_id,chat_ID)
             if hour >= 0 and hour <= 24 and minute >= 0 and minute <= 59:
-                m_mode_duration = self.get_next_occurrence_unix_timestamp(mex)
+                m_mode_duration = self.get_next_occurrence_unix_timestamp(mex,self.time_zone_correction)
                 print('stopped listening for time')
                 plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
                 percentage = self.uservariables[chat_ID]['chatstatus'].split('&')[2]
@@ -1017,6 +1041,7 @@ class GreenHouseBot:
         mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":float(percentage) },{"n": "init_hour", "u": "s", "t": time.time(), "v":init },{"n": "final_hour", "u": "s", "t": time.time(), "v": m_mode_duration } ]}
         self.publish(f'RootyPy/{userid}/{plantcode}/lux_to_give/manual',json.dumps(mex_mqtt))
         print('SENT MESSAGE')
+        time.sleep(2)
         self.manage_plant(chat_ID,plantcode)
 
 
@@ -1031,7 +1056,7 @@ class GreenHouseBot:
         #r = requests.put(self.registry_url+'/updateInterval',headers=self.headers,json = body)
         output = json.loads(r.text)
         self.manage_invalid_request(chat_ID,output)
-        mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":0.0 },{"n": "final_time", "u": "s", "t": time.time(), "v":end} ]}
+        mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":0.0 },{"n": "init_hour", "u": "s", "t": time.time(), "v":time.time()} ,{"n": "final_hour", "u": "s", "t": time.time(), "v":end} ]}
         self.publish(f'RootyPy/{userid}/{plantcode}/lux_to_give/manual',json.dumps(mex_mqtt))
         print(f'SENT MESSAGE to RootyPy/{userid}/{plantcode}/lux_to_give/manual')
         self.manage_plant(chat_ID,plantcode)
