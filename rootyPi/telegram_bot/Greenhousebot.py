@@ -53,34 +53,7 @@ def post_response(url,body):
         #time.sleep(0.1)
     return None
 
-'''
 
-def safe_request(RESTreq,url,n_trials,body = ''):
-    
-    if RESTreq == 'get':
-        function_to_call = requests.get
-    elif RESTreq == 'put':
-        function_to_call = requests.put
-    elif RESTreq == 'post':
-        function_to_call = requests.post
-    elif RESTreq == 'delete':
-        function_to_call = requests.delete
-
-    i = 0
-    flagNone = True
-    while i < n_trials and flagNone == True:
-        if RESTreq == 'get' or RESTreq == 'delete':
-            r = function_to_call(url)
-        else:
-            r = function_to_call(url,body)
-        i = i+1
-        if r.text != None:
-            flagNone = False
-    if i < n_trials:
-        return json.loads(r.text)
-    else:
-        return 
-'''
 class GreenHouseBot:
     def __init__(self, token,config_bot):
         # Local token
@@ -99,7 +72,7 @@ class GreenHouseBot:
         self.ClientID =  json_config_bot['ID']
         self.broker = json_config_bot['broker']
         self.port = json_config_bot['port']
-        self.notifier = self.myconnect
+
         self.paho_mqtt = pahoMQTT.Client(self.ClientID,True)
         self.countdown = json_config_bot['user_inactivity_timer']                            #Value untill the user status diz is deleted to reduce the weight on the server
         self.user_check_interval = json_config_bot['user_check_interval']
@@ -120,15 +93,13 @@ class GreenHouseBot:
         MessageLoop(self.bot, {'chat': self.on_chat_message,'callback_query': self.on_callback_query}).run_as_thread() 
         iamalive = Iamalive(self.iamalive_topic,self.update_time,self.ClientID,self.port,self.broker)
         user_checker = Active_user_checker(self.user_check_interval)
-
+        bot_subscriber = Subscriber_telegram_bot(self.ClientID+'_subscriber',self.port,self.broker,self)
         
-        self.paho_mqtt.on_message = self.on_message
-        self.paho_mqtt.subscribe('RootyPy/microservices/report_generator/#',2)
-        self.paho_mqtt.subscribe('RootyPy/WaterTankAlert/#',2)
         while True:
             time.sleep(5)
             iamalive.check_and_publish()
             self.uservariables = user_checker.updating_user_timer(self.uservariables,self)
+            bot_subscriber.empty_queue()
 
         #messageloop manages the messages by using a certain function
         #specified in the dictionary on the basis of the flavour of the message.
@@ -625,7 +596,7 @@ class GreenHouseBot:
         else:
             buttons = [[InlineKeyboardButton(text=f'confirm', callback_data=f'newuser&confirmtoken&{message.strip()}'), InlineKeyboardButton(text=f'abort', callback_data='newuser&newtkn')]]
             keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-            msg_id = self.bot.sendMessage(chat_ID,text =f'{message} it\'s a valid token \nwould you like to confirm?',reply_markup=keyboard)['message_id']
+            msg_id = self.bot.sendMessage(chat_ID,text =f'{message} it\'s your token \nwould you like to confirm?',reply_markup=keyboard)['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
             self.uservariables[chat_ID]['chatstatus'] = 'start'       
@@ -1067,8 +1038,6 @@ class GreenHouseBot:
     
 #----------------------------------------------------MQTT--------------------------------------------------------------------------------#
 
-    def myconnect(self,paho_mqtt, userdata, flags, rc):
-       print(f"ligth shift: Connected to {self.broker} with result code {rc} ")
 
     def publish(self,topic, diff):
         self.paho_mqtt.publish(topic,diff,2)
@@ -1077,48 +1046,63 @@ class GreenHouseBot:
 #------------------------------------------------ comunication to catalog -------------------------------------------
 #------------------------------------------------- mqtt receiver ---------------------------------------
 
-    def on_message(self, client, userdata, msg):
+    def Handle_report(self,msg):
         payload = msg.payload
-        print(f"Received message on topic {msg.topic}")
-        if 'RootyPy/microservices/report_generator' in msg.topic:
-            user = msg.topic.split('/')[2]
-            plant = msg.topic.split('/')[3]
-            # If the payload is an image, display it
-            try:
-                # Decode the JSON payload
-                payload_dict = json.loads(payload.decode('utf-8'))
-                if user == 'user1':
-                    chat_ID = 6094158662
-                else:
-                    chat_ID = 6094158662
-                
-                # Extract the base64-encoded image and decode it
-                image_base64 = payload_dict['image']
-                image_data = base64.b64decode(image_base64)
-                
-                # Extract the message
-                message = payload_dict['message']
-                print(f"Message: {message}")
+        topic = msg.topic
+        print(f"Received {payload} on topic {msg.topic}")
 
-                # Load the image into a BytesIO stream
-                image = Image.open(BytesIO(image_data))
-                bio = BytesIO()
-                image.save(bio, format='PNG')
-                bio.seek(0)
+        user = msg.topic.split('/')[2]
+        plant = msg.topic.split('/')[3]
+        # If the payload is an image, display it
 
-                # Send the image using the bot
-                self.bot.sendPhoto(chat_ID, bio, caption=message)
+        # Decode the JSON payload
+        payload_dict = json.loads(payload.decode('utf-8'))
+        chat_ID = self.get_chatID_for_username(user)
+            
+        # Extract the base64-encoded image and decode it
+        image_base64 = payload_dict['image']
+        image_data = base64.b64decode(image_base64)
+        
+        plantname = self.get_plantname_for_plantcode(plant)
 
-            except Exception as e:
-                print(f"Error processing message: {e}")
-        elif 'RootyPy/WaterTankAlert' in msg.topic:
-            user = msg.topic.split('/')[2]
-            plant = msg.topic.split('/')[3]
-            try:
-                chat_ID = self.get_chatID_for_username(user)
-                self.bot.sendMessage(chat_ID,text = f'watchout tank almost empty for {plant}')   
-            except Exception as e:
-                print(f"Error processing message: {e}")
+        # Extract the message
+        message = plantname + ' :'+ payload_dict['message']
+        print(f"Message: {message}")
+
+        # Load the image into a BytesIO stream
+        image = Image.open(BytesIO(image_data))
+        bio = BytesIO()
+        image.save(bio, format='PNG')
+        bio.seek(0)
+
+        # Send the image using the bot
+        self.bot.sendPhoto(chat_ID, bio, caption=message)
+
+    def Handle_water_tank_alert(self,msg):
+        topic = msg.topic
+        #payload = msg.payload
+        user = topic.split('/')[2]
+        plant = topic.split('/')[3]
+            
+        chat_ID = self.get_chatID_for_username(user)
+        plantname = self.get_plantname_for_plantcode(plant)
+
+        self.bot.sendMessage(chat_ID,text = f'watchout tank almost empty for {plantname}')   
+
+    def get_plantname_for_plantcode(self,plantcode):
+        #r = requests.get(self.registry_url+'/users',headers = self.headers)
+        r = get_response(self.registry_url+'/plants')
+        print(f'GET request sent at \'{self.registry_url}/plants')
+        output = json.loads(r.text)
+        for diz in output:
+
+            if diz['plantCode'] == plantcode:
+
+                plantname = diz['plantId']
+
+        return plantname
+
+
 
     def get_chatID_for_username(self,userid):
 
@@ -1128,11 +1112,11 @@ class GreenHouseBot:
         output = json.loads(r.text)
         for diz in output:
 
-            if int(diz['userId']) == userid:
+            if diz['userId'] == userid:
 
-                usern =diz['userId']
+                chatid =diz['chatID']
 
-        return usern
+        return chatid
 
 
 
@@ -1165,6 +1149,7 @@ class Iamalive():
 
     def check_and_publish(self):
 
+
         actual_time = time.time()
         if actual_time > self.starting_time + self.interval:
             self.message["e"][0]["t"]= time.time()
@@ -1177,8 +1162,52 @@ class Iamalive():
         __message=json.dumps(self.message)
         # print(f'publishing {__message}, on topic {self.pub_topic}, {type(__message)}')
         self.paho_mqtt.publish(topic=self.pub_topic,payload=__message,qos=2)
+#--------------------------------------------------Subscrier----------------------------------
+
+class Subscriber_telegram_bot():
+
+    def __init__(self,id,port,broker,bot):
+        print('initialiting subscriber')
+        self.clientID = id
+        self.port = port
+        self.broker = broker
+        self.message_queue = []
+        self.bot = bot
+        self.paho_mqtt = pahoMQTT.Client(self.clientID,True)
+        print('subscriber client created')
+        self.paho_mqtt.on_connect = self.myconnect_live
+        self.paho_mqtt.on_message = self.on_message      
+        self.start_mqtt()
+        print('mqtt started')
 
 
+    def start_mqtt(self):
+        print('>starting i am alive')
+        self.paho_mqtt.connect(self.broker,self.port)
+        self.paho_mqtt.loop_start()
+        self.paho_mqtt.subscribe('RootyPy/report_generator/#',qos = 2)
+        self.paho_mqtt.subscribe('RootyPy/WaterTankAlert/#',qos = 2)
+        print('subscribed to all topic')
+
+
+    def myconnect_live(self,paho_mqtt, userdata, flags, rc):
+       print(f"telegrambot: Connected to {self.broker} with result code {rc}")
+
+    def on_message(self, client, userdata, msg):
+
+        print(msg.topic)
+        print(msg.payload)
+        print(f"Received message on topic {msg.topic}")
+        self.message_queue.append(msg)
+    
+
+    def empty_queue(self):
+        for msg in self.message_queue:
+            if 'RootyPy/WaterTankAlert/' in msg.topic:
+                self.bot.Handle_water_tank_alert(msg)
+            elif 'RootyPy/report_generator/' in msg.topic:
+                self.bot.Handle_report(msg)
+        self.message_queue = []
 #-------------------------------------------------- Disconnect silent users -------------------------
 class Active_user_checker():
 
