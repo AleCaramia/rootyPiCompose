@@ -11,34 +11,8 @@ from PIL import Image
 import base64
 import threading
 import cherrypy
-from datetime import datetime, timedelta
+import schedule
 
-def hourly_timestamps_unix(start_time, end_time):
-    """
-    Generate a list of timestamps at hourly intervals between two given Unix timestamps.
-
-    Args:
-    start_time (int): The starting timestamp in Unix format.
-    end_time (int): The ending timestamp in Unix format.
-
-    Returns:
-    list: A list of Unix timestamps at hourly intervals.
-    """
-    start = datetime.fromtimestamp(start_time)
-    end = datetime.fromtimestamp(end_time)
-    
-    # Ensure start is on the hour
-    if start.minute != 0 or start.second != 0:
-        start = (start.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1))
-
-    current = start
-    timestamps = []
-
-    while current <= end:
-        timestamps.append(int(current.timestamp()))
-        current += timedelta(hours=1)
-
-    return timestamps  
 
 def convert_timestamps(timestamps, duration):
     """
@@ -80,6 +54,10 @@ class Report_generator(object):
         self.ID = config['ID']
         self.broker = config['broker']
         self.port = config['port']
+        self.start_time = time.time()
+        self.actual_time = time.time()
+        self.time_zone_correction = 2
+        self.interval = 2
         self.stop_event = stop_event
         self.start_web_server( )
 
@@ -96,6 +74,7 @@ class Report_generator(object):
         cherrypy.config.update({'server.socket_port': 8081})
         cherrypy.config.update({'server.socket_host':'0.0.0.0'})
         cherrypy.engine.start()
+        print('report generator server exposed')
         #cherrypy.engine.block()
         
     def stop_server(self):
@@ -104,7 +83,7 @@ class Report_generator(object):
 
     def plot_lux_intensity(self, sunlight_timestamps, sunlight_lux, lamp_timestamps, lamp_lux):
         """
-        Plots the lux intensity values over time for sunlight and lamp.
+        Plots the lux intensity values over time for sunlight and lamp separately.
         
         :param sunlight_timestamps: List of timestamps for sunlight.
         :param sunlight_lux: List of lux values for sunlight.
@@ -112,105 +91,152 @@ class Report_generator(object):
         :param lamp_lux: List of lux values for lamp.
         :return: BytesIO object containing the plot image.
         """
+        # Function to clean and convert timestamps to datetime format
+        def clean_and_convert_timestamps(timestamps):
+            return pd.to_datetime(timestamps.str.strip(), format='%H:%M:%S')
+        
+        # Create dataframes for both sunlight and lamp data
+        sunlight_df = pd.DataFrame({'timestamp': clean_and_convert_timestamps(pd.Series(sunlight_timestamps)), 'lux_sunlight': sunlight_lux})
+        lamp_df = pd.DataFrame({'timestamp': clean_and_convert_timestamps(pd.Series(lamp_timestamps)), 'lux_lamp': lamp_lux})
+        
+        # Plot the lux intensity for sunlight
         plt.figure(figsize=(10, 6))
+        plt.plot(sunlight_df['timestamp'], sunlight_df['lux_sunlight'], label='Sunlight Lux', marker='o', linestyle='-')
         
-        # Plot sunlight lux intensity
-        plt.plot(sunlight_timestamps, sunlight_lux, label='Sunlight Lux', marker='o', linestyle='-')
-        
-        # Plot lamp lux intensity
-        plt.plot(lamp_timestamps, lamp_lux, label='Lamp Lux', marker='x', linestyle='--')
-        
-        # Set the title and labels
-        plt.title('Lux Intensity Over Time')
+        # Set the title and labels for sunlight plot
+        plt.title('Lux Intensity Over Time - Sunlight')
         plt.xlabel('Time')
         plt.ylabel('Lux Intensity')
         plt.legend()
         plt.grid(True)
         
-        # Adjust x-axis ticks based on the number of samples
-        max_samples = max(len(sunlight_timestamps), len(lamp_timestamps))
-
-        if max_samples > 200000:
-            step = 8000
-        elif max_samples > 80000:
-            step = 300
-        elif max_samples > 43000:
-            step = 1500
-        elif max_samples > 5000:
-            step = 60
-        elif max_samples > 300:
-            step = 10
-        elif max_samples > 50:
-            step = 7
-        elif max_samples > 20:
-            step = 2
+        # Adjust x-axis ticks based on the number of samples for sunlight
+        max_samples_sunlight = len(sunlight_timestamps)
+        if max_samples_sunlight > 50:
+            step_sunlight = 7
+        elif max_samples_sunlight > 20:
+            step_sunlight = 2
         else:
-            step = 1
-
-        ax = plt.gca()
-        ax.set_xticks(ax.get_xticks()[::step])
+            step_sunlight = 1
         
+        ax_sunlight = plt.gca()
+        ax_sunlight.set_xticks(ax_sunlight.get_xticks()[::step_sunlight])
         plt.xticks(rotation=45)
         plt.tight_layout()
-
-        # Save the plot to a BytesIO object
-        buffer = BytesIO()
-        plt.savefig(buffer, format='png')
-        buffer.seek(0)
         
-        # Optionally, you can display the plot with plt.show()
-        # plt.show()
+        # Save the sunlight plot to a BytesIO object
+        buffer_sunlight = BytesIO()
+        plt.savefig(buffer_sunlight, format='png')
+        buffer_sunlight.seek(0)
         
-        return buffer
+        # Clear the plot for lamp lux intensity
+        plt.clf()
+        
+        # Plot the lux intensity for lamp
+        plt.figure(figsize=(10, 6))
+        plt.plot(lamp_df['timestamp'], lamp_df['lux_lamp'], label='Lamp Lux', marker='x', linestyle='--')
+        
+        # Set the title and labels for lamp plot
+        plt.title('Lux Intensity Over Time - Lamp')
+        plt.xlabel('Time')
+        plt.ylabel('Lux Intensity')
+        plt.legend()
+        plt.grid(True)
+        
+        # Adjust x-axis ticks based on the number of samples for lamp
+        max_samples_lamp = len(lamp_timestamps)
+        if max_samples_lamp > 50:
+            step_lamp = 7
+        elif max_samples_lamp > 20:
+            step_lamp = 2
+        else:
+            step_lamp = 1
+        
+        ax_lamp = plt.gca()
+        ax_lamp.set_xticks(ax_lamp.get_xticks()[::step_lamp])
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        
+        # Save the lamp plot to a BytesIO object
+        buffer_lamp = BytesIO()
+        plt.savefig(buffer_lamp, format='png')
+        buffer_lamp.seek(0)
+        
+        # Combine both images into a single BytesIO object
+        combined_buffer = BytesIO()
+        plt.figure(figsize=(10, 6))
+        plt.imshow(plt.imread(buffer_sunlight), extent=[0, 1, 0, 0.5])
+        plt.imshow(plt.imread(buffer_lamp), extent=[0, 1, 0.5, 1])
+        plt.axis('off')
+        plt.tight_layout()
+        plt.savefig(combined_buffer, format='png')
+        combined_buffer.seek(0)
+        
+        return combined_buffer
 
-    def plot_soil_moisture(self, timestamps, moisture_values):
+
+    def plot_data(self, timestamps, values, color,title,yax):
         """
         Plots the soil moisture values over time.
-        
+
         :param timestamps: List of timestamps.
         :param moisture_values: List of soil moisture values.
+        :param color: Color of the plot line.
         :return: BytesIO object containing the plot image.
         """
         plt.figure(figsize=(10, 6))
-        plt.plot(timestamps, moisture_values, label='Soil Moisture', marker='o', linestyle='-')
-        plt.title('Soil Moisture Over Time')
+        plt.plot(timestamps, values, label=yax, marker='o', linestyle='-', color=color)
+        plt.title(title)
         plt.xlabel('Time')
-        plt.ylabel('Soil Moisture')
+        plt.ylabel(yax)
         plt.legend()
         plt.grid(True)
+
+
         plt.xticks(rotation=45)
+
         plt.tight_layout()
-        
+
         # Save the plot to a BytesIO object
         buffer = BytesIO()
         plt.savefig(buffer, format='png')
         buffer.seek(0)
-    
+
         return buffer
-    
-    def concatenate_images_vertically(self, buffer1, buffer2):
+
+        
+    def concatenate_images_vertically(self, buffer1, buffer2, buffer3):
         """
-        Concatenates two images vertically from BytesIO buffers and returns a new BytesIO buffer containing the combined image.
+        Concatenates four images vertically from BytesIO buffers and returns a new BytesIO buffer containing the combined image.
         
         :param buffer1: BytesIO object containing the first image.
         :param buffer2: BytesIO object containing the second image.
+        :param buffer3: BytesIO object containing the third image.
+        :param buffer4: BytesIO object containing the fourth image.
         :return: BytesIO object containing the concatenated image.
         """
         # Load images from buffers
         image1 = Image.open(buffer1)
         image2 = Image.open(buffer2)
+        image3 = Image.open(buffer3)
+
         
         # Get dimensions
         width1, height1 = image1.size
         width2, height2 = image2.size
+        width3, height3 = image3.size
+
         
         # Create a new image with combined height
-        total_height = height1 + height2
-        combined_image = Image.new('RGB', (max(width1, width2), total_height))
+        total_height = height1 + height2 + height3
+        max_width = max(width1, width2, width3)
+        combined_image = Image.new('RGB', (max_width, total_height))
         
         # Paste images into the new image
         combined_image.paste(image1, (0, 0))
         combined_image.paste(image2, (0, height1))
+        combined_image.paste(image3, (0, height1 + height2))
+
         
         # Save the combined image to a new BytesIO buffer
         combined_buffer = BytesIO()
@@ -348,6 +374,7 @@ class Report_generator(object):
 
         # Create payload dictionary
         payload = {
+            'bn': self.ID,
             'image': image_base64,
             'message': message
         }
@@ -366,9 +393,10 @@ class Report_generator(object):
         client.disconnect()
 
     def create_image(self,sunlight_timestamps, sunlight_values, lamp_timestamps, lamp_lux, moisture_timestamps, moisture_values):
-        lux_plot = self.plot_lux_intensity(sunlight_timestamps, sunlight_values, lamp_timestamps, lamp_lux)
-        moisture_plot = self.plot_soil_moisture(moisture_timestamps, moisture_values)
-        combined_plot = self.concatenate_images_vertically(lux_plot,moisture_plot)
+        lux_plot = self.plot_data(sunlight_timestamps, sunlight_values,'yellow','sun light received over time','lux')
+        lamp_plot = self.plot_data(lamp_timestamps, lamp_lux,'violet','uv light emitted over time','lux')
+        moisture_plot = self.plot_data(moisture_timestamps, moisture_values,'blue','moisture over time','moisture')
+        combined_plot = self.concatenate_images_vertically(lux_plot,lamp_plot,moisture_plot)
 
         return combined_plot
 
@@ -410,52 +438,101 @@ class Report_generator(object):
         df_merged['result'] = df_merged['v1'] - df_merged['v2']
 
         return df_merged
-            
+                
+
+    def send_daily_reports(self):
+        try:
+            plants = requests.get(self.registry_url + '/plants')
+            plants = json.loads(plants.text)
+            print(f'GET request sent at {self.registry_url}/plants')
+        except Exception as e:
+            print(f'Error fetching plants: {e}')
+
+        for plant in plants:
+            if plant['report_frequency'] == 'daily':
+                user = plant['userId']
+                chatID = self.get_chatID_from_user(user)
+                if chatID is None:
+                    continue
+                self.generate_report(user, plant['plantCode'], duration=24)
+
+    def send_weekly_reports(self):
+        try:
+            plants = requests.get(self.registry_url + '/plants')
+            plants = json.loads(plants.text)
+            print(f'GET request sent at {self.registry_url}/plants')
+        except Exception as e:
+            print(f'Error fetching plants: {e}')
+
+
+        for plant in plants:
+            if plant['report_frequency'] == 'weekly':
+                user = plant['userId']
+                chatID = self.get_chatID_from_user(user)
+                if chatID is None:
+                    continue
+                if plant['report_frequency'] == 'weekly':
+                    self.generate_report(user, plant['plantCode'], duration=7*24)
+
+    def send_biweekly_reports(self):
+        try:
+            plants = requests.get(self.registry_url + '/plants')
+            plants = json.loads(plants.text)
+            print(f'GET request sent at {self.registry_url}/plants')
+        except Exception as e:
+            print(f'Error fetching plants: {e}')
+
+            for plant in plants:
+                if plant['report_frequency'] == 'biweekly':
+                    user = plant['userId']
+                    chatID = self.get_chatID_from_user(user)
+                    if chatID is None:
+                        continue
+                    if plant['report_frequency'] == 'biweekly':
+                        self.generate_report(user, plant['plantCode'], duration=14*24)
+
+    def send_monthly_reports(self):
+        try:
+            plants = requests.get(self.registry_url + '/plants')
+            plants = json.loads(plants.text)
+            print(f'GET request sent at {self.registry_url}/plants')
+        except Exception as e:
+            print(f'Error fetching plants: {e}')
+
+            for plant in plants:
+                if plant['report_frequency'] == 'monthly':
+                    user = plant['userId']
+                    chatID = self.get_chatID_from_user(user)
+                    if chatID is None:
+                        continue
+                    if plant['report_frequency'] == 'monthly':
+                        self.generate_report(user, plant['plantCode'], duration=30*24)
 
     def schedule_and_send_messages(self):
-        plants = requests.get(self.registry_url+'/plants')
-        plants = json.loads(plants.text)
-        print(f'GET request sent at {self.registry_url+'/plants'}')
-        try:
-            while True:
+        while True:
+            self.actual_time = time.time()
+            if self.actual_time > self.start_time + 60:
+                self.start_time = time.time()
+                #print('checking time')
                 now = datetime.datetime.now()
-                print(now)
-                current_time = now.time()
-                current_day = now.weekday()  # Monday is 0 and Sunday is 6
-                # Check if it's 5 PM
-                if current_time.hour == 14 and current_time.minute == 6:
-                    for plant in plants:
-                        user = plant['userId']
-                        chatID = self.get_chatID_from_user(user) 
-                        if chatID == None:
-                            pass
-                        else:
-                            time_setting = plant['report_frequency']
-                            send_message = False
-                            if time_setting == "daily":
-                                duration = 24
-                                send_message = True
-                            elif time_setting == "weekly" and current_day == 6:  # Sunday
-                                send_message = True
-                                duration = 7*24
-                            elif time_setting == "two weeks" and current_day == 6:  # Handle two-week logic
-                                week_num = now.isocalendar()[1]
-                                duration = 14*24
-                                if week_num % 2 == 0:
-                                    send_message = True
-                            elif time_setting == "monthly":
-                                duration = 30*24
-                                last_day_of_month = (now.replace(day=28) + datetime.timedelta(days=4)).replace(day=1) - datetime.timedelta(days=1)
-                                if now.date() == last_day_of_month:
-                                    send_message = True
 
-                            if send_message:
-                                self.generate_report(user,plant,duration = duration)
-                
-                    time.sleep(60)  # Check every minute
-        except Exception as e:
-            print('Report generator stopped working')
-            self.stop_event.set()
+                print(now.hour,now.minute)
+                if now.hour + self.time_zone_correction == 15 and now.minute == 32:
+                    self.send_daily_reports()
+                    print('sending the daily records')
+
+                    if now.weekday() == 0:  # Sunday
+                        self.send_weekly_reports()
+
+                    
+                    if now.day() == 14 or now.day == 28:
+                        self.send_biweekly_reports()
+
+                    
+                    if now.day() == 15:
+                        self.send_monthly_reports()
+
+
 
     def generate_report(self,user,plant,duration = 24,instant = False):
         #lux_sensor =  {"t": ['2024-06-06, 16-30-00','2024-06-06, 17-30-00','2024-06-06, 18-30-00','2024-06-06, 19-30-00','2024-06-06, 20-30-00','2024-06-06, 21-30-00','2024-06-06, 22-30-00','2024-06-06, 23-30-00','2024-06-07, 00-30-00','2024-06-07, 01-30-00'], "v": [753.28, 423.11, 598.56, 729.18, 444.72, 385.96, 301.67, 529.88, 676.92, 773.53]}
@@ -487,18 +564,42 @@ class Report_generator(object):
             moisture_timestamps.append(datapoint['t'])
             moisture_values.append(datapoint['v'])
 
-        
+
+
+        r = requests.get(self.registry_url+'/models')
+        models = json.loads(r.text)
+        for model in models:
+            if model['model_code'] == plant[:2]:
+                lamp_capacity = model['max_lux']
+
+        lux_emitted_values_2 = []
+        for element in lux_emitted_values:
+            lux_emitted_values_2.append(element*lamp_capacity)
+            
+        lux_emitted_values = lux_emitted_values_2
+
         lux_sunlight_timestamps = convert_timestamps(lux_sunlight_timestamps,duration)
         lux_emitted_timestamps = convert_timestamps(lux_emitted_timestamps,duration)
         moisture_timestamps = convert_timestamps(moisture_timestamps,duration)
 
-        combined_image = self.create_image(lux_sunlight_timestamps, lux_sunlight_values, lux_emitted_timestamps, lux_emitted_values, moisture_timestamps, moisture_values)
+
+
+        print(lux_sunlight_timestamps)
+        print(lux_sunlight_values)
+        print(lux_emitted_timestamps)
+        print(lux_emitted_values)
+        print( moisture_timestamps)
+        print(moisture_values)
+
+        combined_image = self.create_image(lux_sunlight_timestamps, lux_sunlight_values, lux_emitted_timestamps,lux_emitted_values, moisture_timestamps, moisture_values)
         dli = self.calculate_dli(lux_sunlight_values)
         light_fluctuation = self.calculate_light_fluctuation(lux_sunlight_values)
         water_absorption = self.calculate_water_absorption(moisture_values)
         tips = self.analyze_plant_conditions(dli, light_fluctuation, moisture_values, water_absorption)
         if not instant:
-            self.publish_image_via_mqtt(combined_image, tips, self.broker, self.port, f'Rootypy/report_generator/{user}/{plant}')
+            self.publish_image_via_mqtt(combined_image, tips, self.broker, self.port, f'RootyPy/report_generator/{user}/{plant}')
+            print(f"Message sent to {user} for plant {plant} with instant: {instant}")
+            print(f'message sent at Rootypy/report_generator/{user}/{plant}')
         else:
             combined_image.seek(0)
             image_base64 = base64.b64encode(combined_image.read()).decode('utf-8')
@@ -510,23 +611,51 @@ class Report_generator(object):
             }
 
             # Serialize payload to JSON
+            print(f"Message sent to {user} for plant {plant} with instant: {instant}")
             return body
-        print(f"Message sent to {user} for plant {plant} with instant: {instant}")
 
-    def translate_uv_lamp_values(self,lux_emitted):
-        uv_translated_timestamps = []
-        uv_translated_values = []
-        lux_emitted_timestamps = lux_emitted['t']
-        lux_emitted_values = lux_emitted['v']
-        for i in range(len(lux_emitted_timestamps)-1):
-            translated_timestamp = hourly_timestamps_unix(lux_emitted_timestamps[i])
-            translated_value = lux_emitted_values['e'][0]["v"]
-            for element in translated_timestamp:
-                uv_translated_timestamps.append(element)
-            for element in translated_value:
-                uv_translated_values.append(translated_value)
-        
-        return uv_translated_timestamps,uv_translated_values
+
+
+    def interpolate_lux(self, long_timestamps, long_lux, short_timestamps, short_lux):
+        # Convert timestamps to pandas datetime using the correct format
+        long_timestamps = pd.to_datetime(long_timestamps, format='%m/%d/%Y, %H:%M:%S')
+        print(long_timestamps)
+        short_timestamps = pd.to_datetime(short_timestamps, format='%m/%d/%Y, %H:%M:%S')
+        print(short_timestamps)
+        # Create dataframes
+        long_df = pd.DataFrame({'timestamp': long_timestamps, 'lux': long_lux})
+        short_df = pd.DataFrame({'timestamp': short_timestamps, 'lux': short_lux})
+
+        # Set the timestamp as the index
+        long_df.set_index('timestamp', inplace=True)
+        short_df.set_index('timestamp', inplace=True)
+
+        # Reindex the shorter list with the index of the longer list
+        short_df_reindexed = short_df.reindex(long_df.index)
+
+        # Print the reindexed DataFrame for debugging
+        print("Reindexed short_df:")
+        print(short_df_reindexed)
+
+        # Interpolate the missing values
+        short_df_interpolated = short_df_reindexed.interpolate(method='time')
+
+        # Print the interpolated DataFrame for debugging
+        print("Interpolated short_df:")
+        print(short_df_interpolated)
+
+        # Fill any remaining NaNs (e.g., extrapolate if necessary)
+        short_df_interpolated = short_df_interpolated.ffill().bfill()
+
+        # Print the final DataFrame for debugging
+        print("Final short_df after ffill and bfill:")
+        print(short_df_interpolated)
+
+        # The interpolated values can now be matched to the long timestamps
+        interpolated_lux = short_df_interpolated['lux'].tolist()
+
+        return interpolated_lux
+
       
 
     def get_chatID_from_user(self,user):
@@ -580,8 +709,7 @@ class Iamalive(object):
         self.pub_topic = json_config["alive_topic"]
         self.paho_mqtt = pahoMQTT.Client(self.clientID,True)
         self.paho_mqtt.on_connect = self.myconnect_live
-        self.myurl = json_config["myurl"]
-        self.message = {"bn": "updateCatalogService","e":[{ "n": f"{self.clientID}", "u": "", "t": time.time(), "v":f"{self.myurl}" }]}
+        self.message = {"bn": "updateCatalogService","e":[{ "n": f"{self.clientID}", "u": "", "t": time.time(), "v":"" }]}
         self.starting_time = time.time()
         self.interval = json_config["update_time"]
         print('i am alive initialized')
@@ -591,11 +719,13 @@ class Iamalive(object):
 
     def start_mqtt(self):
         print('>starting i am alive')
+        print(self.broker)
+        print(self.port)
         self.paho_mqtt.connect(self.broker,self.port)
         self.paho_mqtt.loop_start()
 
     def myconnect_live(self,paho_mqtt, userdata, flags, rc):
-       print(f"report generator: Connected to {self.broker} with result code {rc}")
+       print(f"Report generator: Connected to {self.broker} with result code {rc}")
 
     def check_and_publish(self):
         while  not self.stop_event.is_set():
@@ -613,18 +743,16 @@ class Iamalive(object):
 
 class ThreadManager:
 
-    def __init__(self, report_generator, iamalive):
-        self.report_generator = report_generator
+    def __init__(self, reportgenerator, iamalive):
+        self.reportgenerator = reportgenerator
         self.iamalive = iamalive
 
     def start_threads(self):
+        threading.Thread(target=self.reportgenerator.schedule_and_send_messages).start()
         threading.Thread(target=self.iamalive.check_and_publish).start()
-        threading.Thread(target=self.report_generator.schedule_and_send_messages).start()
-
 
 if __name__ == '__main__':
-    # Initialize the objects
-    config_path = "config_report_generator.json"
+    config_path = 'config_report_generator.json'
     stop_event = threading.Event()
     report_generator = Report_generator(config_path,stop_event)
     iamalive = Iamalive(config_path,stop_event)  # Provide the actual path to your config file

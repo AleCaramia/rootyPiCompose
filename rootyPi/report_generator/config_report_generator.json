@@ -1,19 +1,15 @@
 {
-    "ID":"Report_generator",
-    "broker":"mqtt.eclipseprojects.io",
-    "port":1883,
+    "ID": "Report_generator",
+    "broker": "mqtt.eclipseprojects.io",
+    "port": 1883,
+    "url_registry" : "http://192.68.0.24:8081",
     "myurl":"http://192.68.0.33:8081",
     "sub_topic":"RootyPy/iamalive/ReportGenerator",
     "pub_topic":"RootyPy/iamalive/ReportGenerator",
-    "url_registry":"http://192.68.0.24:8081",
     "url_adaptor" : "http://192.68.0.25:8080",
     "alive_topic":"RootyPy/microservices/Report_generator",
     "update_time":10,
     "headers":{
        "content-type":"application/json; charset=UTF-8"
-    },
-    "needed_services":{
-       "Telegram_bot":"",
-       "Adaptor":""
     }
  }
