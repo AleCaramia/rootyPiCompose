@@ -132,11 +132,13 @@ class Iamalive(object):
 
     def start_mqtt(self):
         print('>starting i am alive')
+        print(self.broker)
+        print(self.port)
         self.paho_mqtt.connect(self.broker,self.port)
         self.paho_mqtt.loop_start()
 
     def myconnect_live(self,paho_mqtt, userdata, flags, rc):
-       print(f"report generator: Connected to {self.broker} with result code {rc}")
+       print(f"Watertankalert: Connected to {self.broker} with result code {rc}")
 
     def check_and_publish(self):
         while  not self.stop_event.is_set():
@@ -149,7 +151,7 @@ class Iamalive(object):
 
     def publish(self):
         __message=json.dumps(self.message)
-        #print(f'message sent at {time.time()} to {self.pub_topic}')
+        print(f'message sent at {time.time()} to {self.pub_topic}')
         self.paho_mqtt.publish(topic=self.pub_topic,payload=__message,qos=2)
 
 class ThreadManager:
