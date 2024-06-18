@@ -75,6 +75,10 @@ class water_pump(object):
         return []
    
     def mymessage(self,paho_mqtt,userdata,msg):
+        '''
+        it takes the message from the broker and publish the state of the pump
+        it takes the flow from the message and publish it
+        '''
         mess = json.loads(msg.payload)
         pump = { "bn": "None","e": [
         {
@@ -161,7 +165,7 @@ class water_pump(object):
     
         
 class run():
-    """Thread to run mqtt."""
+    """ this class is used to run the water_pump and the Iamalive class in parallel"""
 
     def __init__(self, ThreadID, name,config):
         self.ThreadID = ThreadID
@@ -174,6 +178,10 @@ class run():
 
 
     def run(self):
+        '''
+        the iamalive thread is started and the water_pump thread is started
+        iamalive is send every alive_interval seconds
+        '''
         try:
             while True:
                 self.alive.publish()  

@@ -65,6 +65,10 @@ class MoistureMonitoring(object):
         return []
 
     def MyPublish(self, type):
+        '''
+        if function is passed as argument, the function will calculate the amount of water to give to each plant and publish it
+        if alive is passed as argument, the function will publish an alive message
+        '''
 
         if type == "function":
             plants,url_adptor,models=self.RequestsToRegistry() 
@@ -107,23 +111,24 @@ class MoistureMonitoring(object):
     def RequestsToRegistry(self):        
             '''
             Request are needed info from the Registry
-            returns: all plant registerd, the models, the types of plant and the adaptor url
+            returns: all plant registerd, the models and the adaptor url
             
             '''
             plants=self.get_response(f"{self.url_registry}/plants")
             models=self.get_response(f"{self.url_registry}/models")
             active_services=self.get_response(f"{self.url_registry}/services")
-            # response=req.get(f"{self.url_registry}/plants") #plant request        
             #find if adaptor is online
             for service in active_services:
                 if service['serviceID']=="adaptor":
                     url_adaptor=service['route']
                     break
-            # url_adaptor=self.url_adaptor
 
             return plants,url_adaptor,models
     
     def retriveJarVolume(self,plant_code,models):
+        '''
+        returns the jar volume of the plant
+        '''
         # Retrieve the jar volume based on the plant code
 
         vase_type=plant_code[:2]
@@ -134,7 +139,20 @@ class MoistureMonitoring(object):
         return jar_volume
 
     def PlantWaterEstimation(self,url_adptor,plant_code,plant_type,userId,jar_volume): 
- # Estimate the amount of water to add to the plant based on the moisture goals and past measurements
+        '''
+        Estimate the amount of water to add to the plant based on the moisture goals and past measurements
+        Args:
+            plant_code (str): The plant code.
+            plant_type (str): The plant type.
+            userId (str): The user ID.
+            jar_volume (float): The jar volume.
+        The water is calculated as follows:
+        1. Get the moisture goals for the plant type.
+        2. Get the measurements of the past hour.
+        3. Calculate the mean moisture of the past hour.
+        4. If the mean moisture is less than the moisture goals, calculate the amount of water to add.
+        5. Return the amount of water to add.
+        '''
         valid_plants_types= self.get_response(f"{self.url_registry}/valid_plant_types")
 
 
@@ -179,12 +197,15 @@ class run(object):
         self.alive_interval = settings['alive_interval']
         
     def run(self):
+        '''
+        this function run publish every update_time the amount of water to give to each plant and every alive_interval an alive message
+        '''
         
         try:
             start = time.time()
             while True:
                     ##################################################################
-                    if time.time()-start > self.update_time: #3600
+                    if time.time()-start > self.update_time: 
                     ##################################################################
                         self.function.MyPublish("function")
                         start = time.time()
