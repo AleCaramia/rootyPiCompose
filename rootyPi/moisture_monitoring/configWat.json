@@ -5,14 +5,9 @@
     "port": 1883,
     "pub_topic_moisturemonitoring": "RootyPy",
     "sub_topics_moisturemonitoring": null,
-    "url_models": "http://192.68.0.24:8081/models",
-    "url_plants": "http://192.68.0.24:8081/plants",
-    "url_devices": "http://192.68.0.24:8081/devices",
     "url_registry": "http://192.68.0.24:8081",
-    "url_adaptor": "http://192.68.0.25:8080",
     "pub_topic_Iamalive": "RootyPy/microservices/moistureMonitoring",
     "sub_topic_Iamalive": null,
-    "default_time":{"start":"08:00","stop":"20:00"},
     "update_time":30
 
 }

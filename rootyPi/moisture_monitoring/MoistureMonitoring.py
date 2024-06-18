@@ -18,9 +18,7 @@ class MoistureMonitoring(object):
         self.port=settings['port']
         self.broker=settings['broker']
         self.clientID=settings['ID_moistureMonitoring']
-        self.default_time=settings['default_time'] 
         self.url_registry=settings['url_registry']
-        self.url_adaptor=settings['url_adaptor']
 
 
         ###############################################à
@@ -106,16 +104,24 @@ class MoistureMonitoring(object):
             self._paho_mqtt.publish(topic=self.alive_topic,payload=json.dumps(message),qos=2)
 
     
-    def RequestsToRegistry(self):
-    # Send HTTP GET requests to the registry and return the responses as JSON
+    def RequestsToRegistry(self):        
+            '''
+            Request are needed info from the Registry
+            returns: all plant registerd, the models, the types of plant and the adaptor url
+            
+            '''
+            plants=self.get_response(f"{self.url_registry}/plants")
+            models=self.get_response(f"{self.url_registry}/models")
+            active_services=self.get_response(f"{self.url_registry}/services")
+            # response=req.get(f"{self.url_registry}/plants") #plant request        
+            #find if adaptor is online
+            for service in active_services:
+                if service['serviceID']=="adaptor":
+                    url_adaptor=service['route']
+                    break
+            # url_adaptor=self.url_adaptor
 
-        plants=self.get_response(f"{self.url_registry}/plants")
-        models=self.get_response(f"{self.url_registry}/models")
-
-
-
-        url_adaptor=self.url_adaptor
-        return plants,url_adaptor,models
+            return plants,url_adaptor,models
     
     def retriveJarVolume(self,plant_code,models):
         # Retrieve the jar volume based on the plant code
