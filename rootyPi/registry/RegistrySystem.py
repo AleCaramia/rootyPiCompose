@@ -29,11 +29,8 @@ class Catalog(object):
             except Exception:
                 print("Problem in loading catalog")
 
-        #self.broker_ip = self.service["broker"]["IP"]
-        #self.mqtt_port = self.service["broker"]["mqtt_port"]
-
     def write_catalog(self):
-        """Write data on service json file."""
+        """Write data on catalog json file."""
         with open(self.filename_catalog, "w") as fs:
             json.dump(self.catalog, fs, ensure_ascii=False, indent=2)
             fs.write("\n")
@@ -66,7 +63,7 @@ class Catalog(object):
             }
             self.catalog["services"].append(service_res_json)
         self.write_catalog()
-    #todo 
+
     def add_user(self, user_json):
         self.load_file()
         found = 0
@@ -85,6 +82,7 @@ class Catalog(object):
             return "Added user"
         else:
             return "User already registered"
+
     def remove_user(self, userId):
         self.load_file()
         found = 0
@@ -136,12 +134,14 @@ class Catalog(object):
                     return "done"
         if found == 0:
             return "User not found"
+
     def removeFromPlants(self, plantCode):
         index = 0
         for plant in self.catalog["plants"]:
             if plant["plantCode"] == plantCode:
                 del self.catalog["plants"][index]
             index +=1
+
     def remove_plant(self, userId, plantCode):
         self.load_file()
         found = 0
@@ -162,10 +162,7 @@ class Catalog(object):
             return "User not found"
 
     def update_device(self, deviceJson):
-        """Update timestamp of a device.
-        Update timestamp or insert it again in the resource catalog if it has
-        expired.
-        """
+        """Update timestamp of a devices."""
         self.load_file()
         found = 0
         for dev in self.catalog['devices']:
@@ -183,11 +180,9 @@ class Catalog(object):
             }
             self.catalog["devices"].append(device_json)
         self.write_catalog()
+
     def update_service(self, serviceJson):
-        """Update timestamp of a device.
-        Update timestamp or insert it again in the resource catalog if it has
-        expired.
-        """
+        """Update timestamp of a services."""
         self.load_file()
         found = 0
         for service in self.catalog['services']:
@@ -208,10 +203,7 @@ class Catalog(object):
 
     
     def remove_old_device(self):
-        """Remove old devices whose timestamp is expired.
-        Check all the devices whose timestamps are old and remove them from
-        the resource catalog.
-        """
+        """Remove old devices whose timestamp is expired."""
         self.load_file()
         removable = []
         for counter, d in enumerate(self.catalog['devices']):
@@ -223,10 +215,7 @@ class Catalog(object):
         self.write_catalog()
         
     def remove_old_service(self):
-        """Remove old services whose timestamp is expired.
-        Check all the services whose timestamps are old and remove them from
-        the resource catalog.
-        """
+        """Remove old services whose timestamp is expired."""
         self.load_file()
         removable = []
         for counter, s in enumerate(self.catalog['services']):
@@ -252,57 +241,56 @@ class Webserver(object):
         cherrypy.config.update({'server.socket_port':8081})
         cherrypy.config.update({'server.socket_host':'0.0.0.0'})
         cherrypy.engine.start()
-        #cherrypy.engine.block()
         try:
             with open(SETTINGS, "r") as fs:                
-                self.settings = json.loads(fs.read())            
+                self.settings = json.loads(fs.read())   
+            self.cat = Catalog()
         except Exception:
             print("Problem in loading settings")
 
-    #@cherrypy.tools.json_out()
     def GET(self, *uri, **params):
-        """Define GET HTTP method for RESTful webserver."""
-        cat = Catalog()
-        cat.load_file()
-        # Get Devices catalog json.
+        self.cat.load_file()
         if len(uri) == 0:
             return open(INDEX)
-        else:            
+        else:
+            #GET Devices from catalog            
             if uri[0] == 'devices':
-                return json.dumps(cat.catalog["devices"])
-            # Get Devices catalog json.
+                return json.dumps(self.cat.catalog["devices"])
+            #GET Services from catalog    
             if uri[0] == 'services':
-                return json.dumps(cat.catalog["services"])
+                return json.dumps(self.cat.catalog["services"])
+            #GET Users from catalog    
             if uri[0] == 'users':
-                return json.dumps(cat.catalog["users"])
+                return json.dumps(self.cat.catalog["users"])
+            #GET Models from catalog    
             if uri[0] == 'models':
-                return json.dumps(cat.catalog["models"])
+                return json.dumps(self.cat.catalog["models"])
+            #GET Plants from catalog    
             if uri[0] == 'plants':
-                return json.dumps(cat.catalog["plants"])
+                return json.dumps(self.cat.catalog["plants"])
+            #GET PlantTypes from catalog    
             if uri[0] == 'valid_plant_types':
-                return json.dumps(cat.catalog["valid_plant_types"])
+                return json.dumps(self.cat.catalog["valid_plant_types"])
         
 
     def POST(self, *uri, **params):
         """Define POST HTTP method for RESTful webserver.Modify content of catalogs"""  
         # Add new device.
+        self.cat.load_file()
         if uri[0] == 'addd':
             body = json.loads(cherrypy.request.body.read())  # Read body data
-            cat = Catalog()
             print(json.dumps(body))
-            cat.add_device(body, uri[1])#(device, user)
+            self.cat.add_device(body, uri[1])#(device, user)
             return 200
         
         if uri[0] == 'adds':
             body = json.loads(cherrypy.request.body.read())  # Read body data
-            cat = Catalog()
             print(json.dumps(body))
-            cat.add_service(body, uri[1])
+            self.cat.add_service(body, uri[1])
             return 200
         if uri[0] == 'addu':
             body = json.loads(cherrypy.request.body.read())  # Read body {userid, password}
-            cat = Catalog()
-            out = cat.add_user(body)
+            out = self.cat.add_user(body)
             print(out)
             if out == "User already registered":
                 response = {"status": "NOT_OK",
@@ -318,9 +306,8 @@ class Webserver(object):
                 
         if uri[0] == 'addp':
             body = json.loads(cherrypy.request.body.read())  # Read body data
-            cat = Catalog()
             print(json.dumps(body))
-            out = cat.add_plant(body)
+            out = self.cat.add_plant(body)
             if out == "Plant already registered":
                 response = {"status": "NOT_OK", "code": 400, "message": "Plant already registered"}
                 return json.dumps(response)
@@ -334,9 +321,9 @@ class Webserver(object):
                 response = {"status": "NOT_OK", "code": 400, "message": "Invalid plant code"}
                 return json.dumps(response)
     def PUT(self, *uri, **params):
+        self.cat.load_file()
         if uri[0] == 'updateInterval':
             body = json.loads(cherrypy.request.body.read())  # Read body data
-            cat = Catalog()
             print(json.dumps(body))
             plantCode = body["plantCode"]
             state = body["state"]
@@ -344,19 +331,19 @@ class Webserver(object):
             end = body["end"]
             found = False
             output = ""
-            for plant in cat.catalog["plants"]:
+            for plant in self.cat.catalog["plants"]:
                 if plant["plantCode"] == plantCode:
                     found = True
                     if state == "auto":
                         plant['state']="auto"
                         plant["auto_init"] = init
                         plant["auto_end"] = end
-                        cat.write_catalog()
+                        self.cat.write_catalog()
                     elif state == "manual":
                         plant['state']="manual"
                         plant["manual_init"] = init
                         plant["manual_end"] = end
-                        cat.write_catalog()
+                        self.cat.write_catalog()
                     else:
                         output = "Invalid state"
             if not found:   
@@ -369,21 +356,20 @@ class Webserver(object):
         elif uri[0] == 'modifyPlant':
             print('put request received')
             body = json.loads(cherrypy.request.body.read())  # Read body data
-            cat = Catalog()
             print('catalog opened')
             print(json.dumps(body))
             plantCode = body["plantCode"]
             newplantId = body["new_name"]
             found = False
             print('starting for cycle')
-            for plant in cat.catalog["plants"]:
+            for plant in self.cat.catalog["plants"]:
                 if plant["plantCode"] == plantCode:
                     print('found is true')
                     found = True
-                    index = cat.catalog["plants"].index(plant)
+                    index = self.cat.catalog["plants"].index(plant)
                     print(f'index is {index}')
-            cat.catalog['plants'][index]['plantId'] = newplantId 
-            cat.write_catalog()
+            self.cat.catalog['plants'][index]['plantId'] = newplantId 
+            self.cat.write_catalog()
             print('catalog written')
             if not found:   
                 response = {"status": "NOT_OK", "code": 400, "message": "Invalid plant code"}
@@ -393,16 +379,15 @@ class Webserver(object):
             return json.dumps(response)
         elif uri[0] == 'setreportfrequency':
             body = json.loads(cherrypy.request.body.read())  # Read body data
-            cat = Catalog()
             plantCode = body['plantCode']
             reportf = body['report_frequency']
             found = False
             print(json.dumps(body))
-            for plant in cat.catalog['plants']:
+            for plant in self.cat.catalog['plants']:
                 if plant['plantCode'] == plantCode:
                     found = True
                     plant['report_frequency'] = reportf
-                    cat.write_catalog()
+                    self.cat.write_catalog()
             if found:
                 response = {"status": "OK", "code": 200, "message": "Data updated successfully"}
             else:
@@ -411,13 +396,12 @@ class Webserver(object):
             return json.dumps(response) 
         elif uri[0] == "transferuser":
             body = json.loads(cherrypy.request.body.read())
-            cat = Catalog()
             found = False
-            for user in cat.catalog['users']:
-              if user['userId'] == body['userId']:
-                  found = True
-                  user['chatID'] = body['chatID']
-                  cat.write_catalog()
+            for user in self.cat.catalog['users']:
+                if user['userId'] == body['userId']:
+                    found = True
+                    user['chatID'] = body['chatID']
+                    self.cat.write_catalog()
             if found:
                 response = {"status": "OK", "code": 200, "message": "Data updated successfully"}
             else:
@@ -429,8 +413,7 @@ class Webserver(object):
             
     def DELETE(self, *uri, **params):
         if uri[0] == 'rmu':
-            cat = Catalog()
-            out = cat.remove_user(uri[1])
+            out = self.cat.remove_user(uri[1])
             print(out)
             if out == "User not found":
                 response = {"status": "NOT_OK",
@@ -438,13 +421,11 @@ class Webserver(object):
                 #raise cherrypy.HTTPError("400", "User already registered")
                 return json.dumps(response)
             else:
-                headers = {'content-type': 'application/json; charset=UTF-8'}
                 response = requests.delete(self.settings["adaptor_url"] + "/deleteUser/" + uri[1])
                 response = {"status": "OK", "code": 200}
                 return json.dumps(response)           
         elif uri[0] == 'rmp':
-            cat = Catalog()
-            out = cat.remove_plant(uri[1], uri[2])
+            out = self.cat.remove_plant(uri[1], uri[2])
             if out == "User not found":
                 raise cherrypy.HTTPError("400", "user not found")
             if out == "Plant not found":
@@ -487,9 +468,9 @@ class MySubscriber:
             print ("Connected to %s with result code: %d" % (self.messageBroker, rc))
 
         def myOnMessageReceived (self, paho_mqtt , userdata, msg):
+            #Listening to all messages with topic "RootyPy/#"
             message = json.loads(msg.payload.decode("utf-8")) #{"bn": updateCatalog<>, "e": [{...}]}
             catalog = Catalog()
-            print(message)
             if message['bn'] == "updateCatalogDevice":            
                 catalog.update_device(message['e'][0])# {"n": PlantCode/deviceName, "t": time.time(), "v": "", "u": IP}
             if message['bn'] == "updateCatalogService":            
@@ -510,10 +491,7 @@ class First(threading.Thread):
         
 
 class Second(threading.Thread):
-    """MQTT Thread.
-    Subscribe to MQTT in order to update timestamps of sensors in the dynamic
-    part of the catalog.
-    """
+    """MQTT Thread."""
 
     def __init__(self, ThreadID, name):
         """Initialise thread widh ID and name."""
@@ -564,9 +542,9 @@ class Third(threading.Thread):
             time.sleep(MAXDELAY_DEVICE+1)
             
 class Fourth(threading.Thread):
-    """Old device remover thread.
-    Remove old devices which do not send alive messages anymore.
-    Devices are removed every five minutes.
+    """Old service remover thread.
+    Remove old services which do not send alive messages anymore.
+    Services are removed every five minutes.
     """
 
     def __init__(self, ThreadID, name):
