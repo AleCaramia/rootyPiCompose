@@ -374,11 +374,8 @@ class Report_generator(object):
 
         # Create payload dictionary
         payload = {
-            'bn': self.ID,
-            'image': image_base64,
-            'message': message
+            'bn': self.ID,"e":[{"n":'image',"u":"","t":time.time(),"v":image_base64},{"n":'message',"u":"","t":time.time(),"v":message}]
         }
-
         # Serialize payload to JSON
         payload_json = json.dumps(payload)
 
