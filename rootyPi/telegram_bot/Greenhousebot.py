@@ -170,7 +170,6 @@ class GreenHouseBot:
             self.uservariables[chat_ID]['chatstatus'] = 'start'
             query_list = query_data.split('&')                             # splits the query from the callback_data, function_to_call is extracted from the dictionaries
             if query_list[0] == 'plant':
-                print('chosen plant')
                 if query_list[1] not in self.diz['plant'].keys():
                     #self.uservariables[chat_ID]['selected_plant'] = query_list[1]   CAMBIARE
                     self.manage_plant(chat_ID,query_list[1])
@@ -185,11 +184,9 @@ class GreenHouseBot:
                     else:
                         function_to_call(chat_ID)
             elif query_list[0] == 'command':
-                print('chosen command')
                 function_to_call = self.diz['actions'][query_list[1]]
                 function_to_call(chat_ID,query_list[2])
             elif query_list[0] == 'led':
-                print('chosen led')
                 function_to_call = self.diz['led'][query_list[1]]
                 function_to_call(chat_ID,query_list[2])
             elif query_list[0] == 'newuser':
@@ -243,7 +240,6 @@ class GreenHouseBot:
     # Update the timer for a user identified by chat_ID with a new countdown value.
     def restarting_user_timer(self, chat_ID, countdown):
         self.uservariables[chat_ID]['timer'] = countdown  # Set the timer for the user to the given countdown value
-        print(f'restarting {chat_ID} of {countdown}')
 
     #-------------------------------------------------                             ---------------------------
 
@@ -287,7 +283,7 @@ class GreenHouseBot:
         userid = self.get_username_for_chat_ID(chatID)
         f = True
         r = get_response(self.registry_url+'/plants')
-        print(f'GET request sent at {self.registry_url}/plants')
+
 
         output =json.loads(r.text)
         for diz in output:
@@ -296,20 +292,6 @@ class GreenHouseBot:
 
         
         return plant_list
-
-    def write_plants_for_chatID(self,path_archive, chatID,updated_list):
-
-        df_users = pd.read_excel(path_archive)
-        row_index = df_users.index[df_users['chatID'] == chatID].tolist()[0]
-        print(f'updated plant list is {updated_list}')
-        #updated_list.remove('')
-        string_list = ''
-        for plant in updated_list:
-            string_list = string_list + ';' + plant
-        print(f'string list is {string_list}')
-        df_users.at[row_index, 'plants'] = string_list
-        df_users.to_excel(path_archive,index=False)
-        
 
     def manage_plant(self,chat_ID,plantcode):                       #generate a report on the status of the plant and allows you to perform change of the led or water
 
@@ -354,7 +336,6 @@ class GreenHouseBot:
         #plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
         r = get_response(self.report_generator_url+f'/getreport/{plantcode}')
         #r = requests.get(self.report_generator_url+f'/getreport/{plantcode}',headers = self.headers)
-        print(f'GET request sent at \'{self.report_generator_url}/getreport/{plantcode}')
         output = json.loads(r.text)
             # Extract the base64-encoded image and decode it
         image_base64 = output['image']
@@ -362,7 +343,6 @@ class GreenHouseBot:
         
         # Extract the message
         message = output['message']
-        print(f"Message: {message}")
 
         # Load the image into a BytesIO stream
         image = Image.open(BytesIO(image_data))
@@ -376,7 +356,6 @@ class GreenHouseBot:
         self.choose_plant(chat_ID)
 
     def set_report_frequency(self,chat_ID,plantcode):
-        print('choosing report frequency')
         userid = self.get_username_for_chat_ID(chat_ID)
         r = get_response(self.registry_url+f'/plants')
         #r = requests.get(self.registry_url+f'/plants')
@@ -398,9 +377,7 @@ class GreenHouseBot:
 
     def send_new_report_frequency(self,chat_ID,newfrequency,plantcode):
 
-        print(f'updating {chat_ID} report frequency')
         body = {'plantCode':plantcode,'report_frequency':newfrequency}
-        print(body)
         #r = requests.put(self.registry_url+'/setreportfrequency',headers = self.headers,json = body)
         r = put_response(self.registry_url+'/setreportfrequency',body)
         flag_keep_mex = self.manage_invalid_request(chat_ID,json.loads(r.text))
@@ -437,9 +414,7 @@ class GreenHouseBot:
     
     def create_plant(self,chat_ID,plantname,plant_type,plantcode):         #adds the name to the list associated to the user
         body = {'userId' : self.get_username_for_chat_ID(chat_ID),'plantId':plantname,'plantCode':plantcode,'type':plant_type}
-        print(body)
         r = requests.post(self.registry_url+'/addp',headers=self.headers,json = body)
-        print(f'post request sent at {self.registry_url}/addp')
         output = json.loads(r.text)
         flag_keep_messages = self.manage_invalid_request(chat_ID,output)
         self.choose_plant(chat_ID,keep_prev = flag_keep_messages)
@@ -454,9 +429,7 @@ class GreenHouseBot:
 
     def add_user_first_time(self,chat_ID,userid,pwd):
         body = {'userId' : userid,'password':pwd,'chatID':chat_ID}
-        print(body)
         r = requests.post(self.registry_url+'/addu',headers=self.headers,json = body)
-        print(f'POST request sent at \'{self.registry_url}/addu')
         output = json.loads(r.text)
         self.remove_previous_messages(chat_ID)
         if self.manage_invalid_request(chat_ID,output):
@@ -467,7 +440,6 @@ class GreenHouseBot:
 
         #r = requests.get(self.registry_url+'/users',headers = self.headers)
         r = get_response(self.registry_url+'/users')
-        print(f'GET request sent at \'{self.registry_url}/users')
         output = json.loads(r.text)
         for diz in output:
 
@@ -492,7 +464,6 @@ class GreenHouseBot:
     def get_available_plant_types(self):
         #r = requests.get(self.registry_url+'/valid_plant_types', headers = self.headers)
         r = get_response(self.registry_url+'/valid_plant_types')
-        print(f'GET request sent at {self.registry_url}/valid_plant_types')
         output = json.loads(r.text)
         plant_types =[]
         for diz in output:
@@ -504,11 +475,9 @@ class GreenHouseBot:
 
     def is_new_user(self,chat_ID):
         f = 0
-        print('checking if the user is new')
         #r = requests.get(self.registry_url+'/users',headers = self.headers)
         r = get_response(self.registry_url+'/users')
         print(json.loads(r.text))
-        print(f'GET request sent at {self.registry_url}/users')
 
         output = json.loads(r.text)
         
@@ -516,7 +485,6 @@ class GreenHouseBot:
             if diz['chatID'] == None:
                 pass
             elif int(diz['chatID']) == chat_ID:
-                print(diz)
                 f=1
         if f == 1:
             return False
@@ -708,7 +676,6 @@ class GreenHouseBot:
 
 
     def confirmed_remove_plant(self,chat_ID,plantname):#*
-        print(f'removing from {chat_ID} plant formerly named {plantname}')
         userid = self.get_username_for_chat_ID(chat_ID)
         try:
             plantcode = self.get_plant_code_from_plant_name(userid,plantname)
@@ -748,7 +715,6 @@ class GreenHouseBot:
         self.uservariables[chat_ID]['chatstatus'] =f'listeningforplantname&choose&{plantname}'
 
     def remove_old_name_add_new(self,chat_ID,newname,oldname):
-        print(f'changing plant name from {oldname} to  {newname}')
         userid = self.get_username_for_chat_ID(chat_ID)
         try:
             plant_code = self.get_plant_code_from_plant_name(userid,oldname)
@@ -758,7 +724,6 @@ class GreenHouseBot:
         body = {"plantCode":plant_code,'new_name':newname}
         r = put_response(self.registry_url+'/modifyPlant',body)
         #r = requests.put(self.registry_url+'/modifyPlant',headers=self.headers,json = body)
-        print(f'PUT requesrt sent at {self.registry_url+'/modifyPlant'} with {body}')
         output = json.loads(r.text)
         flag_remove_mex = self.manage_invalid_request(chat_ID,output)
         self.choose_plant(chat_ID,flag_remove_mex)
@@ -768,8 +733,6 @@ class GreenHouseBot:
 
     def get_plant_code_from_plant_name(self,userid,plantname):
         r = get_response(self.registry_url+'/plants')
-            #r = requests.get(self.registry_url+'/plants',headers=self.headers)
-        print(f'GET request sent at {self.registry_url}/plants')
 
         output = json.loads(r.text)
         for diz in output:
@@ -907,8 +870,6 @@ class GreenHouseBot:
             self.bot.send_message(chat_ID,text = 'invalid message')
         else:
             if mex[2] == ':' and mex[0].isdigit() and mex[1].isdigit() and mex[3].isdigit() and mex[4].isdigit():
-                print('extracting time')
-                print(mex)
                 hour = int(mex.split(':')[0])
                 minute = int(mex.split(':')[1])
             else:
@@ -917,7 +878,7 @@ class GreenHouseBot:
                 self.update_message_to_remove(msg_id,chat_ID)
             if hour >= 0 and hour <= 24 and minute >= 0 and minute <= 59:
                 m_mode_duration = self.get_next_occurrence_unix_timestamp(mex,self.time_zone_correction)
-                print('stopped listening for time')
+                print(f'stopped listening for time {chat_ID}')
                 plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
                 percentage = self.uservariables[chat_ID]['chatstatus'].split('&')[2]
                 self.uservariables[chat_ID]['chatstatus'] = 'start'
@@ -946,7 +907,6 @@ class GreenHouseBot:
     def get_time_start_and_time_end_from_chatId(self,userid):
         #r = requests.get(self.registry_url+'/plants',headers = self.headers)
         r = get_response(self.registry_url+'/plants')
-        print(f'GET request sent at \'{self.registry_url}/plants')
         output = json.loads(r.text)
         for plant in output:
             if plant['userId'] == userid:
@@ -957,7 +917,7 @@ class GreenHouseBot:
 
     def change_time(self,chat_ID,timest,plantcode):         
         self.uservariables[chat_ID]['chatstatus'] = f'listeningforobswindow&{timest}&{plantcode}'
-        print('started listening for time')
+        print(f'started listening for time for {chat_ID}')
         msg_id = self.bot.sendMessage(chat_ID, text='Insert time in format hh:mm')['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
@@ -965,8 +925,6 @@ class GreenHouseBot:
     def set_light_time(self,mex,chat_ID,checkp,plantcode):     # Extracts time and assigns it to the plant
         mex=mex.strip()
         if mex[2] == ':' and mex[0].isdigit() and mex[1].isdigit() and mex[3].isdigit() and mex[4].isdigit():
-            print('extracting time')
-            print(mex)
             hour = int(mex.split(':')[0])
             minute = int(mex.split(':')[1])
         else:
@@ -982,9 +940,8 @@ class GreenHouseBot:
             if checkp == 'end':
                 time_end=mex
                 time_start = old_start
-        print('stopped listening for time')
+        print(f'stopped listening for time for {chat_ID}')
 
-        print('Changed observation window for automatic mode')
         state = "auto"
         init = time_start
         end =  time_end
@@ -1004,7 +961,6 @@ class GreenHouseBot:
 
         userid = self.get_username_for_chat_ID(chat_ID)
         plantcode
-        print('Light switched off manually')
         state = "manual"
         init = time.time()
         body = {"plantCode":plantcode,'state':state,'init':init,'end':m_mode_duration}
@@ -1014,7 +970,6 @@ class GreenHouseBot:
         self.manage_invalid_request(chat_ID,output)
         mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":float(percentage) },{"n": "init_hour", "u": "s", "t": time.time(), "v":init },{"n": "final_hour", "u": "s", "t": time.time(), "v": m_mode_duration } ]}
         self.publish(f'RootyPy/{userid}/{plantcode}/lux_to_give/manual',json.dumps(mex_mqtt))
-        print('SENT MESSAGE')
         time.sleep(2)
         self.manage_plant(chat_ID,plantcode)
 
@@ -1067,7 +1022,6 @@ class GreenHouseBot:
 
         # Extract the message
         message = plantname + ' :'+ payload_dict["e"][1]["v"]
-        print(f"Message: {message}")
 
         # Load the image into a BytesIO stream
         image = Image.open(BytesIO(image_data))
@@ -1092,7 +1046,6 @@ class GreenHouseBot:
     def get_plantname_for_plantcode(self,plantcode):
         #r = requests.get(self.registry_url+'/users',headers = self.headers)
         r = get_response(self.registry_url+'/plants')
-        print(f'GET request sent at \'{self.registry_url}/plants')
         output = json.loads(r.text)
         for diz in output:
 
@@ -1108,7 +1061,6 @@ class GreenHouseBot:
 
         #r = requests.get(self.registry_url+'/users',headers = self.headers)
         r = get_response(self.registry_url+'/users')
-        print(f'GET request sent at \'{self.registry_url}/users')
         output = json.loads(r.text)
         for diz in output:
 
@@ -1153,14 +1105,11 @@ class Iamalive():
         actual_time = time.time()
         if actual_time > self.starting_time + self.interval:
             self.message["e"][0]["t"]= time.time()
-
             self.publish()
-            #print(f'{self.interval} seconds passed sending i am alive message at {self.pub_topic}')
             self.starting_time = actual_time
 
     def publish(self):
         __message=json.dumps(self.message)
-        # print(f'publishing {__message}, on topic {self.pub_topic}, {type(__message)}')
         self.paho_mqtt.publish(topic=self.pub_topic,payload=__message,qos=2)
 #--------------------------------------------------Subscrier----------------------------------
 
@@ -1174,15 +1123,12 @@ class Subscriber_telegram_bot():
         self.message_queue = []
         self.bot = bot
         self.paho_mqtt = pahoMQTT.Client(self.clientID,True)
-        print('subscriber client created')
         self.paho_mqtt.on_connect = self.myconnect_live
         self.paho_mqtt.on_message = self.on_message      
         self.start_mqtt()
-        print('mqtt started')
 
 
     def start_mqtt(self):
-        print('>starting i am alive')
         self.paho_mqtt.connect(self.broker,self.port)
         self.paho_mqtt.loop_start()
         self.paho_mqtt.subscribe('RootyPy/report_generator/#',qos = 2)

@@ -9,5 +9,5 @@
     "url_report_generator" : "http://192.68.0.33:8081",
     "url_adaptor" : "http://192.68.0.25:8080",
     "iamalive_topic":"RootyPy/microservices/TelegramBot",
-    "update_time":5
+    "update_time":15
 }
