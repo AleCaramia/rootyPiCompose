@@ -6,7 +6,6 @@ import threading
 import paho.mqtt.client as PahoMQTT
 from pathlib import Path
 
-
 P = Path(__file__).parent.absolute()
 CATALOG = P / 'catalog.json'
 SETTINGS = P / 'settings.json'
@@ -14,7 +13,7 @@ INDEX = P / 'index.html'
 MAXDELAY_DEVICE = 60
 MAXDELAY_SERVICE = 60
 
-
+"""Catalog class that interacts with the catalog.json file"""
 class Catalog(object):
     def __init__(self):
         self.filename_catalog = CATALOG
@@ -136,6 +135,7 @@ class Catalog(object):
             return "User not found"
 
     def removeFromPlants(self, plantCode):
+        """Remove the plant also into catalog['plants']"""
         index = 0
         for plant in self.catalog["plants"]:
             if plant["plantCode"] == plantCode:
@@ -219,7 +219,6 @@ class Catalog(object):
         self.load_file()
         removable = []
         for counter, s in enumerate(self.catalog['services']):
-            #print(counter, d)
             if time.time() - float(s['lastUpdate']) > MAXDELAY_SERVICE:
                 print("Removing... %s" % (s['serviceID']))
                 removable.append(counter)
@@ -275,38 +274,37 @@ class Webserver(object):
 
     def POST(self, *uri, **params):
         """Define POST HTTP method for RESTful webserver.Modify content of catalogs"""  
-        # Add new device.
+        
         self.cat.load_file()
         if uri[0] == 'addd':
+            # Add new device.
             body = json.loads(cherrypy.request.body.read())  # Read body data
-            print(json.dumps(body))
             self.cat.add_device(body, uri[1])#(device, user)
             return 200
         
         if uri[0] == 'adds':
+            # Add new service.
             body = json.loads(cherrypy.request.body.read())  # Read body data
-            print(json.dumps(body))
             self.cat.add_service(body, uri[1])
             return 200
         if uri[0] == 'addu':
+            # Add new user.
             body = json.loads(cherrypy.request.body.read())  # Read body {userid, password}
             out = self.cat.add_user(body)
-            print(out)
             if out == "User already registered":
                 response = {"status": "NOT_OK",
                             "code": 400}
                 #raise cherrypy.HTTPError("400", "User already registered")
                 return json.dumps(response)
             else:
-                
                 headers = {'content-type': 'application/json; charset=UTF-8'}
                 response = requests.post(self.settings["adaptor_url"] + "/addUser", data=json.dumps(body), headers=headers)
                 response = {"status": "OK", "code": 200, "message": "Data processed"}
                 return json.dumps(response)
                 
         if uri[0] == 'addp':
+            # Add new plant.
             body = json.loads(cherrypy.request.body.read())  # Read body data
-            print(json.dumps(body))
             out = self.cat.add_plant(body)
             if out == "Plant already registered":
                 response = {"status": "NOT_OK", "code": 400, "message": "Plant already registered"}
@@ -323,8 +321,8 @@ class Webserver(object):
     def PUT(self, *uri, **params):
         self.cat.load_file()
         if uri[0] == 'updateInterval':
+            #update intervals and mode of a specific plant
             body = json.loads(cherrypy.request.body.read())  # Read body data
-            print(json.dumps(body))
             plantCode = body["plantCode"]
             state = body["state"]
             init = body["init"]
@@ -353,36 +351,30 @@ class Webserver(object):
             else:
                 response = {"status": "OK", "code": 200, "message": "Data updated successfully"}
             return json.dumps(response)
+        
         elif uri[0] == 'modifyPlant':
-            print('put request received')
+            #Update plant data
             body = json.loads(cherrypy.request.body.read())  # Read body data
-            print('catalog opened')
-            print(json.dumps(body))
             plantCode = body["plantCode"]
             newplantId = body["new_name"]
             found = False
-            print('starting for cycle')
             for plant in self.cat.catalog["plants"]:
                 if plant["plantCode"] == plantCode:
-                    print('found is true')
                     found = True
                     index = self.cat.catalog["plants"].index(plant)
-                    print(f'index is {index}')
             self.cat.catalog['plants'][index]['plantId'] = newplantId 
             self.cat.write_catalog()
-            print('catalog written')
             if not found:   
                 response = {"status": "NOT_OK", "code": 400, "message": "Invalid plant code"}
             else:
                 response = {"status": "OK", "code": 200, "message": "Data updated successfully"}
-            print(response)
             return json.dumps(response)
         elif uri[0] == 'setreportfrequency':
+            #Update the frequency of the report
             body = json.loads(cherrypy.request.body.read())  # Read body data
             plantCode = body['plantCode']
             reportf = body['report_frequency']
             found = False
-            print(json.dumps(body))
             for plant in self.cat.catalog['plants']:
                 if plant['plantCode'] == plantCode:
                     found = True
@@ -392,9 +384,9 @@ class Webserver(object):
                 response = {"status": "OK", "code": 200, "message": "Data updated successfully"}
             else:
                 response = {"status": "NOT_OK", "code": 400, "message": "Invalid plant code"}        
-
             return json.dumps(response) 
         elif uri[0] == "transferuser":
+            #Update chatID for telegram 
             body = json.loads(cherrypy.request.body.read())
             found = False
             for user in self.cat.catalog['users']:
@@ -408,17 +400,11 @@ class Webserver(object):
                 response = {"status": "NOT_OK", "code": 400, "message": "Invalid plant code"}   
             return json.dumps(response)
             
-            
-
-            
     def DELETE(self, *uri, **params):
         if uri[0] == 'rmu':
             out = self.cat.remove_user(uri[1])
-            print(out)
             if out == "User not found":
-                response = {"status": "NOT_OK",
-                            "code": 400}
-                #raise cherrypy.HTTPError("400", "User already registered")
+                response = {"status": "NOT_OK","code": 400}
                 return json.dumps(response)
             else:
                 response = requests.delete(self.settings["adaptor_url"] + "/deleteUser/" + uri[1])
@@ -431,7 +417,6 @@ class Webserver(object):
             if out == "Plant not found":
                 raise cherrypy.HTTPError("400", "plant not found")
             else:
-                print("success")
                 result = {"status": "OK", "code": 200, "message": "Data processed"}
                 return json.dumps(result)
 
@@ -447,10 +432,6 @@ class MySubscriber:
             self.topic = topic
             self.messageBroker = broker
             self.port = port
-            print(port)
-            print(broker)
-
-
 
         def start (self):
             #manage connection to broker
@@ -513,7 +494,6 @@ class Second(threading.Thread):
         sub.start()
 
         while sub.loop_flag:
-            #print("Waiting for connection...")
             time.sleep(1)
 
         while True:
