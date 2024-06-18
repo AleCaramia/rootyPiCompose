@@ -170,13 +170,14 @@ class run():
         self.water_pump.start_mqtt()
         self.alive = Iamalive(config)
         self.alive.start_mqtt()
+        self.alive_interval = config["alive_interval"]
 
 
     def run(self):
         try:
             while True:
                 self.alive.publish()  
-                time.sleep(5)
+                time.sleep(self.alive_interval)
         except KeyboardInterrupt:
                 self.water_pump.stop()
                 self.alive.stop()

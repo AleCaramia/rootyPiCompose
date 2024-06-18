@@ -8,6 +8,6 @@
     "url_registry": "http://192.68.0.24:8081",
     "pub_topic_Iamalive": "RootyPy/microservices/moistureMonitoring",
     "sub_topic_Iamalive": null,
-    "update_time":30
-
+    "update_time":30,
+    "iamalive_interval": 15
 }
