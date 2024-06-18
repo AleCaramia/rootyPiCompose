@@ -1060,13 +1060,13 @@ class GreenHouseBot:
         chat_ID = self.get_chatID_for_username(user)
             
         # Extract the base64-encoded image and decode it
-        image_base64 = payload_dict['image']
+        image_base64 = payload_dict["e"][0]["v"]
         image_data = base64.b64decode(image_base64)
         
         plantname = self.get_plantname_for_plantcode(plant)
 
         # Extract the message
-        message = plantname + ' :'+ payload_dict['message']
+        message = plantname + ' :'+ payload_dict["e"][1]["v"]
         print(f"Message: {message}")
 
         # Load the image into a BytesIO stream
