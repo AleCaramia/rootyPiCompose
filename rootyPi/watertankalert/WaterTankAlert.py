@@ -8,18 +8,7 @@ import requests
 import threading
 from requests.exceptions import HTTPError
 
-def get_response(url):
-    for i in range(15):
-        try:
-            response = requests.get(url)
-            response.raise_for_status()
-            return response
-        except HTTPError as http_err:
-            print(f"HTTP error occurred: {http_err}")
-        except Exception as err:
-            print(f"Other error occurred: {err}")
-        #time.sleep(0.1)
-    return None
+
 
 class WaterTankAlert(object):
 
@@ -27,14 +16,14 @@ class WaterTankAlert(object):
         config =  json.load(open(config_path,'r'))
         self.registry_url = config['url_registry']
         self.adaptor_url = config['url_adaptor']
-        #self.registry_url = 'http://127.0.0.1:8080'
         self.headers = config['headers']
         self.ID = config['ID']
         self.broker = config['broker']
         self.port = config['port']
         self.starting_time_tank = time.time()
-        self.interval_tank =60# config['tank_interval']
+        self.interval_tank = config['tank_interval']
         self.pub_topic = config['pub_topic']
+        self.number_of_requests = config['number_of_requests']
         self.paho_mqtt = pahoMQTT.Client(self.ID,True)
         self.paho_mqtt.on_connect = self.myconnect_live
         self.stop_event = stop_event
@@ -42,22 +31,19 @@ class WaterTankAlert(object):
         self.start_mqtt()
 
     def check_water_level(self):
-        #try:
+        try:
             while True:
                 actual_time = time.time()
                 if actual_time > self.starting_time_tank + self.interval_tank:
-                    #r = requests.get(self.registry_url+'/models')
-                    r = get_response(self.registry_url+'/models')
+                    r = self.get_response(self.registry_url+'/models')
                     models = json.loads(r.text)
-                    #r = requests.get(self.registry_url+'/users')
-                    r = get_response(self.registry_url+'/users')
+                    r = self.get_response(self.registry_url+'/users')
                     users = json.loads(r.text)
                     userwithchatid = []
                     for user in users:
                         if user['chatID'] != None:
                             userwithchatid.append(user['userId'])
-                    #r = requests.get(self.registry_url+'/plants')
-                    r = get_response(self.registry_url+'/plants')
+                    r = self.get_response(self.registry_url+'/plants')
                     plants = json.loads(r.text)
                     plantwithchatid = []
                     for plant_diz in plants:
@@ -79,11 +65,10 @@ class WaterTankAlert(object):
                                 print(f'sent {json.dumps(message)} at {topic}')
                         else:
                             pass
-                    #print(f'{self.interval} seconds passed sending i am alive message at {self.pub_topic}')
                     self.starting_time_tank = actual_time
-        #except Exception as e:
-        #    print('Water tank level stopped working')
-        #    self.stop_event.set()
+        except Exception as e:
+            print('Water tank level stopped working')
+            self.stop_event.set()
 
     def start_mqtt(self):
         print('>starting i am alive')
@@ -98,9 +83,19 @@ class WaterTankAlert(object):
         #print(f'message sent at {time.time()} to {self.pub_topic}')
         self.paho_mqtt.publish(topic,payload=__message,qos=2)
 
-
+    def get_response(self,url):
+        for i in range(self.number_of_requests):
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                return response
+            except HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
+            except Exception as err:
+                print(f"Other error occurred: {err}")
+        return None
 class Iamalive(object):
-
+    #Object that takes care of sending periodics messages to the service registry 
     def __init__(self ,config_path,stop_event):
 
         json_config =  json.load(open(config_path,'r'))
@@ -111,8 +106,8 @@ class Iamalive(object):
         self.pub_topic = json_config["iamalive_topic"]
         self.paho_mqtt = pahoMQTT.Client(self.clientID,True)
         self.paho_mqtt.on_connect = self.myconnect_live
-        self.message = {"bn": "updateCatalogService","e":[{ "n": f"{self.clientID}", "u": "", "t": time.time(), "v":"" }]}
-        self.starting_time = time.time()
+        self.message = {"bn": "updateCatalogService","e":[{ "n": f"{self.clientID}", "u": "", "t": time.time(), "v":"" }]} # Message that the registry is going to receive
+        self.starting_time = time.time()      # this variable is gonna be updated to check and send the message
         self.interval = json_config["update_time"]
         print('i am alive initialized')
         self.start_mqtt()
@@ -127,9 +122,11 @@ class Iamalive(object):
         self.paho_mqtt.loop_start()
 
     def myconnect_live(self,paho_mqtt, userdata, flags, rc):
+       # Feedback on the connection
        print(f"Watertankalert: Connected to {self.broker} with result code {rc}")
 
     def check_and_publish(self):
+        # Updates the time value of the message
         while  not self.stop_event.is_set():
             actual_time = time.time()
             if actual_time > self.starting_time + self.interval:
@@ -138,12 +135,14 @@ class Iamalive(object):
             time.sleep(15)
 
     def publish(self):
+        # Publishes the mqtt message in the right format
         __message=json.dumps(self.message)
         print(f'message sent at {time.time()} to {self.pub_topic}')
         self.paho_mqtt.publish(topic=self.pub_topic,payload=__message,qos=2)
 
 class ThreadManager:
-
+    #Manages the creation and starting of threads for the report generator and the 
+    #'I am alive' status checker.
     def __init__(self, watertankalert, iamalive):
         self.watertankalert = watertankalert
         self.iamalive = iamalive
