@@ -381,8 +381,6 @@ class Report_generator(object):
 
         # Publish the JSON string
         client.publish(mqtt_topic, payload_json, qos=2)
-
-        print(f'Message sent to {mqtt_topic}')
         
         # Stop the loop
         time.sleep(2)  # Wait for the message to be sent
@@ -390,7 +388,7 @@ class Report_generator(object):
         client.disconnect()
 
     def create_image(self,sunlight_timestamps, sunlight_values, lamp_timestamps, lamp_lux, moisture_timestamps, moisture_values):
-        lux_plot = self.plot_data(sunlight_timestamps, sunlight_values,'yellow','sun light received over time','lux')
+        lux_plot = self.plot_data(sunlight_timestamps, sunlight_values,'yellow','Daily light interval','DLI')
         lamp_plot = self.plot_data(lamp_timestamps, lamp_lux,'violet','uv light emitted over time','lux')
         moisture_plot = self.plot_data(moisture_timestamps, moisture_values,'blue','moisture over time','moisture')
         combined_plot = self.concatenate_images_vertically(lux_plot,lamp_plot,moisture_plot)
@@ -513,10 +511,8 @@ class Report_generator(object):
                 #print('checking time')
                 now = datetime.datetime.now()
 
-                print(now.hour,now.minute)
                 if now.hour + self.time_zone_correction == 15 and now.minute == 32:
                     self.send_daily_reports()
-                    print('sending the daily records')
 
                     if now.weekday() == 0:  # Sunday
                         self.send_weekly_reports()
@@ -532,12 +528,8 @@ class Report_generator(object):
 
 
     def generate_report(self,user,plant,duration = 24,instant = False):
-        #lux_sensor =  {"t": ['2024-06-06, 16-30-00','2024-06-06, 17-30-00','2024-06-06, 18-30-00','2024-06-06, 19-30-00','2024-06-06, 20-30-00','2024-06-06, 21-30-00','2024-06-06, 22-30-00','2024-06-06, 23-30-00','2024-06-07, 00-30-00','2024-06-07, 01-30-00'], "v": [753.28, 423.11, 598.56, 729.18, 444.72, 385.96, 301.67, 529.88, 676.92, 773.53]}
-        #lux_emitted = {"t": ['2024-06-06, 16-30-00','2024-06-06, 17-30-00','2024-06-06, 18-30-00','2024-06-06, 19-30-00','2024-06-06, 20-30-00','2024-06-06, 21-30-00','2024-06-06, 22-30-00','2024-06-06, 23-30-00','2024-06-07, 00-30-00','2024-06-07, 01-30-00'], "v": [459.45, 142.22, 361.34, 233.16, 389.65, 421.54, 283.64, 119.98, 249.29, 391.77]}
-        #moisture = {"t":['2024-06-06, 16-30-00','2024-06-06, 17-30-00','2024-06-06, 18-30-00','2024-06-06, 19-30-00','2024-06-06, 20-30-00','2024-06-06, 21-30-00','2024-06-06, 22-30-00','2024-06-06, 23-30-00','2024-06-07, 00-30-00','2024-06-07, 01-30-00'], "v": [15.28, 45.34, 23.12, 54.87, 31.94, 41.07, 57.23, 11.75, 29.66, 37.14]}
 
-
-        lux_sensor =  json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurament":'light',"duration":duration}).text)
+        lux_sensor =  json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurament":'DLI',"duration":duration}).text)
 
 
         lux_emitted =  json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}',params={"measurament":'current_intensity',"duration":duration}).text)
@@ -580,14 +572,6 @@ class Report_generator(object):
         moisture_timestamps = convert_timestamps(moisture_timestamps,duration)
 
 
-
-        print(lux_sunlight_timestamps)
-        print(lux_sunlight_values)
-        print(lux_emitted_timestamps)
-        print(lux_emitted_values)
-        print( moisture_timestamps)
-        print(moisture_values)
-
         combined_image = self.create_image(lux_sunlight_timestamps, lux_sunlight_values, lux_emitted_timestamps,lux_emitted_values, moisture_timestamps, moisture_values)
         dli = self.calculate_dli(lux_sunlight_values)
         light_fluctuation = self.calculate_light_fluctuation(lux_sunlight_values)
@@ -595,8 +579,7 @@ class Report_generator(object):
         tips = self.analyze_plant_conditions(dli, light_fluctuation, moisture_values, water_absorption)
         if not instant:
             self.publish_image_via_mqtt(combined_image, tips, self.broker, self.port, f'RootyPy/report_generator/{user}/{plant}')
-            print(f"Message sent to {user} for plant {plant} with instant: {instant}")
-            print(f'message sent at Rootypy/report_generator/{user}/{plant}')
+
         else:
             combined_image.seek(0)
             image_base64 = base64.b64encode(combined_image.read()).decode('utf-8')
@@ -610,48 +593,6 @@ class Report_generator(object):
             # Serialize payload to JSON
             print(f"Message sent to {user} for plant {plant} with instant: {instant}")
             return body
-
-
-
-    def interpolate_lux(self, long_timestamps, long_lux, short_timestamps, short_lux):
-        # Convert timestamps to pandas datetime using the correct format
-        long_timestamps = pd.to_datetime(long_timestamps, format='%m/%d/%Y, %H:%M:%S')
-        print(long_timestamps)
-        short_timestamps = pd.to_datetime(short_timestamps, format='%m/%d/%Y, %H:%M:%S')
-        print(short_timestamps)
-        # Create dataframes
-        long_df = pd.DataFrame({'timestamp': long_timestamps, 'lux': long_lux})
-        short_df = pd.DataFrame({'timestamp': short_timestamps, 'lux': short_lux})
-
-        # Set the timestamp as the index
-        long_df.set_index('timestamp', inplace=True)
-        short_df.set_index('timestamp', inplace=True)
-
-        # Reindex the shorter list with the index of the longer list
-        short_df_reindexed = short_df.reindex(long_df.index)
-
-        # Print the reindexed DataFrame for debugging
-        print("Reindexed short_df:")
-        print(short_df_reindexed)
-
-        # Interpolate the missing values
-        short_df_interpolated = short_df_reindexed.interpolate(method='time')
-
-        # Print the interpolated DataFrame for debugging
-        print("Interpolated short_df:")
-        print(short_df_interpolated)
-
-        # Fill any remaining NaNs (e.g., extrapolate if necessary)
-        short_df_interpolated = short_df_interpolated.ffill().bfill()
-
-        # Print the final DataFrame for debugging
-        print("Final short_df after ffill and bfill:")
-        print(short_df_interpolated)
-
-        # The interpolated values can now be matched to the long timestamps
-        interpolated_lux = short_df_interpolated['lux'].tolist()
-
-        return interpolated_lux
 
       
 
@@ -672,14 +613,11 @@ class Report_generator(object):
     def GET(self,*uri,**params):
         print(f'get request received at {uri}')
         if uri[0] == 'getreport':
-            print(f'get request  at {uri[0]}')
             r = requests.get(self.registry_url+'/plants',headers=self.headers)
             output = json.loads(r.text)
             found = False
-            print('tutto a posto')
             for diz in output:
                 if diz['plantCode'] == uri[1]:
-                    print('trovato')
                     found = True
                     userid = diz['userId']
                     plantname = diz['plantCode']
@@ -688,7 +626,6 @@ class Report_generator(object):
                 response = {"status": "NOT_OK", "code": 400, "message": "Invalid user"}
             else:
                 response = body
-            print(found)
             return json.dumps(response) 
 
 
@@ -709,15 +646,13 @@ class Iamalive(object):
         self.message = {"bn": "updateCatalogService","e":[{ "n": f"{self.clientID}", "u": "", "t": time.time(), "v":"" }]}
         self.starting_time = time.time()
         self.interval = json_config["update_time"]
-        print('i am alive initialized')
         self.start_mqtt()
         self.stop_event = stop_event
         
 
     def start_mqtt(self):
         print('>starting i am alive')
-        print(self.broker)
-        print(self.port)
+
         self.paho_mqtt.connect(self.broker,self.port)
         self.paho_mqtt.loop_start()
 
@@ -729,9 +664,8 @@ class Iamalive(object):
             actual_time = time.time()
             if actual_time > self.starting_time + self.interval:
                 self.publish()
-                print('sent alive message')
                 self.starting_time = actual_time
-            time.sleep(5)
+            time.sleep(15)
 
     def publish(self):
         __message=json.dumps(self.message)

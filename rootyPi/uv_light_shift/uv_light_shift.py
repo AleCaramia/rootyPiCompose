@@ -326,13 +326,15 @@ class run():
         self.shift = light_shift(config)
         self.shift.start_mqtt()
         self.alive = Iamalive(config)
+        self.alive_interval = config["alive_interval"]
+
 
     def run(self):
         try:
             self.alive.start_mqtt()
             while True:
                 self.alive.publish()  
-                time.sleep(5)
+                time.sleep(self.alive_interval)
         except KeyboardInterrupt:
                 self.shift.stop()
                 self.alive.stop()

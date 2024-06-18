@@ -176,7 +176,7 @@ class run(object):
         self.function = MoistureMonitoring(settings)
         self.function.start()
         self.update_time=float(settings['update_time'])
-
+        self.alive_interval = settings['alive_interval']
         
     def run(self):
         
@@ -189,7 +189,7 @@ class run(object):
                         self.function.MyPublish("function")
                         start = time.time()
                     self.function.MyPublish("alive")     
-                    time.sleep(15)
+                    time.sleep(self.alive_interval)
 
                 
         except KeyboardInterrupt:
