@@ -9,7 +9,6 @@ import threading
 from datetime import datetime,timedelta
 from requests.exceptions import HTTPError
 
-#devo cambiare il modo in cui prendo la perc intensità
 class EnvMonitoring(object):
     def __init__(self,settings):
         #load settings
@@ -19,10 +18,8 @@ class EnvMonitoring(object):
         self.clientID=settings['ID']
         self.default_time=settings['default_time']
         self.alive_topic=f"{self.base_topic}/{self.clientID}_alive" #RootyPy/Env_monitoring_alive
-        ###
         self.url_registry=settings['url_registry']
-        # self.url_adaptor=settings['url_adaptor']
-        #####
+
         #Variables to activate simulation
         self.simMode=settings['simMode'] 
         self.startedSim=0
@@ -48,107 +45,108 @@ class EnvMonitoring(object):
         print(f"EnvMonitoring: Connected to {self.broker} with result code {rc}")
     
     def MyPublish(self):
-        # try:
-            #requesting info needed from registry
-            plants,url_adptor,models,valid_plant_types=self.RequestsToRegistry()
-            if self.simMode==1:
-                if self.startedSim>=24:
-                    self.startedSim=0
-                else:
-                    self.startedSim+=1
-            #for each plant in registry
-            for plant in plants:
-                    
-                plant_type=plant['type']        #Category of the plant
-                userId=plant['userId']          #User assigned to the the plant
-                plant_code=plant["plantCode"]   #Unique code of the vase
-
-                #From the code, retrive maximum lux value that that specific vase lamp can give
-                max_lux_lamp=self.retriveMaxLuxLamp(plant_code,models)
-
-                start_time=plant['auto_init']   #User defined time to start Automatic lamp adjustment
-                end_time=plant['auto_end']      #User defined time to end Automatic lamp adjustment
+        #requesting info needed from registry
+        plants,url_adptor,models,valid_plant_types=self.RequestsToRegistry()
+        if self.simMode==1:
+            if self.startedSim>=24:
+                self.startedSim=0
+            else:
+                self.startedSim+=1
+        #for each plant in registry
+        for plant in plants:
                 
-                #discriminatoir between auto and sim mode
+            plant_type=plant['type']        #Category of the plant
+            userId=plant['userId']          #User assigned to the the plant
+            plant_code=plant["plantCode"]   #Unique code of the vase
+
+            #From the code, retrive maximum lux value that that specific vase lamp can give
+            max_lux_lamp=self.retriveMaxLuxLamp(plant_code,models)
+
+            start_time=plant['auto_init']   #User defined time to start Automatic lamp adjustment
+            end_time=plant['auto_end']      #User defined time to end Automatic lamp adjustment
+            
+            #discriminatoir between auto and sim mode
+            
+            if self.simMode==0: #simMode off
+                current_time = datetime.now().time() #use current real time
+                current_datetime = datetime.combine(datetime.today(), current_time) 
+                start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time()) #transform string to time
+                time_difference = current_datetime - start_datetime #define time difference
                 
-                if self.simMode==0: #simMode off
-                    current_time = datetime.now().time() #use current real time
-                    current_datetime = datetime.combine(datetime.today(), current_time) 
-                    start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time()) #transform string to time
-                    time_difference = current_datetime - start_datetime #define time difference
-                    
-                    hours_passed = round(time_difference.total_seconds() / 3600) #find how many hour are passed
+                hours_passed = round(time_difference.total_seconds() / 3600) #find how many hour are passed
 
-                    #if result is negative, adjust
-                    if hours_passed <0:
-                        hours_passed=24+hours_passed
-                    else:
-                        #if 0, take 1 (can't request 0 to adaptor)
-                        hours_passed=max(hours_passed,1)
-
-                    end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time()) #transform time string to time
-                    time_difference = end_datetime - start_datetime #hors difference between them
-                    suncycle = round(time_difference.total_seconds() / 3600) #is the periodt defined by the user at wich the auto mode is activated
+                #if result is negative, adjust
+                if hours_passed <0:
+                    hours_passed=24+hours_passed
                 else:
-                    
-                    print("simMode started")
-                    current_datetime = datetime.combine(datetime.today(),datetime.strptime("00:00", '%H:%M').time())
-                    
-                    current_datetime += timedelta(hours=self.startedSim)
-                    print(current_datetime)
-                    start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
-                    time_difference = current_datetime - start_datetime
-                    hours_passed = round(time_difference.total_seconds() / 3600)
+                    #if 0, take 1 (can't request 0 to adaptor)
+                    hours_passed=max(hours_passed,1)
 
-                    if hours_passed <0:
-                        hours_passed=24+hours_passed
-                    else:
-                        #if 0, take 1 (can't request 0 to adaptor)
-                        hours_passed=max(hours_passed,1)
+                end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time()) #transform time string to time
+                time_difference = end_datetime - start_datetime #hors difference between them
+                suncycle = round(time_difference.total_seconds() / 3600) #is the periodt defined by the user at wich the auto mode is activated
+            
+            else:
+                #If sim mode is on, hour count is incremented each minute : 1m=1h
+                
+                print("simMode started")
+                #from midnight of today
+                current_datetime = datetime.combine(datetime.today(),datetime.strptime("00:00", '%H:%M').time())
+                #add time difference
+                current_datetime += timedelta(hours=self.startedSim)
+                print(current_datetime)
+                start_datetime = datetime.combine(datetime.today(),datetime.strptime(start_time, '%H:%M').time())
+                time_difference = current_datetime - start_datetime
+                hours_passed = round(time_difference.total_seconds() / 3600)
 
-                    end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
-                    time_difference = end_datetime - start_datetime
-                    suncycle = round(time_difference.total_seconds() / 3600)
-                ###########
-                #deficit estimation and DLi calculation
-                lux_to_add,dli_recived_past_hour=self.PlantLuxEstimation(url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp,valid_plant_types)
-                current_msg=self.__message.copy()
-
-                #define topic to send to uv_light shift
-                current_topic=f"{self.base_topic}/{userId}/{plant_code}/lux_to_give/automatic"
-
-                #prepare message to Uv_light_shift
-                current_msg['e'][0]['t']=time.time()
-                current_msg['e'][0]['v']=lux_to_add
-                current_msg['bn']=current_topic
-
-                #define topic to send to adaptor
-                topicDLI=f"{self.base_topic}/{userId}/{plant_code}/DLI"
-                dli_mess=self.dli_rec_message.copy()
-
-                #prepare message to adaptor
-                dli_mess['e'][0]['t']=time.time()
-                dli_mess['e'][0]['v']=dli_recived_past_hour
-                dli_mess['bn']=topicDLI
-                dli_mess=json.dumps(dli_mess)
-
-                #publish message to adaptor
-                self._paho_mqtt.publish(topic=topicDLI,payload=dli_mess,qos=2)
-                print(dli_mess)
-
-                #check if time is over defined auto regolation period
-                if current_datetime>=start_datetime and current_datetime<=end_datetime:
-                    __message=json.dumps(current_msg)
-                    print(__message)
-                    self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)
+                if hours_passed <0:
+                    hours_passed=24+hours_passed
                 else:
-                    #if not publish 0 as lux to give
-                    current_msg['e'][0]['v']=0
-                    __message=json.dumps(current_msg)
-                    self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)                 
-            return
-        # except:
-        #     return "Error reqesting from registry"
+                    #if 0, take 1 (can't request 0 to adaptor)
+                    hours_passed=max(hours_passed,1)
+
+                end_datetime = datetime.combine(datetime.today(), datetime.strptime(end_time, '%H:%M').time())
+                time_difference = end_datetime - start_datetime
+                suncycle = round(time_difference.total_seconds() / 3600)
+            ###########
+            #deficit estimation and DLi calculation
+            lux_to_add,dli_recived_past_hour=self.PlantLuxEstimation(url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp,valid_plant_types)
+            current_msg=self.__message.copy()
+
+            #define topic to send to uv_light shift
+            current_topic=f"{self.base_topic}/{userId}/{plant_code}/lux_to_give/automatic"
+
+            #prepare message to Uv_light_shift
+            current_msg['e'][0]['t']=time.time()
+            current_msg['e'][0]['v']=lux_to_add
+            current_msg['bn']=current_topic
+
+            #define topic to send to adaptor
+            topicDLI=f"{self.base_topic}/{userId}/{plant_code}/DLI"
+            dli_mess=self.dli_rec_message.copy()
+
+            #prepare message to adaptor
+            dli_mess['e'][0]['t']=time.time()
+            dli_mess['e'][0]['v']=dli_recived_past_hour
+            dli_mess['bn']=topicDLI
+            dli_mess=json.dumps(dli_mess)
+
+            #publish message to adaptor
+            self._paho_mqtt.publish(topic=topicDLI,payload=dli_mess,qos=2)
+            print(dli_mess)
+
+            #check if time is over defined auto regolation period
+            if current_datetime>=start_datetime and current_datetime<=end_datetime:
+                __message=json.dumps(current_msg)
+                print(__message)
+                self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)
+            else:
+                #if not publish 0 as lux to give
+                current_msg['e'][0]['v']=0
+                __message=json.dumps(current_msg)
+                self._paho_mqtt.publish(topic=current_topic,payload=__message,qos=2)                 
+        return
+
     
 
     def PublishAlive(self):
@@ -213,16 +211,15 @@ class EnvMonitoring(object):
         return max_lux_lamp
 
     def PlantLuxEstimation(self,url_adptor,plant_code,plant_type,userId,hours_passed,suncycle,max_lux_lamp,valid_plant_types):               
-        
-
-        # Devo fare una request per sapere la misurazione della pianta (nome misurazione place holder)
-        # mesurements_past_hour,perc_intensity_lamp=self.PlantSpecificGetReq(userId,plantId)
-        mesurements_past_hour,DLI_daily_record,lamp_intensity_past_hour=self.PlantSpecificGetReq(url_adptor,userId,plant_code,hours_passed)#aggiungo i dli dati fin ora
-        #ipotizzando siano lux al secondo e siano in un vettore
-        # lux_past_hour=self.LuxPastHour(mesurements_past_hour)
-        lux_past_hour,mean_lamp_intensity,dli_given_today=self.LuxPastHour(mesurements_past_hour,lamp_intensity_past_hour,DLI_daily_record)  
+        """Retrives all data needed for deficit calculation for a single plant
+        """
+        #Make reqest to adaptor for data needed
+        mesurements_past_hour,DLI_daily_record,lamp_intensity_past_hour=self.PlantSpecificGetReq(url_adptor,userId,plant_code,hours_passed)
+        #estimate lux given in prec hour, the lampintensity and all dli given till now
+        lux_past_hour,mean_lamp_intensity,dli_given_today=self.LuxPastHour(mesurements_past_hour,lamp_intensity_past_hour,DLI_daily_record) 
+        #retrive goal of plant based on type 
         current_plant_goal=self.PlantGoal(plant_type,valid_plant_types)
-
+        #Do lux deficit calc
         lux_to_add,dli_recived_past_hour=self.LuxDeficitCalculation(current_plant_goal,suncycle,lux_past_hour,mean_lamp_intensity,dli_given_today,hours_passed,max_lux_lamp)
     
         return lux_to_add,dli_recived_past_hour
@@ -328,14 +325,21 @@ class EnvMonitoring(object):
 
 
 def main():
+    #load settings file
     settings=json.load(open("configEnv.json",'r'))
+    #istance class
     function = EnvMonitoring(settings)
+    #start mqtt
     function.start()
+    #initialize reference time
     _time=time.time()
-        # try:
-    while True:        
+
+    while True: 
+        #time passed from reference       
         time_passed=time.time()-_time
         print(f"time_passed: {time_passed}" )
+
+        #chechs if time passed is more than the interval in settings
         if round(time_passed)>=settings['publishInterval']:
             function.MyPublish()
             function.PublishAlive()

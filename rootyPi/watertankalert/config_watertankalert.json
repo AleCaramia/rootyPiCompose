@@ -10,5 +10,6 @@
      },
     "tank_interval":60,
     "pub_topic":"RootyPy/WaterTankAlert",
-    "update_time":15
+    "update_time":15,
+    "number_of_requests": 15
 }
