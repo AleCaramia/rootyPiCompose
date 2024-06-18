@@ -6,52 +6,10 @@ import requests
 import time
 import datetime
 import paho.mqtt.client as pahoMQTT
-import threading
-import pandas as pd
-import numpy as np
 import base64
 from PIL import Image
 from io import BytesIO
 from requests.exceptions import HTTPError
-
-def get_response(url):
-    for i in range(15):
-        try:
-            response = requests.get(url)
-            response.raise_for_status()
-            return response
-        except HTTPError as http_err:
-            print(f"HTTP error occurred: {http_err}")
-        except Exception as err:
-            print(f"Other error occurred: {err}")
-        #time.sleep(0.1)
-    return None
-
-def put_response(url,body):
-    for i in range(15):
-        try:
-            response = requests.put(url,json = body)
-            response.raise_for_status()
-            return response
-        except HTTPError as http_err:
-            print(f"HTTP error occurred: {http_err}")
-        except Exception as err:
-            print(f"Other error occurred: {err}")
-        #time.sleep(0.1)
-    return None
-
-def post_response(url,body):
-    for i in range(15):
-        try:
-            response = requests.post(url,json = body)
-            response.raise_for_status()
-            return response
-        except HTTPError as http_err:
-            print(f"HTTP error occurred: {http_err}")
-        except Exception as err:
-            print(f"Other error occurred: {err}")
-        #time.sleep(0.1)
-    return None
 
 
 class GreenHouseBot:
@@ -67,8 +25,6 @@ class GreenHouseBot:
         self.registry_url = json_config_bot['url_registry']
         self.report_generator_url = json_config_bot['url_report_generator']
         self.adaptor_url = json_config_bot['url_adaptor']
-        #self.registry_url = "http://127.0.0.1:8080"
-        #self.report_generator_url = 'http://127.0.0.1:8081'
         self.ClientID =  json_config_bot['ID']
         self.broker = json_config_bot['broker']
         self.port = json_config_bot['port']
@@ -171,7 +127,6 @@ class GreenHouseBot:
             query_list = query_data.split('&')                             # splits the query from the callback_data, function_to_call is extracted from the dictionaries
             if query_list[0] == 'plant':
                 if query_list[1] not in self.diz['plant'].keys():
-                    #self.uservariables[chat_ID]['selected_plant'] = query_list[1]   CAMBIARE
                     self.manage_plant(chat_ID,query_list[1])
                 else:
                     function_to_call = self.diz['plant'][query_list[1]]
@@ -241,7 +196,7 @@ class GreenHouseBot:
     def restarting_user_timer(self, chat_ID, countdown):
         self.uservariables[chat_ID]['timer'] = countdown  # Set the timer for the user to the given countdown value
 
-    #-------------------------------------------------                             ---------------------------
+    #-------------------------------------------------  manage a plant  ---------------------------
 
     def choose_plant(self,chat_ID,keep_prev = False):                       #creates plants from the inventory of the user
         buttons = []
@@ -269,38 +224,14 @@ class GreenHouseBot:
             self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
 
-    def new_user_management(self,chat_ID):
-
-        buttons = [[InlineKeyboardButton(text=f'new user', callback_data='newuser&sign_up'), InlineKeyboardButton(text=f'transfer account', callback_data='newuser&transferaccount')]]
-        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-        msg_id = self.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
-        self.remove_previous_messages(chat_ID)
-        self.update_message_to_remove(msg_id,chat_ID)
-
-    def get_plant_for_chatID(self, chatID):
-
-        plant_list = []     
-        userid = self.get_username_for_chat_ID(chatID)
-        f = True
-        r = get_response(self.registry_url+'/plants')
-
-
-        output =json.loads(r.text)
-        for diz in output:
-            if diz['userId'] == userid:
-                plant_list.append(diz['plantId'])
-
-        
-        return plant_list
-
     def manage_plant(self,chat_ID,plantcode):                       #generate a report on the status of the plant and allows you to perform change of the led or water
 
         userid = self.get_username_for_chat_ID(chat_ID)
 
-        lux_sensor = json.loads(get_response(f'{self.adaptor_url}/getData/{userid}/{plantcode}?measurament=light&duration=1').text)
-        lamp_emission =  json.loads(get_response(f'{self.adaptor_url}/getData/{userid}/{plantcode}?measurament=current_intensity&duration=1').text)
-        moisture =  json.loads(get_response(f'{self.adaptor_url}/getData/{userid}/{plantcode}?measurament=moisture&duration=1').text)
-        tank_level =  json.loads(get_response(f'{self.adaptor_url}/getData/{userid}/{plantcode}?measurament=tankLevel&duration=1').text)
+        lux_sensor = json.loads(self.get_response(f'{self.adaptor_url}/getData/{userid}/{plantcode}?measurament=light&duration=1').text)
+        lamp_emission =  json.loads(self.get_response(f'{self.adaptor_url}/getData/{userid}/{plantcode}?measurament=current_intensity&duration=1').text)
+        moisture =  json.loads(self.get_response(f'{self.adaptor_url}/getData/{userid}/{plantcode}?measurament=moisture&duration=1').text)
+        tank_level =  json.loads(self.get_response(f'{self.adaptor_url}/getData/{userid}/{plantcode}?measurament=tankLevel&duration=1').text)
         if len(lux_sensor) > 0:
             actual_lux = lux_sensor[-1]['v']
             str_lux = f'light received: {actual_lux} lux'
@@ -330,153 +261,10 @@ class GreenHouseBot:
         msg_id = self.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
         self.update_message_to_remove(msg_id,chat_ID)
 
-    def generate_instant_report(self,chat_ID,plantcode):
-        print(f'{chat_ID} is asking for a report')
-
-        #plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
-        r = get_response(self.report_generator_url+f'/getreport/{plantcode}')
-        #r = requests.get(self.report_generator_url+f'/getreport/{plantcode}',headers = self.headers)
-        output = json.loads(r.text)
-            # Extract the base64-encoded image and decode it
-        image_base64 = output['image']
-        image_data = base64.b64decode(image_base64)
-        
-        # Extract the message
-        message = output['message']
-
-        # Load the image into a BytesIO stream
-        image = Image.open(BytesIO(image_data))
-        bio = BytesIO()
-        image.save(bio, format='PNG')
-        bio.seek(0)
-
-            # Send the image using the bot
-        msg_id = self.bot.sendPhoto(chat_ID, bio, caption=message)
-        self.update_message_to_remove(msg_id,chat_ID)
-        self.choose_plant(chat_ID)
-
-    def set_report_frequency(self,chat_ID,plantcode):
-        userid = self.get_username_for_chat_ID(chat_ID)
-        r = get_response(self.registry_url+f'/plants')
-        #r = requests.get(self.registry_url+f'/plants')
-        output = json.loads(r.text)
-        for plant in output:
-            if plant['userId'] == userid:
-                oldsetting = plant['report_frequency']
-                plantid = plant['plantId']
-        self.remove_previous_messages(chat_ID)
-
-        msg_id = self.bot.sendMessage(chat_ID,text = f'actual report frequency for {plantid} is {oldsetting}')['message_id']
-
-        self.update_message_to_remove(msg_id,chat_ID)
-        buttons = [[InlineKeyboardButton(text=f'daily', callback_data=f'f_settings&daily&{plantcode}'), InlineKeyboardButton(text=f'weekly', callback_data=f'f_settings&weekly&{plantcode}'), InlineKeyboardButton(text='biweekly', callback_data=f'f_settings&biweekly&{plantcode}'),InlineKeyboardButton(text=f'monthly', callback_data=f'f_settings&monthly&{plantcode}')]]
-        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-        msg_id = self.bot.sendMessage(chat_ID, text=f'when do you want to receive a report for {plantcode}', reply_markup=keyboard)['message_id']
-        self.update_message_to_remove(msg_id,chat_ID)
-
-
-    def send_new_report_frequency(self,chat_ID,newfrequency,plantcode):
-
-        body = {'plantCode':plantcode,'report_frequency':newfrequency}
-        #r = requests.put(self.registry_url+'/setreportfrequency',headers = self.headers,json = body)
-        r = put_response(self.registry_url+'/setreportfrequency',body)
-        flag_keep_mex = self.manage_invalid_request(chat_ID,json.loads(r.text))
-        self.choose_plant(chat_ID,flag_keep_mex)
-
-    def add_plant(self,chat_ID,token):                         # allows self.on_chat_message() to stop listen to commands and listen for names
-        msg_id = self.bot.sendMessage(chat_ID, text='Send new plant name in the chat')['message_id']
-        self.remove_previous_messages(chat_ID)
-        self.update_message_to_remove(msg_id,chat_ID)
-        self.uservariables[chat_ID]['chatstatus'] = f'listeningforplantname&create&{token}'
-
-    def eval_plant_name(self,chat_ID,mex,mode,plant = ''):              #Checks if the name is already used or other exceptions and makes you confirm
-        try:
-            user_plants = self.get_plant_for_chatID(chat_ID)
-        except:
-            msg_id = self.bot.sendMessage(chat_ID,text = 'unable to get plant code, action blocked')
-            self.update_message_to_remove(msg_id,chat_ID)
-        name_set = set(user_plants)
-        if mex.strip() in name_set:
-            msg_id = self.bot.sendMessage(chat_ID,text =f'{mex} already exists')['message_id']
-            self.remove_previous_messages(chat_ID)
-            self.update_message_to_remove(msg_id,chat_ID)
-        elif any(char in mex.strip() for char in '&;:",/\'{}[]'):
-            msg_id = self.bot.sendMessage(chat_ID,text =f'{mex} is a invalid name contains \'&,,,:,;,/,[,] ')['message_id']
-            self.remove_previous_messages(chat_ID)
-            self.update_message_to_remove(msg_id,chat_ID)
-        else:
-            buttons = [[InlineKeyboardButton(text=f'confirm', callback_data='plant&'+ mode +'&'+mex+'&'+plant), InlineKeyboardButton(text=f'abort', callback_data='plant&inventory')]]
-            keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-            msg_id = self.bot.sendMessage(chat_ID,text =f'{mex} it\'s a valid name \nwould you like to confirm?',reply_markup=keyboard)['message_id']
-            self.remove_previous_messages(chat_ID)
-            self.update_message_to_remove(msg_id,chat_ID)
-            self.uservariables[chat_ID]['chatstatus'] = 'start'
-    
-    def create_plant(self,chat_ID,plantname,plant_type,plantcode):         #adds the name to the list associated to the user
-        body = {'userId' : self.get_username_for_chat_ID(chat_ID),'plantId':plantname,'plantCode':plantcode,'type':plant_type}
-        r = requests.post(self.registry_url+'/addp',headers=self.headers,json = body)
-        output = json.loads(r.text)
-        flag_keep_messages = self.manage_invalid_request(chat_ID,output)
-        self.choose_plant(chat_ID,keep_prev = flag_keep_messages)
-
-    def manage_invalid_request(self,chat_ID,req_output):
-        if req_output['code'] != 200:
-            msg_id = self.bot.sendMessage(chat_ID,text = f'{req_output['message']}')['message_id']
-            self.update_message_to_remove(msg_id,chat_ID)
-            return True
-        else:
-            return False
-
-    def add_user_first_time(self,chat_ID,userid,pwd):
-        body = {'userId' : userid,'password':pwd,'chatID':chat_ID}
-        r = requests.post(self.registry_url+'/addu',headers=self.headers,json = body)
-        output = json.loads(r.text)
-        self.remove_previous_messages(chat_ID)
-        if self.manage_invalid_request(chat_ID,output):
-            msg_id = self.bot.sendMessage(chat_ID,text = 'Something went wrong, try restarting the bot with /start')
-            self.update_message_to_remove(msg_id,chat_ID)
-
-    def get_username_for_chat_ID(self,chat_ID):
-
-        #r = requests.get(self.registry_url+'/users',headers = self.headers)
-        r = get_response(self.registry_url+'/users')
-        output = json.loads(r.text)
-        for diz in output:
-
-            if int(diz['chatID']) == chat_ID:
-
-                usern =diz['userId']
-        
-        return usern
-
-
-    def choose_plant_type(self,chat_ID,plantname,plantcode):
-        available_plant_types = self.get_available_plant_types()
-        buttons = []
-        for pt in available_plant_types:
-            button = [InlineKeyboardButton(text=f'{pt}', callback_data=f'plant_type&{pt}&{plantname}&{plantcode}')]
-            buttons.append(button)
-        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-        msg_id = self.bot.sendMessage(chat_ID,text =f'choose plant type:',reply_markup=keyboard)['message_id']
-        self.remove_previous_messages(chat_ID)
-        self.update_message_to_remove(msg_id,chat_ID)
-
-    def get_available_plant_types(self):
-        #r = requests.get(self.registry_url+'/valid_plant_types', headers = self.headers)
-        r = get_response(self.registry_url+'/valid_plant_types')
-        output = json.loads(r.text)
-        plant_types =[]
-        for diz in output:
-            plant_types.append(diz['type'])
-        return plant_types
-
-
-#--------------------------------------------------------- New user ----------------------------------------------------
-
+ # ----------------------------------------------------- sign up ------------------------------------------------
     def is_new_user(self,chat_ID):
         f = 0
-        #r = requests.get(self.registry_url+'/users',headers = self.headers)
-        r = get_response(self.registry_url+'/users')
+        r = self.get_response(self.registry_url+'/users')
         print(json.loads(r.text))
 
         output = json.loads(r.text)
@@ -490,6 +278,23 @@ class GreenHouseBot:
             return False
         else:
             return True    
+
+    def new_user_management(self,chat_ID):
+
+        buttons = [[InlineKeyboardButton(text=f'new user', callback_data='newuser&sign_up'), InlineKeyboardButton(text=f'transfer account', callback_data='newuser&transferaccount')]]
+        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+        msg_id = self.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
+        self.remove_previous_messages(chat_ID)
+        self.update_message_to_remove(msg_id,chat_ID)
+
+    def add_user_first_time(self,chat_ID,userid,pwd):
+        body = {'userId' : userid,'password':pwd,'chatID':chat_ID}
+        r =self.post_response(self.registry_url+'/addu',headers=self.headers,json = body)
+        output = json.loads(r.text)
+        self.remove_previous_messages(chat_ID)
+        if self.manage_invalid_request(chat_ID,output):
+            msg_id = self.bot.sendMessage(chat_ID,text = 'Something went wrong, try restarting the bot with /start')
+            self.update_message_to_remove(msg_id,chat_ID)
 
     def add_user(self,chat_ID):
 
@@ -546,12 +351,233 @@ class GreenHouseBot:
         self.add_user_first_time(chat_ID,userid,pwd)
         self.add_planttoken(chat_ID)
 
-    def add_planttoken(self,chat_ID):
-        msg_id = self.bot.sendMessage(chat_ID, text='Insert the token of your pot, it\'s writtend on the bottom of the pot, it starts with two letters followed by a series of numbers')['message_id']
+# ---------------------------------------- REST management ----------------------------------------------------        
+
+    def get_plant_for_chatID(self, chatID):
+
+        plant_list = []     
+        userid = self.get_username_for_chat_ID(chatID)
+        f = True
+        r = self.get_response(self.registry_url+'/plants')
+
+
+        output =json.loads(r.text)
+        for diz in output:
+            if diz['userId'] == userid:
+                plant_list.append(diz['plantId'])
+
+        
+        return plant_list
+
+    def manage_invalid_request(self,chat_ID,req_output):
+        if req_output['code'] != 200:
+            msg_id = self.bot.sendMessage(chat_ID,text = f'{req_output['message']}')['message_id']
+            self.update_message_to_remove(msg_id,chat_ID)
+            return True
+        else:
+            return False
+        
+    def get_username_for_chat_ID(self,chat_ID):
+
+        r = self.get_response(self.registry_url+'/users')
+        output = json.loads(r.text)
+        for diz in output:
+
+            if diz['chatID'] == chat_ID:
+
+                usern =diz['userId']
+        
+        return usern
+    
+    def get_available_plant_types(self):
+        r = self.get_response(self.registry_url+'/valid_plant_types')
+        output = json.loads(r.text)
+        plant_types =[]
+        for diz in output:
+            plant_types.append(diz['type'])
+        return plant_types
+
+
+    def get_plant_code_from_plant_name(self,userid,plantname):
+        r = self.get_response(self.registry_url+'/plants')
+
+        output = json.loads(r.text)
+        for diz in output:
+            if diz['userId'] == userid and diz['plantId'] == plantname:
+                return diz['plantCode']
+            
+    def get_plantname_for_plantcode(self,plantcode):
+        r = self.get_response(self.registry_url+'/plants')
+        output = json.loads(r.text)
+        for diz in output:
+
+            if diz['plantCode'] == plantcode:
+
+                plantname = diz['plantId']
+
+        return plantname
+
+
+
+    def get_chatID_for_username(self,userid):
+
+        #r = requests.get(self.registry_url+'/users',headers = self.headers)
+        r = self.get_response(self.registry_url+'/users')
+        output = json.loads(r.text)
+        for diz in output:
+
+            if diz['userId'] == userid:
+
+                chatid =diz['chatID']
+
+        return chatid
+
+
+
+    def get_response(self,url):
+        for i in range(15):
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                return response
+            except HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
+            except Exception as err:
+                print(f"Other error occurred: {err}")
+        return None
+
+    def put_response(self,url,body):
+        for i in range(15):
+            try:
+                response = requests.put(url,json = body)
+                response.raise_for_status()
+                return response
+            except HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
+            except Exception as err:
+                print(f"Other error occurred: {err}")
+        return None
+
+    def post_response(self,url,body):
+        for i in range(15):
+            try:
+                response = requests.post(url,json = body)
+                response.raise_for_status()
+                return response
+            except HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
+            except Exception as err:
+                print(f"Other error occurred: {err}")
+        return None
+
+
+# ------------------------------------------------- Report -------------------------------------------------------
+
+    def generate_instant_report(self,chat_ID,plantcode):
+        print(f'{chat_ID} is asking for a report')
+
+        r = self.get_response(self.report_generator_url+f'/getreport/{plantcode}')
+        output = json.loads(r.text)
+            # Extract the base64-encoded image and decode it
+        image_base64 = output['image']
+        image_data = base64.b64decode(image_base64)
+        
+        # Extract the message
+        message = output['message']
+
+        # Load the image into a BytesIO stream
+        image = Image.open(BytesIO(image_data))
+        bio = BytesIO()
+        image.save(bio, format='PNG')
+        bio.seek(0)
+
+            # Send the image using the bot
+        msg_id = self.bot.sendPhoto(chat_ID, bio, caption=message)
+        self.update_message_to_remove(msg_id,chat_ID)
+        self.choose_plant(chat_ID)
+
+    def set_report_frequency(self,chat_ID,plantcode):
+        userid = self.get_username_for_chat_ID(chat_ID)
+        r = self.get_response(self.registry_url+f'/plants')
+        output = json.loads(r.text)
+        for plant in output:
+            if plant['userId'] == userid:
+                oldsetting = plant['report_frequency']
+                plantid = plant['plantId']
+        self.remove_previous_messages(chat_ID)
+
+        msg_id = self.bot.sendMessage(chat_ID,text = f'actual report frequency for {plantid} is {oldsetting}')['message_id']
+
+        self.update_message_to_remove(msg_id,chat_ID)
+        buttons = [[InlineKeyboardButton(text=f'daily', callback_data=f'f_settings&daily&{plantcode}'), InlineKeyboardButton(text=f'weekly', callback_data=f'f_settings&weekly&{plantcode}'), InlineKeyboardButton(text='biweekly', callback_data=f'f_settings&biweekly&{plantcode}'),InlineKeyboardButton(text=f'monthly', callback_data=f'f_settings&monthly&{plantcode}')]]
+        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+        msg_id = self.bot.sendMessage(chat_ID, text=f'when do you want to receive a report for {plantcode}', reply_markup=keyboard)['message_id']
+        self.update_message_to_remove(msg_id,chat_ID)
+
+
+    def send_new_report_frequency(self,chat_ID,newfrequency,plantcode):
+
+        body = {'plantCode':plantcode,'report_frequency':newfrequency}
+        r = self.put_response(self.registry_url+'/setreportfrequency',body)
+        flag_keep_mex = self.manage_invalid_request(chat_ID,json.loads(r.text))
+        self.choose_plant(chat_ID,flag_keep_mex)
+
+
+    def set_frequency_or_generate(self,chat_ID,plantcode):
+
+        buttons = [[ InlineKeyboardButton(text=f'generate report', callback_data=f'report&generate&{plantcode}'), InlineKeyboardButton(text=f'settings', callback_data=f'report&settings&{plantcode}'), InlineKeyboardButton(text=f'🔙', callback_data=f'plant&back&{plantcode}')]]
+        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+        msg_id = self.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
+        self.update_message_to_remove(msg_id,chat_ID)      
+
+#------------------------------------------------- Adding a plant ----------------------------------------------#        
+
+    def add_plant(self,chat_ID,token):                         # allows self.on_chat_message() to stop listen to commands and listen for names
+        msg_id = self.bot.sendMessage(chat_ID, text='Send new plant name in the chat')['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
-        self.uservariables[chat_ID]['chatstatus'] = 'listeningfortoken'
-        print(f'waiting for  pot token from {chat_ID}')
+        self.uservariables[chat_ID]['chatstatus'] = f'listeningforplantname&create&{token}'
+
+    def eval_plant_name(self,chat_ID,mex,mode,plant = ''):              #Checks if the name is already used or other exceptions and makes you confirm
+        try:
+            user_plants = self.get_plant_for_chatID(chat_ID)
+        except:
+            msg_id = self.bot.sendMessage(chat_ID,text = 'unable to get plant code, action blocked')
+            self.update_message_to_remove(msg_id,chat_ID)
+        name_set = set(user_plants)
+        if mex.strip() in name_set:
+            msg_id = self.bot.sendMessage(chat_ID,text =f'{mex} already exists')['message_id']
+            self.remove_previous_messages(chat_ID)
+            self.update_message_to_remove(msg_id,chat_ID)
+        elif any(char in mex.strip() for char in '&;:",/\'{}[]'):
+            msg_id = self.bot.sendMessage(chat_ID,text =f'{mex} is a invalid name contains \'&,,,:,;,/,[,] ')['message_id']
+            self.remove_previous_messages(chat_ID)
+            self.update_message_to_remove(msg_id,chat_ID)
+        else:
+            buttons = [[InlineKeyboardButton(text=f'confirm', callback_data='plant&'+ mode +'&'+mex+'&'+plant), InlineKeyboardButton(text=f'abort', callback_data='plant&inventory')]]
+            keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+            msg_id = self.bot.sendMessage(chat_ID,text =f'{mex} it\'s a valid name \nwould you like to confirm?',reply_markup=keyboard)['message_id']
+            self.remove_previous_messages(chat_ID)
+            self.update_message_to_remove(msg_id,chat_ID)
+            self.uservariables[chat_ID]['chatstatus'] = 'start'
+    
+    def create_plant(self,chat_ID,plantname,plant_type,plantcode):         #adds the name to the list associated to the user
+        body = {'userId' : self.get_username_for_chat_ID(chat_ID),'plantId':plantname,'plantCode':plantcode,'type':plant_type}
+        r = self.post_response(self.registry_url+'/addp',headers=self.headers,json = body)
+        output = json.loads(r.text)
+        flag_keep_messages = self.manage_invalid_request(chat_ID,output)
+        self.choose_plant(chat_ID,keep_prev = flag_keep_messages)
+
+    def choose_plant_type(self,chat_ID,plantname,plantcode):
+        available_plant_types = self.get_available_plant_types()
+        buttons = []
+        for pt in available_plant_types:
+            button = [InlineKeyboardButton(text=f'{pt}', callback_data=f'plant_type&{pt}&{plantname}&{plantcode}')]
+            buttons.append(button)
+        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+        msg_id = self.bot.sendMessage(chat_ID,text =f'choose plant type:',reply_markup=keyboard)['message_id']
+        self.remove_previous_messages(chat_ID)
+        self.update_message_to_remove(msg_id,chat_ID)
 
     def eval_token(self,chat_ID,message):
         
@@ -567,7 +593,18 @@ class GreenHouseBot:
             msg_id = self.bot.sendMessage(chat_ID,text =f'{message} it\'s your token \nwould you like to confirm?',reply_markup=keyboard)['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
-            self.uservariables[chat_ID]['chatstatus'] = 'start'       
+            self.uservariables[chat_ID]['chatstatus'] = 'start'     
+
+
+    def add_planttoken(self,chat_ID):
+        msg_id = self.bot.sendMessage(chat_ID, text='Insert the token of your pot, it\'s writtend on the bottom of the pot, it starts with two letters followed by a series of numbers')['message_id']
+        self.remove_previous_messages(chat_ID)
+        self.update_message_to_remove(msg_id,chat_ID)
+        self.uservariables[chat_ID]['chatstatus'] = 'listeningfortoken'
+        print(f'waiting for  pot token from {chat_ID}')
+
+
+#--------------------------------------------------------- Adapt user from NodeRed ----------------------------------------------------
 
     def transfer_usern(self,chat_ID):
         msg_id = self.bot.sendMessage(chat_ID, text='insert you username')['message_id']
@@ -592,8 +629,7 @@ class GreenHouseBot:
             if user['userId'] == username and user['password'] == pwd:
                 f = True
                 body = {"userId":username, 'chatID':chat_ID}
-                #r = requests.put(self.registry_url+'/transferuser',headers = self.headers,json = body)
-                r = put_response(self.registry_url+'/transferuser',body)
+                r = self.put_response(self.registry_url+'/transferuser',body)
                 if self.manage_invalid_request(chat_ID,json.loads(r.text)):
                     msg_id = self.bot.sendMessage(chat_ID,'something went wrong try restarting the bot with /start')
                     self.update_message_to_remove(msg_id,chat_ID)
@@ -614,7 +650,7 @@ class GreenHouseBot:
             perc_value = float(message)
             if perc_value <= 10 and perc_value > 0:
                 plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
-                r =get_response(self.registry_url+'/models')
+                r =self.get_response(self.registry_url+'/models')
                 models = json.loads(r.text)
                 for model in models:
                     if model["model_code"] == plantcode[0:2]:
@@ -631,7 +667,7 @@ class GreenHouseBot:
                 self.manage_plant(chat_ID,plantcode)
             elif perc_value == 100:           #DA TOGLIERE ASSOLUTAMENTE BACKDOOR PER SVUOTARE TANICA
                 plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
-                r =get_response(self.registry_url+'/models')
+                r =self.get_response(self.registry_url+'/models')
                 models = json.loads(r.text)
                 for model in models:
                     if model["model_code"] == plantcode[0:2]:
@@ -722,8 +758,7 @@ class GreenHouseBot:
             msg_id = self.bot.sendMessage(chat_ID,text = 'unable to get plant code, action blocked')
             self.update_message_to_remove(msg_id,chat_ID)
         body = {"plantCode":plant_code,'new_name':newname}
-        r = put_response(self.registry_url+'/modifyPlant',body)
-        #r = requests.put(self.registry_url+'/modifyPlant',headers=self.headers,json = body)
+        r = self.put_response(self.registry_url+'/modifyPlant',body)
         output = json.loads(r.text)
         flag_remove_mex = self.manage_invalid_request(chat_ID,output)
         self.choose_plant(chat_ID,flag_remove_mex)
@@ -731,13 +766,6 @@ class GreenHouseBot:
         self.update_message_to_remove(msg_id,chat_ID)
 
 
-    def get_plant_code_from_plant_name(self,userid,plantname):
-        r = get_response(self.registry_url+'/plants')
-
-        output = json.loads(r.text)
-        for diz in output:
-            if diz['userId'] == userid and diz['plantId'] == plantname:
-                return diz['plantCode']
 
 #----------------------------------------------- removes messages from bot --------------------------------------
 
@@ -762,13 +790,7 @@ class GreenHouseBot:
             
             self.uservariables[chat_ID]['messages_to_remove'] = []
 
-
-    def set_frequency_or_generate(self,chat_ID,plantcode):
-
-        buttons = [[ InlineKeyboardButton(text=f'generate report', callback_data=f'report&generate&{plantcode}'), InlineKeyboardButton(text=f'settings', callback_data=f'report&settings&{plantcode}'), InlineKeyboardButton(text=f'🔙', callback_data=f'plant&back&{plantcode}')]]
-        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-        msg_id = self.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
-        self.update_message_to_remove(msg_id,chat_ID)        
+  
 
 #----------------------------------------------------- Lamp management ---------------------------------------------------------------- 
 
@@ -882,7 +904,6 @@ class GreenHouseBot:
                 plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
                 percentage = self.uservariables[chat_ID]['chatstatus'].split('&')[2]
                 self.uservariables[chat_ID]['chatstatus'] = 'start'
-                #self.uservariables[chat_ID]['manual_mode_duration'] = m_mode_duration
                 msg_id = self.bot.sendMessage(chat_ID, text=f"light will be switched off at {mex}")['message_id']
                 self.remove_previous_messages(chat_ID)
                 self.update_message_to_remove(msg_id,chat_ID)
@@ -905,8 +926,7 @@ class GreenHouseBot:
         self.update_message_to_remove(msg_id,chat_ID)
 
     def get_time_start_and_time_end_from_chatId(self,userid):
-        #r = requests.get(self.registry_url+'/plants',headers = self.headers)
-        r = get_response(self.registry_url+'/plants')
+        r = self.get_response(self.registry_url+'/plants')
         output = json.loads(r.text)
         for plant in output:
             if plant['userId'] == userid:
@@ -964,8 +984,7 @@ class GreenHouseBot:
         state = "manual"
         init = time.time()
         body = {"plantCode":plantcode,'state':state,'init':init,'end':m_mode_duration}
-        r = put_response(self.registry_url+'/updateInterval',body)
-        #r = requests.put(self.registry_url+'/updateInterval',headers=self.headers,json = body)
+        r = self.put_response(self.registry_url+'/updateInterval',body)
         output = json.loads(r.text)
         self.manage_invalid_request(chat_ID,output)
         mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":float(percentage) },{"n": "init_hour", "u": "s", "t": time.time(), "v":init },{"n": "final_hour", "u": "s", "t": time.time(), "v": m_mode_duration } ]}
@@ -981,8 +1000,7 @@ class GreenHouseBot:
         init = time.time()
         end = time.time()+10
         body = {"plantCode":plantcode,'state':state,'init':init,'end':end}
-        r = put_response(self.registry_url+'/updateInterval',body)
-        #r = requests.put(self.registry_url+'/updateInterval',headers=self.headers,json = body)
+        r = self.put_response(self.registry_url+'/updateInterval',body)
         output = json.loads(r.text)
         self.manage_invalid_request(chat_ID,output)
         mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":0.0 },{"n": "init_hour", "u": "s", "t": time.time(), "v":time.time()} ,{"n": "final_hour", "u": "s", "t": time.time(), "v":end} ]}
@@ -993,17 +1011,14 @@ class GreenHouseBot:
     
 #----------------------------------------------------MQTT--------------------------------------------------------------------------------#
 
-
     def publish(self,topic, diff):
         self.paho_mqtt.publish(topic,diff,2)
 
 
-#------------------------------------------------ comunication to catalog -------------------------------------------
-#------------------------------------------------- mqtt receiver ---------------------------------------
+#-------------------------------------------------Handle mqtt messages ---------------------------------------
 
     def Handle_report(self,msg):
         payload = msg.payload
-        topic = msg.topic
         print(f"Received {payload} on topic {msg.topic}")
 
         user = msg.topic.split('/')[2]
@@ -1034,7 +1049,6 @@ class GreenHouseBot:
 
     def Handle_water_tank_alert(self,msg):
         topic = msg.topic
-        #payload = msg.payload
         user = topic.split('/')[2]
         plant = topic.split('/')[3]
             
@@ -1042,33 +1056,6 @@ class GreenHouseBot:
         plantname = self.get_plantname_for_plantcode(plant)
 
         self.bot.sendMessage(chat_ID,text = f'watchout tank almost empty for {plantname}')   
-
-    def get_plantname_for_plantcode(self,plantcode):
-        #r = requests.get(self.registry_url+'/users',headers = self.headers)
-        r = get_response(self.registry_url+'/plants')
-        output = json.loads(r.text)
-        for diz in output:
-
-            if diz['plantCode'] == plantcode:
-
-                plantname = diz['plantId']
-
-        return plantname
-
-
-
-    def get_chatID_for_username(self,userid):
-
-        #r = requests.get(self.registry_url+'/users',headers = self.headers)
-        r = get_response(self.registry_url+'/users')
-        output = json.loads(r.text)
-        for diz in output:
-
-            if diz['userId'] == userid:
-
-                chatid =diz['chatID']
-
-        return chatid
 
 
 
