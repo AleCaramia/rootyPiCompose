@@ -33,7 +33,7 @@ class WaterTankAlert(object):
         self.broker = config['broker']
         self.port = config['port']
         self.starting_time_tank = time.time()
-        self.interval_tank =10# config['tank_interval']
+        self.interval_tank =60# config['tank_interval']
         self.pub_topic = config['pub_topic']
         self.paho_mqtt = pahoMQTT.Client(self.ID,True)
         self.paho_mqtt.on_connect = self.myconnect_live
