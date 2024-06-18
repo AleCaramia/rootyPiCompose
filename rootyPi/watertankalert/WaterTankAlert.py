@@ -46,41 +46,30 @@ class WaterTankAlert(object):
             while True:
                 actual_time = time.time()
                 if actual_time > self.starting_time_tank + self.interval_tank:
-                    print('time trigger triggered')
                     #r = requests.get(self.registry_url+'/models')
                     r = get_response(self.registry_url+'/models')
                     models = json.loads(r.text)
-                    print('GET request sent at /models')
                     #r = requests.get(self.registry_url+'/users')
                     r = get_response(self.registry_url+'/users')
                     users = json.loads(r.text)
-                    print('GET request sent at /users')
                     userwithchatid = []
-                    print(users)
                     for user in users:
-                        print( user['chatID'] != None)
                         if user['chatID'] != None:
-                            print(user['chatID'])
                             userwithchatid.append(user['userId'])
-                    print(userwithchatid)
                     #r = requests.get(self.registry_url+'/plants')
                     r = get_response(self.registry_url+'/plants')
                     plants = json.loads(r.text)
-                    print('GET request sent at /plants')
                     plantwithchatid = []
                     for plant_diz in plants:
                         if plant_diz['userId'] in userwithchatid:    
                             plantwithchatid.append((plant_diz['plantCode'],plant_diz['userId']))
-                    print(plantwithchatid)
                     for plant_u_tuple in plantwithchatid:
                         tank_level_series=  json.loads(requests.get(f'{self.adaptor_url}/getData/{plant_u_tuple[1]}/{plant_u_tuple[0]}',params={"measurament":'tankLevel',"duration":1}).text)
-                        print(f'get request sent at {self.adaptor_url}/getData/{plant_u_tuple[1]}/{plant_u_tuple[0]}')
                         if len(tank_level_series) > 0:
                             actual_tank_level = tank_level_series[-1]["v"]
                             curr_model = plant_u_tuple[0][:2]
                             for model in models:
                                 if model['model_code'] == curr_model:
-                                    print(f'found {model['model_code']}')
                                     tank_capacity = model['tank_capacity']
                             tank_level_th = 0.1 * tank_capacity
                             if actual_tank_level < tank_level_th:
@@ -102,7 +91,7 @@ class WaterTankAlert(object):
         self.paho_mqtt.loop_start()
 
     def myconnect_live(self,paho_mqtt, userdata, flags, rc):
-       print(f"report generator: Connected to {self.broker} with result code {rc}")
+       print(f"watertankalert: Connected to {self.broker} with result code {rc}")
 
     def publish(self,topic,message):
         __message=json.dumps(message)
@@ -145,9 +134,8 @@ class Iamalive(object):
             actual_time = time.time()
             if actual_time > self.starting_time + self.interval:
                 self.publish()
-                print('sent alive message')
                 self.starting_time = actual_time
-            time.sleep(5)
+            time.sleep(15)
 
     def publish(self):
         __message=json.dumps(self.message)
