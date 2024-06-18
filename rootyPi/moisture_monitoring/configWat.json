@@ -9,5 +9,5 @@
     "pub_topic_Iamalive": "RootyPy/microservices/moistureMonitoring",
     "sub_topic_Iamalive": null,
     "update_time":30,
-    "iamalive_interval": 15
+    "alive_interval": 15
 }

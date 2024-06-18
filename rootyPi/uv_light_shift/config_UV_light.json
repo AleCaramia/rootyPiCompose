@@ -11,6 +11,6 @@
     "url_devices": "http://192.68.0.24:8081/devices",
     "pub_topic_Iamalive": "RootyPy/microservices/lightShift",
     "sub_topic_Iamalive": null,
-    "aimalive_interval": 15
+    "alive_interval": 15
 
 }
