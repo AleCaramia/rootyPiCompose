@@ -23,22 +23,26 @@
     {
       "type": "Foliage",
       "DLI_goal": 4,
-      "moisture_goal": 50
+      "moisture_goal": 50,
+      "moistureDecay": 0.002 
     },
     {
       "type": "Flower",
       "DLI_goal": 10,
-      "moisture_goal": 70
+      "moisture_goal": 70,
+      "moistureDecay": 0.002 
     },
     {
       "type": "Succulent",
       "DLI_goal": 14,
-      "moisture_goal": 110
+      "moisture_goal": 30,
+      "moistureDecay": 0.0010
     },
     {
       "type": "Fruit",
       "DLI_goal": 25,
-      "moisture_goal": 50
+      "moisture_goal": 50,
+      "moistureDecay": 0.002 
     }
   ]
 }

@@ -120,6 +120,11 @@ class light_shift(object):
             
 
     def mymessage(self,paho_mqtt,userdata,msg):
+        '''
+        this function is called when a message is received on the subscribed topic
+        it takes a message from automatic or manual light shift and publish the new state of the lamp
+        if the message is manual, it adds the plant to the list of manual plants, if it is already in the list, it updates the state
+        '''
         
         mess = json.loads(msg.payload)
         print(mess)

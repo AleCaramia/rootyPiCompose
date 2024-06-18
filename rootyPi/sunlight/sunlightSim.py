@@ -118,7 +118,6 @@ class AllPubs(threading.Thread):
 
     def run(self):
         """Run thread."""
-       
         if self.simMode==1:
             index=0
             reference_time=time.time()
@@ -146,7 +145,6 @@ class AllPubs(threading.Thread):
                 outAlive = {"bn": sim.aliveBn,"e":[eventAlive]}
                 print(outAlive)
                 sim.myPub.myPublish(json.dumps(outAlive), sim.aliveTopic)
-                time.sleep(2)
             time.sleep(10)
 
 if __name__ == '__main__':
