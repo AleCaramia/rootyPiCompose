@@ -6,13 +6,15 @@
     "myurl":"http://192.68.0.33:8081",
     "sub_topic":"RootyPy/iamalive/ReportGenerator",
     "pub_topic":"RootyPy/iamalive/ReportGenerator",
-    "url_adaptor" : "http://192.68.0.25:8080",
     "alive_topic":"RootyPy/microservices/Report_generator",
     "update_time":15,
     "headers":{
        "content-type":"application/json; charset=UTF-8"
     },
     "time_zone_correction":2,
-    "targer_hour":15,
-    "target_minute":30
+    "target_hour":15,
+    "target_minute":30,
+    "needed_urls": {
+      "adaptor":""
+    }
  }

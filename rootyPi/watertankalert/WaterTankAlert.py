@@ -15,7 +15,6 @@ class WaterTankAlert(object):
     def __init__(self,config_path,stop_event):
         config =  json.load(open(config_path,'r'))
         self.registry_url = config['url_registry']
-        self.adaptor_url = config['url_adaptor']
         self.headers = config['headers']
         self.ID = config['ID']
         self.broker = config['broker']
@@ -24,6 +23,7 @@ class WaterTankAlert(object):
         self.interval_tank = config['tank_interval']
         self.pub_topic = config['pub_topic']
         self.number_of_requests = config['number_of_requests']
+        self.needed_urls = config['needed_urls']
         self.paho_mqtt = pahoMQTT.Client(self.ID,True)
         self.paho_mqtt.on_connect = self.myconnect_live
         self.stop_event = stop_event
@@ -50,7 +50,7 @@ class WaterTankAlert(object):
                         if plant_diz['userId'] in userwithchatid:    
                             plantwithchatid.append((plant_diz['plantCode'],plant_diz['userId']))
                     for plant_u_tuple in plantwithchatid:
-                        tank_level_series=  json.loads(requests.get(f'{self.adaptor_url}/getData/{plant_u_tuple[1]}/{plant_u_tuple[0]}',params={"measurament":'tankLevel',"duration":1}).text)
+                        tank_level_series=  json.loads(requests.get(f'{self.needed_urls['adaptor']}/getData/{plant_u_tuple[1]}/{plant_u_tuple[0]}',params={"measurament":'tankLevel',"duration":1}).text)
                         if len(tank_level_series) > 0:
                             actual_tank_level = tank_level_series[-1]["v"]
                             curr_model = plant_u_tuple[0][:2]
@@ -94,6 +94,13 @@ class WaterTankAlert(object):
             except Exception as err:
                 print(f"Other error occurred: {err}")
         return None
+    
+    def get_needed_urls(self):
+        return self.needed_urls
+    
+    def set_needed_urls(self,new_urls):
+        self.needed_urls = new_urls
+        
 class Iamalive(object):
     #Object that takes care of sending periodics messages to the service registry 
     def __init__(self ,config_path,stop_event):
@@ -109,15 +116,25 @@ class Iamalive(object):
         self.message = {"bn": "updateCatalogService","e":[{ "n": f"{self.clientID}", "u": "", "t": time.time(), "v":"" }]} # Message that the registry is going to receive
         self.starting_time = time.time()      # this variable is gonna be updated to check and send the message
         self.interval = json_config["update_time"]
+        self.url_registry = json_config["url_registry"]
         print('i am alive initialized')
         self.start_mqtt()
         self.stop_event = stop_event
-        
+
+    def ask_for_urls(self,needed_urls):
+
+        while '' in needed_urls.values():
+
+            services = json.loads(requests.get(self.url_registry+'/services').text)
+            print(needed_urls)
+            for service in services:
+                if service['serviceID'] in needed_urls.keys():
+                    needed_urls[service['serviceID']] = service['route'] 
+
+        return needed_urls            
 
     def start_mqtt(self):
         print('>starting i am alive')
-        print(self.broker)
-        print(self.port)
         self.paho_mqtt.connect(self.broker,self.port)
         self.paho_mqtt.loop_start()
 
@@ -146,7 +163,7 @@ class ThreadManager:
     def __init__(self, watertankalert, iamalive):
         self.watertankalert = watertankalert
         self.iamalive = iamalive
-
+        self.watertankalert.set_needed_urls(self.iamalive.ask_for_urls(self.watertankalert.get_needed_urls()))
     def start_threads(self):
         threading.Thread(target=self.watertankalert.check_water_level).start()
         threading.Thread(target=self.iamalive.check_and_publish).start()

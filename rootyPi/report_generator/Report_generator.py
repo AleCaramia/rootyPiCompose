@@ -20,7 +20,6 @@ class Report_generator(object):
     def __init__(self,config_path,stop_event):
         config =  json.load(open(config_path,'r'))
         self.registry_url = config['url_registry']
-        self.url_adaptor = config['url_adaptor']
         self.headers = config['headers']
         self.ID = config['ID']
         self.broker = config['broker']
@@ -30,8 +29,15 @@ class Report_generator(object):
         self.target_hour = config['target_hour']
         self.target_minute = config['target_minute']
         self.time_zone_correction = config['time_zone_correction']
+        self.needed_urls = config['needed_urls']
         self.stop_event = stop_event
         self.start_web_server( )
+
+    def get_needed_urls(self):
+        return self.needed_urls
+    
+    def set_needed_urls(self,new_urls):
+        self.needed_urls = new_urls
 
     def start_web_server(self):
 
@@ -433,10 +439,10 @@ class Report_generator(object):
             instant (bool): If True, the report is returned immediately. If False, it is published via MQTT.
         """
         # Fetch DLI (Daily Light Integral) data for the specified duration
-        lux_sensor = json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}', params={"measurament": 'DLI', "duration": duration}).text)
+        lux_sensor = json.loads(requests.get(f'{self.needed_urls['adaptor']}/getData/{user}/{plant}', params={"measurament": 'DLI', "duration": duration}).text)
         
         # Fetch current light intensity data for the specified duration
-        lux_emitted = json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}', params={"measurament": 'current_intensity', "duration": duration}).text)
+        lux_emitted = json.loads(requests.get(f'{self.needed_urls['adaptor']}/getData/{user}/{plant}', params={"measurament": 'current_intensity', "duration": duration}).text)
         
         # Extract timestamps and values for emitted light
         lux_emitted_timestamps = [datapoint['t'] for datapoint in lux_emitted]
@@ -447,7 +453,7 @@ class Report_generator(object):
         lux_sunlight_values = [datapoint['v'] for datapoint in lux_sensor]
         
         # Fetch moisture data for the specified duration
-        moisture = json.loads(requests.get(f'{self.url_adaptor}/getData/{user}/{plant}', params={"measurament": 'moisture', "duration": duration}).text)
+        moisture = json.loads(requests.get(f'{self.needed_urls['adaptor']}/getData/{user}/{plant}', params={"measurament": 'moisture', "duration": duration}).text)
         
         # Extract timestamps and values for moisture
         moisture_timestamps = [datapoint['t'] for datapoint in moisture]
@@ -560,11 +566,24 @@ class Iamalive(object):
         self.pub_topic = json_config["alive_topic"]
         self.paho_mqtt = pahoMQTT.Client(self.clientID,True)
         self.paho_mqtt.on_connect = self.myconnect_live
-        self.message = {"bn": "updateCatalogService","e":[{ "n": f"{self.clientID}", "u": "", "t": time.time(), "v":"" }]} # Message that the registry is going to receive
+        self.message = {"bn": "updateCatalogService","e":[{ "n": f"{self.clientID}", "u": "IP", "t": time.time(), "v":json_config['myurl'] }]} # Message that the registry is going to receive
         self.starting_time = time.time()          # this variable is gonna be updated to check and send the message
         self.interval = json_config["update_time"]
+        self.url_registry = json_config["url_registry"]
         self.stop_event = stop_event
-        self.start_mqtt()        
+        self.start_mqtt()  
+
+    def ask_for_urls(self,needed_urls):
+
+        while '' in needed_urls.values():
+
+            services = json.loads(requests.get(self.url_registry+'/services').text)
+            print(needed_urls)
+            for service in services:
+                if service['serviceID'] in needed_urls.keys():
+                    needed_urls[service['serviceID']] = service['route'] 
+
+        return needed_urls     
 
     def start_mqtt(self):
         # Connects to broker and starts the mqtt
@@ -596,6 +615,7 @@ class ThreadManager:
     def __init__(self, reportgenerator, iamalive):
         self.reportgenerator = reportgenerator
         self.iamalive = iamalive
+        self.reportgenerator.set_needed_urls(self.iamalive.ask_for_urls(self.reportgenerator.get_needed_urls()))
 
     def start_threads(self):
         threading.Thread(target=self.reportgenerator.schedule_and_send_messages).start()
