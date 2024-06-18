@@ -612,9 +612,9 @@
         "height": 1
     },
     {
-        "id": "8296e3a27436a4f2",
+        "id": "15064130afb327b1",
         "type": "ui_spacer",
-        "z": "785f53d943d8482e",
+        "z": "420e20ab72977e1d",
         "name": "spacer",
         "group": "b6795e559d1e41a6",
         "order": 4,
@@ -622,9 +622,9 @@
         "height": 1
     },
     {
-        "id": "1e50427ef0d16676",
+        "id": "fb12e1bc5a1b47af",
         "type": "ui_spacer",
-        "z": "785f53d943d8482e",
+        "z": "420e20ab72977e1d",
         "name": "spacer",
         "group": "b6795e559d1e41a6",
         "order": 6,
@@ -632,22 +632,22 @@
         "height": 1
     },
     {
-        "id": "bea3431b9a775a2c",
+        "id": "4cb6585846f5c1f7",
         "type": "ui_spacer",
-        "z": "785f53d943d8482e",
+        "z": "420e20ab72977e1d",
         "name": "spacer",
         "group": "43a5a58f83248d8e",
-        "order": 10,
+        "order": 13,
         "width": 1,
         "height": 1
     },
     {
-        "id": "d960ac44e499bef6",
+        "id": "918d9b0d0903efe7",
         "type": "ui_spacer",
-        "z": "785f53d943d8482e",
+        "z": "420e20ab72977e1d",
         "name": "spacer",
         "group": "43a5a58f83248d8e",
-        "order": 12,
+        "order": 15,
         "width": 1,
         "height": 1
     },
@@ -2517,7 +2517,7 @@
         "y": 140,
         "wires": [
             [
-                "48b32af69ada68a2"
+                "5ef3ae51b23c9b5a"
             ]
         ]
     },
@@ -2530,36 +2530,11 @@
             "4ceec963bc87e85e",
             "d5129feb0f116564"
         ],
-        "x": 955,
+        "x": 875,
         "y": 80,
         "wires": [
-            []
-        ]
-    },
-    {
-        "id": "48b32af69ada68a2",
-        "type": "change",
-        "z": "785f53d943d8482e",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "choice",
-                "pt": "msg",
-                "to": "choice",
-                "tot": "global"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 900,
-        "y": 140,
-        "wires": [
             [
-                "c8eea8aa3cf00822"
+                "5ef3ae51b23c9b5a"
             ]
         ]
     },
@@ -2631,6 +2606,114 @@
         "x": 1750,
         "y": 360,
         "wires": []
+    },
+    {
+        "id": "b71d9070a0f6399f",
+        "type": "python3-function",
+        "z": "785f53d943d8482e",
+        "name": "Read users plants",
+        "func": "\nuser = msg.get('user')\nplants = msg.get(\"payload\", [])\n\n\nmsg['options'] = []\nmsg['plants'] = []\nmsg['noPlants']=0\n\nfor plant in plants:\n\n    if 'userId' in plant and 'plantId' in plant and 'plantCode' in plant:\n        # Extract the ID and CODE from the plant dictionary\n        ID = plant['plantId']\n        CODE = plant['plantCode']\n        \n        \n        if plant['userId'] == user:\n            msg['options'].append(ID)\n            msg['plants'].append(plant)\nif len(msg['plants'])==0:\n    msg['noPlants']=1\n\nreturn msg\n\n    \n",
+        "outputs": 1,
+        "x": 1530,
+        "y": 220,
+        "wires": [
+            [
+                "719c5010aa1cc4c5"
+            ]
+        ]
+    },
+    {
+        "id": "5ef3ae51b23c9b5a",
+        "type": "change",
+        "z": "785f53d943d8482e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "settings.settings.url_registry",
+                "tot": "global"
+            },
+            {
+                "t": "set",
+                "p": "choice",
+                "pt": "msg",
+                "to": "choice",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 940,
+        "y": 140,
+        "wires": [
+            [
+                "eac376bc5a94a23f"
+            ]
+        ]
+    },
+    {
+        "id": "eac376bc5a94a23f",
+        "type": "python3-function",
+        "z": "785f53d943d8482e",
+        "name": "req plants",
+        "func": "msg['url']=msg['url']+\"/plants\"\nreturn msg",
+        "outputs": 1,
+        "x": 1160,
+        "y": 140,
+        "wires": [
+            [
+                "611762fb62a1d588"
+            ]
+        ]
+    },
+    {
+        "id": "611762fb62a1d588",
+        "type": "http request",
+        "z": "785f53d943d8482e",
+        "name": "Req plants",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1170,
+        "y": 220,
+        "wires": [
+            [
+                "8963c19c879e3fd7"
+            ]
+        ]
+    },
+    {
+        "id": "8963c19c879e3fd7",
+        "type": "function",
+        "z": "785f53d943d8482e",
+        "name": "UserFetcher",
+        "func": "msg.user = global.get(\"user\");\n//msg.plants=global.get(\"plants\")\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1350,
+        "y": 220,
+        "wires": [
+            [
+                "b71d9070a0f6399f"
+            ]
+        ]
     },
     {
         "id": "205746116f4c2e47",
@@ -4388,7 +4471,7 @@
         "type": "ui_text",
         "z": "420e20ab72977e1d",
         "group": "43a5a58f83248d8e",
-        "order": 5,
+        "order": 8,
         "width": 3,
         "height": 1,
         "name": "curr mode start",
@@ -4409,7 +4492,7 @@
         "type": "ui_text",
         "z": "420e20ab72977e1d",
         "group": "43a5a58f83248d8e",
-        "order": 7,
+        "order": 10,
         "width": 3,
         "height": 1,
         "name": "curr mode end ",
@@ -4431,7 +4514,7 @@
         "z": "420e20ab72977e1d",
         "name": "submit mode change",
         "group": "43a5a58f83248d8e",
-        "order": 11,
+        "order": 14,
         "width": 4,
         "height": 1,
         "passthru": false,
@@ -4458,7 +4541,7 @@
         "type": "ui_text",
         "z": "420e20ab72977e1d",
         "group": "43a5a58f83248d8e",
-        "order": 3,
+        "order": 4,
         "width": 3,
         "height": 1,
         "name": "Current mode",
@@ -4986,11 +5069,11 @@
         "type": "ui_switch",
         "z": "420e20ab72977e1d",
         "name": "",
-        "label": "Mode:",
+        "label": "",
         "tooltip": "manual<=>auto",
         "group": "43a5a58f83248d8e",
-        "order": 4,
-        "width": 3,
+        "order": 6,
+        "width": 1,
         "height": 1,
         "passthru": false,
         "decouple": "false",
@@ -5023,7 +5106,7 @@
         "label": "Starting time:",
         "tooltip": "",
         "group": "43a5a58f83248d8e",
-        "order": 6,
+        "order": 9,
         "width": 3,
         "height": 1,
         "passthru": false,
@@ -5049,7 +5132,7 @@
         "label": "Ending time:",
         "tooltip": "",
         "group": "43a5a58f83248d8e",
-        "order": 8,
+        "order": 11,
         "width": 3,
         "height": 1,
         "passthru": false,
@@ -5125,7 +5208,7 @@
         "label": "Light intensity picker",
         "tooltip": "",
         "group": "43a5a58f83248d8e",
-        "order": 9,
+        "order": 12,
         "width": 0,
         "height": 0,
         "passthru": false,
@@ -5446,18 +5529,18 @@
         "type": "ui_text",
         "z": "420e20ab72977e1d",
         "group": "43a5a58f83248d8e",
-        "order": 2,
-        "width": 6,
+        "order": 3,
+        "width": 3,
         "height": 1,
         "name": "Text of mode",
         "label": "",
         "format": "Change lamp settings:",
         "layout": "col-center",
         "className": "",
-        "style": false,
+        "style": true,
         "font": "",
         "fontSize": 16,
-        "color": "#000000",
+        "color": "#00ff2a",
         "x": 750,
         "y": 940,
         "wires": []
@@ -5512,6 +5595,69 @@
         "wires": [
             []
         ]
+    },
+    {
+        "id": "3c937eade10b213f",
+        "type": "ui_text",
+        "z": "420e20ab72977e1d",
+        "group": "43a5a58f83248d8e",
+        "order": 2,
+        "width": 3,
+        "height": 1,
+        "name": "user current settings",
+        "label": "",
+        "format": "Current settings:",
+        "layout": "col-center",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#030303",
+        "x": 770,
+        "y": 1176,
+        "wires": []
+    },
+    {
+        "id": "64405ecb62f47883",
+        "type": "ui_text",
+        "z": "420e20ab72977e1d",
+        "group": "43a5a58f83248d8e",
+        "order": 5,
+        "width": 1,
+        "height": 1,
+        "name": "User awareness manual",
+        "label": "",
+        "format": "M",
+        "layout": "col-center",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#045ff1",
+        "x": 770,
+        "y": 1260,
+        "wires": []
+    },
+    {
+        "id": "5da32f8049b46198",
+        "type": "ui_text",
+        "z": "420e20ab72977e1d",
+        "group": "43a5a58f83248d8e",
+        "order": 7,
+        "width": 1,
+        "height": 1,
+        "name": "User awareness auto",
+        "label": "",
+        "format": "A",
+        "layout": "col-center",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#f10404",
+        "x": 760,
+        "y": 1300,
+        "wires": []
     },
     {
         "id": "e9be20f99306515c",

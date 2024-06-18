@@ -21,7 +21,7 @@ class EnvMonitoring(object):
         self.alive_topic=f"{self.base_topic}/{self.clientID}_alive" #RootyPy/Env_monitoring_alive
         ###
         self.url_registry=settings['url_registry']
-        self.url_adaptor=settings['url_adaptor']
+        # self.url_adaptor=settings['url_adaptor']
         #####
         #Variables to activate simulation
         self.simMode=settings['simMode'] 
