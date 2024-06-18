@@ -7,11 +7,27 @@ from queue import Queue
 import datetime
 import json
 import requests
+from requests.exceptions import HTTPError
 
 P = Path(__file__).parent.absolute()
 SETTINGS = P / 'settings.json'
 
+def get_request(url):
+    """Make a request to the url specified with retries"""
+    for i in range(15):
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                return json.loads(response.text)
+            except HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
+            except Exception as err:
+                print(f"Other error occurred: {err}")
+            time.sleep(1)
+    return []
+
 class MoistureSens:
+    """Simulation class for moisture sensor"""
     def __init__(self, sensorId, decreaseCoef, currentState, baseTopic, plantCode):
         self.sensorId = sensorId
         self.decayCoef = decreaseCoef
@@ -110,18 +126,16 @@ class MySubscriber:
         self.q.put(msg)
         print ("Topic:'" + msg.topic+"', QoS: '"+str(msg.qos)+"' Message: '"+str(msg.payload) + "'")
 
-#toDelete
-def getRandomMoisture(min_value=0, max_value=100):
-    return random.uniform(min_value, max_value)
 def update_sensors(sensors):
+    """Update the sensors list in case of changes to the catalog"""
     try:
         with open(SETTINGS, "r") as fs:                
             settings = json.loads(fs.read())            
     except Exception:
         print("Problem in loading settings")
-    url = settings["registry_url"] + "/plants"
-    response = requests.get(url)
-    plants = json.loads(response.text)
+    test = settings["test"]
+    plants = get_request(settings["registry_url"] + "/plants")
+    plantTypes = get_request(settings["registry_url"] + "/valid_plant_types")
     for plant in plants:
         sensId = plant["plantCode"]
         sensId
@@ -130,13 +144,19 @@ def update_sensors(sensors):
             if sens.sensorId == sensId:
                 found = 1
         if found == 0:
+            decayCoeff = 0
+            for types in plantTypes:
+                if types["type"] == plant["type"]:
+                    decayCoeff = types["moistureDecay"]
+            if test == 1:
+                """For test we multiply the decayCoefficent, non realistical"""
+                decayCoeff *= 1200
             baseTopic = "RootyPy/" + plant["userId"] + "/" + plant["plantCode"]
-            sens = MoistureSens(sensId, 1, 100, baseTopic, plant["plantCode"])
+            sens = MoistureSens(sensId, decayCoeff, 100, baseTopic, plant["plantCode"])
             sensors.append(sens)
     for sens in sensors:
         found = 0
         for plant in plants:
-            
             sensId = plant["plantCode"]
             if sens.sensorId == sensId:
                 found = 1
@@ -158,7 +178,6 @@ class AllPubs(threading.Thread):
         """Run thread."""
         while True:
             update_sensors(self.sensors)
-            print(len(self.sensors))
             for sens in self.sensors:
                 waterQuantity = 0
                 if not sens.mySub.q.empty():
@@ -180,10 +199,9 @@ class AllPubs(threading.Thread):
                 sens.currentState -= sens.decayCoef
                 if sens.currentState<0:
                     sens.currentState=0
-                time.sleep(2)
             time.sleep(10)
 
 if __name__ == '__main__':
 
-    thredPub = AllPubs(2, "AllPubs")
+    thredPub = AllPubs(1, "AllPubs")
     thredPub.start()
