@@ -7,7 +7,7 @@
     "headers":{
         "content-type":"application/json; charset=UTF-8"
      },
-    "tank_interval":60,
+    "tank_interval":300,
     "pub_topic":"RootyPy/WaterTankAlert",
     "update_time":15,
     "number_of_requests": 15,

@@ -104,7 +104,7 @@ class Adaptor(object):
                             bucket = uri[1]
                             #query = f'from(bucket:"{bucket}") |> range(start: -1h) |> filter(fn:(r) => r["_measurement"] == "plant1"))'#test query    
                             query = f'from(bucket: "{bucket}") \
-                                |> range(start: -{duration}h) \
+                                |> range(start: -{duration}m) \
                                     |> filter(fn: (r) => r["_measurement"] == "{uri[2]}") \
                                         |> filter(fn: (r) => r["_field"] == "{params["measurament"]}")'
                             tables = self.client.query_api().query(org=self.org, query=query)

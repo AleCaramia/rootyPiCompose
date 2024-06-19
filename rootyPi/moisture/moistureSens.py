@@ -150,7 +150,7 @@ def update_sensors(sensors):
                     decayCoeff = types["moistureDecay"]
             if test == 1:
                 """For test we multiply the decayCoefficent, non realistical"""
-                decayCoeff *= 1200
+                decayCoeff *= 600
             baseTopic = "RootyPy/" + plant["userId"] + "/" + plant["plantCode"]
             sens = MoistureSens(sensId, decayCoeff, 100, baseTopic, plant["plantCode"])
             sensors.append(sens)
