@@ -37,26 +37,31 @@ class GreenHouseBot:
         self.paho_mqtt.connect(self.broker, self.port)
         self.paho_mqtt.loop_start()
 
+        user_checker = Active_user_checker(self.user_check_interval)                                              # keeps track of the users on a timer
+        bot_subscriber = Subscriber_telegram_bot(self.ClientID+'_subscriber',self.port,self.broker,self,json_config_bot['sub_topics'])          # Mqtt subscriber that receives messages and gives the to the bot
+        self.registry_interface = Registry_interface(self.registry_url,self.num_rest_attempts,self)
+        iamalive = Iamalive(self.iamalive_topic,self.update_time,self.ClientID,self.port,self.broker,self.registry_interface)             #makes the microservice visible to the user
+        self.set_needed_urls(iamalive.ask_for_urls(self.needed_urls))
+        print(self.needed_urls)
+        self.adaptor_interface = Adaptor_interface(self.needed_urls['adaptor'],self.num_rest_attempts)
+        self.report_generator_interface = Report_manager(self.needed_urls['Report_generator'],self,self.num_rest_attempts)
+        self.irrigation_manager = Irrigation_manager(self)
+        self.led_manager = Led_manager(self)
+        self.repeated_function_interval = json_config_bot['repeated_function_interval']      # Frequency at which functions in a loop are executed
+
         #Dictionaries with the function to perform after a certain specification which will be written in query_list[1]
         diz_plant = {'inventory':self.choose_plant,'add':self.add_planttoken,'back':self.manage_plant,'create':self.choose_plant_type,'change':self.change_plant_name,'choose':self.remove_old_name_add_new}  #managing plants
-        diz_actions = { 'water':self.water_plant, 'ledlight':self.led_management,'reportmenu':self.set_frequency_or_generate}   #actions to take care of the plant
-        diz_led = {'setpercentage':self.set_led_percentage,'setmanualmodduration':self.set_led_manual_mode_duration,'switch':self.led_switch,'off':self.instant_switch_off,'change':self.led_change}      # control the led light
+        diz_actions = { 'water':self.irrigation_manager.water_plant, 'ledlight':self.led_manager.led_management,'reportmenu':self.report_generator_interface.set_frequency_or_generate}   #actions to take care of the plant
+        diz_led = {'setpercentage':self.led_manager.set_led_percentage,'setmanualmodduration':self.led_manager.set_led_manual_mode_duration,'switch':self.led_manager.led_switch,'off':self.led_manager.instant_switch_off,'change':self.led_manager.led_change}      # control the led light
         diz_newuser = {'confirmname':self.add_passwd,'newname':self.add_user,'confirmpwd':self.confirm_pwd,'confirmtoken':self.add_plant,'newpsw':self.add_passwd,'newtkn':self.add_planttoken,'newplantname':self.add_plant,'sign_up':self.add_user,'transferaccount':self.transfer_usern,'back':self. new_user_management}
         diz_removeplant = {'choose':self.remove_plant,'plantname':self.confirmed_remove_plant}
-        diz_report = {'generate':self.generate_instant_report,'settings':self.set_report_frequency}
+        diz_report = {'generate':self.report_generator_interface.generate_instant_report,'settings':self.report_generator_interface.set_report_frequency}
         self.diz = { 'actions':diz_actions , 'led':diz_led,'plant':diz_plant,'removeplant':diz_removeplant,'newuser':diz_newuser,'report':diz_report}     #dictionary with dictionaries
 
 
         MessageLoop(self.bot, {'chat': self.on_chat_message,'callback_query': self.on_callback_query}).run_as_thread()    #manages incoming telegram messages and callbacks
 
-        user_checker = Active_user_checker(self.user_check_interval)                                              # keeps track of the users on a timer
-        bot_subscriber = Subscriber_telegram_bot(self.ClientID+'_subscriber',self.port,self.broker,self,json_config_bot['sub_topics'])          # Mqtt subscriber that receives messages and gives the to the bot
-        self.registry_interface = Registry_interface(self.registry_url,self.num_rest_attempts)
-        iamalive = Iamalive(self.iamalive_topic,self.update_time,self.ClientID,self.port,self.broker,self.registry_interface)             #makes the microservice visible to the user
-        iamalive.ask_for_urls(self)
-        print(self.needed_urls)
-        self.adaptor_interface = Adaptor_interface(self.needed_urls['adaptor'],self.num_rest_attempts)
-        self.repeated_function_interval = json_config_bot['repeated_function_interval']      # Frequency at which functions in a loop are executed
+
         while True:
             time.sleep(self.repeated_function_interval)
             iamalive.check_and_publish()                                                      #if enough seconds have passed sends message
@@ -80,7 +85,7 @@ class GreenHouseBot:
         self.bot.deleteMessage(msg_id)                                           #Deletes user's text
         if message == "/start":                                                  #starts the bot
             self.start_user_status(chat_ID)                                      # Create a voice at  key chat_id in uservariables
-            if self.is_new_user(chat_ID):
+            if self.registry_interface.is_new_user(chat_ID):
                 print('new user detected')
                 self.new_user_management(chat_ID)                                # Menu for new users
             else:
@@ -91,28 +96,28 @@ class GreenHouseBot:
             self.paho_mqtt.publish("RootyPy/" + userid + "/" + plantcode +"/waterPump/refill",json.dumps({"bn": "refillTank", "e": []}))
 
 
-        elif  'listeningfortime' in self.uservariables[chat_ID]['chatstatus']:                     #Messages from users used in the functions
-            self.confirm_manual_mode_duration(message,chat_ID)
-        elif "listeningforobswindow" in self.uservariables[chat_ID]['chatstatus'] :
-            self.set_light_time(message,chat_ID,self.uservariables[chat_ID]['chatstatus'].split('&')[1],self.uservariables[chat_ID]['chatstatus'].split('&')[2])
-        elif 'listeningforledpercentage' in self.uservariables[chat_ID]['chatstatus'] :
-            self.check_light_percentage(message,chat_ID)
-        elif self.uservariables[chat_ID]['chatstatus'].split('&')[0] == 'listeningforplantname':
-            self.eval_plant_name(chat_ID,message,self.uservariables[chat_ID]['chatstatus'].split('&')[1],self.uservariables[chat_ID]['chatstatus'].split('&')[2])
-        elif self.uservariables[chat_ID]['chatstatus'] == 'listeningforuser':
+        elif  'listeningfortime' in self.get_uservariables_chatstatus(chat_ID):                     #Messages from users used in the functions
+            self.led_manager.confirm_manual_mode_duration(message,chat_ID)
+        elif "listeningforobswindow" in self.get_uservariables_chatstatus(chat_ID) :
+            self.led_manager.set_light_time(message,chat_ID,self.get_uservariables_chatstatus(chat_ID).split('&')[1],self.get_uservariables_chatstatus(chat_ID).split('&')[2])
+        elif 'listeningforledpercentage' in self.get_uservariables_chatstatus(chat_ID) :
+            self.led_manager.check_light_percentage(message,chat_ID)
+        elif self.get_uservariables_chatstatus(chat_ID).split('&')[0] == 'listeningforplantname':
+            self.eval_plant_name(chat_ID,message,self.get_uservariables_chatstatus(chat_ID).split('&')[1],self.get_uservariables_chatstatus(chat_ID).split('&')[2])
+        elif self.get_uservariables_chatstatus(chat_ID) == 'listeningforuser':
             self.eval_username(chat_ID,message)
-        elif self.uservariables[chat_ID]['chatstatus'].split('&')[0]== 'listeningforpwd':
-            self.eval_pwd(chat_ID,self.uservariables[chat_ID]['chatstatus'].split('&')[1],message)
-        elif 'listeningforwaterpercentage' in  self.uservariables[chat_ID]['chatstatus']:
-            self.eval_water_percentage(chat_ID,message)
-        elif self.uservariables[chat_ID]['chatstatus'] == 'listeningfortoken':
+        elif self.get_uservariables_chatstatus(chat_ID).split('&')[0]== 'listeningforpwd':
+            self.eval_pwd(chat_ID,self.get_uservariables_chatstatus(chat_ID).split('&')[1],message)
+        elif 'listeningforwaterpercentage' in  self.get_uservariables_chatstatus(chat_ID):
+            self.irrigation_manager.eval_water_percentage(chat_ID,message)
+        elif self.get_uservariables_chatstatus(chat_ID) == 'listeningfortoken':
             self.eval_token(chat_ID,message)
-        elif self.uservariables[chat_ID]['chatstatus'] == 'listeningfortransfername':
+        elif self.get_uservariables_chatstatus(chat_ID) == 'listeningfortransfername':
             self.transfer_password(chat_ID,msg['text'])
-        elif 'listeningfortransferpwd' == self.uservariables[chat_ID]['chatstatus'].split('&')[0]:            
-            if self.confirm_transfer(chat_ID, self.uservariables[chat_ID]['chatstatus'].split('&')[1],msg['text']):
+        elif 'listeningfortransferpwd' == self.get_uservariables_chatstatus(chat_ID).split('&')[0]:            
+            if self.confirm_transfer(chat_ID, self.get_uservariables_chatstatus(chat_ID).split('&')[1],msg['text']):
                 msg_id = self.bot.sendMessage(chat_ID, text='Account migrated correctly')['message_id']
-                self.uservariables[chat_ID]['chatstatus'] = 'start'
+                self.set_uservariables_chatstatus(chat_ID,'start')
                 self.remove_previous_messages(chat_ID)
                 self.update_message_to_remove(msg_id,chat_ID)
                 self.choose_plant(chat_ID)
@@ -128,7 +133,7 @@ class GreenHouseBot:
         query_ID , chat_ID , query_data = telepot.glance(msg,flavor='callback_query')           # who sent the message and whats in the query
         if chat_ID in self.uservariables.keys():
             self.restarting_user_timer(chat_ID,self.countdown)     
-            self.uservariables[chat_ID]['chatstatus'] = 'start'
+            self.set_uservariables_chatstatus(chat_ID,'start')
             query_list = query_data.split('&')                             # splits the query from the callback_data, function_to_call is extracted from the dictionaries
             if query_list[0] == 'plant':
                 if query_list[1] not in self.diz['plant'].keys():
@@ -162,9 +167,9 @@ class GreenHouseBot:
                 function_to_call = self.diz['report'][query_list[1]]
                 function_to_call(chat_ID,query_list[2])
             elif query_list[0] == 'f_settings':
-                self.set_new_report_frequency(chat_ID,query_list[1],query_list[2])
+                self.registry_interface.set_new_report_frequency(chat_ID,query_list[1],query_list[2])
             elif query_list[0] == 'time':
-                self.change_time(chat_ID,query_list[1],query_list[2])
+                self.led_manager.change_time(chat_ID,query_list[1],query_list[2])
             elif query_list[0] == 'inventory':
                 self.choose_plant(chat_ID)
             elif query_list[0]== 'changeplantname':
@@ -185,6 +190,14 @@ class GreenHouseBot:
             self.update_message_to_remove(msg_id,chat_ID)
 
 
+    def set_needed_urls(self,needed_urls):
+        self.needed_urls = needed_urls
+
+    def set_uservariables_chatstatus(self,chatID,new_status):
+        self.uservariables[chatID]['chatstatus'] = new_status
+
+    def get_uservariables_chatstatus(self,chatID):
+        return self.uservariables[chatID]['chatstatus']
    #----------------------------------------------------- Managing user connected -------------------------------------------------
 
 
@@ -193,7 +206,7 @@ class GreenHouseBot:
     def start_user_status(self, chat_ID):
         if chat_ID not in self.uservariables.keys():
             self.uservariables[chat_ID] = {}  # Initialize a new entry for the user
-            self.uservariables[chat_ID]['chatstatus'] = 'start'  # Set the chatstatus for the user to 'start'
+            self.set_uservariables_chatstatus(chat_ID,'start') # Set the chatstatus for the user to 'start'
             self.uservariables[chat_ID]['timer'] = self.countdown # Starts the "activity" countdown   
             print(f'{chat_ID} connected ')
 
@@ -240,22 +253,22 @@ class GreenHouseBot:
         tank_level =  json.loads(self.adaptor_interface.get_data(userid,plantcode,'tankLevel',1).text)
         # Managing the initialitation of the kit
         if len(lux_sensor) > 0:
-            actual_lux = lux_sensor[-1]['v']
+            actual_lux = round(lux_sensor[-1]['v'],2)
             str_lux = f'light received: {actual_lux} lux'
         else:
             str_lux = 'no sensor data for light sensor'
         if len(lamp_emission) > 0:
-            actual_emission = lamp_emission[-1]['v']
+            actual_emission = round(lamp_emission[-1]['v'],2)
             str_lamp = f'current lamp intensity: {actual_emission} %'
         else:
             str_lamp = f'no data on lamp intensity'
         if len(moisture) > 0:
-            actual_moisture = moisture[-1]['v']
+            actual_moisture = round(moisture[-1]['v'],2)
             str_moisture = f'actual moisture: {actual_moisture} '
         else:
             str_moisture = f'no sensor data on moisture'
         if len(tank_level) > 0:
-            actual_tank_level = tank_level[-1]['v']
+            actual_tank_level = round(tank_level[-1]['v'],2)
             str_tank = f'actual tank level {actual_tank_level}'
         else:
             str_tank = 'no sensor data on tank level'
@@ -270,22 +283,7 @@ class GreenHouseBot:
         self.update_message_to_remove(msg_id,chat_ID)
 
  # ----------------------------------------------------- sign up ------------------------------------------------
-    def is_new_user(self,chat_ID):                   # Checks if the messaging chatID is between the registered chatID
-        flag_user_present = 0       
-        r = self.get_response(self.registry_url+'/users')
-        print(json.loads(r.text))
-
-        output = json.loads(r.text)
-        
-        for diz in output:
-            if diz['chatID'] == None:
-                pass
-            elif int(diz['chatID']) == chat_ID:
-                flag_user_present=1
-        if flag_user_present == 1:
-            return False
-        else:
-            return True    
+  
 
     def new_user_management(self,chat_ID):       
         #Makes the user choose between sign up and transfer an already existing account from nodered
@@ -307,7 +305,7 @@ class GreenHouseBot:
 
     def add_user(self,chat_ID):
         #Give the user the possiblity to write his username
-        self.uservariables[chat_ID]['chatstatus'] = 'listeningforuser'
+        self.set_uservariables_chatstatus(chat_ID,'listeningforuser')
         buttons = [[InlineKeyboardButton(text=f'🔙', callback_data='newuser&back')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         msg_id = self.bot.sendMessage(chat_ID, text='Choose a username',reply_markup=keyboard)['message_id']
@@ -327,7 +325,7 @@ class GreenHouseBot:
             msg_id = self.bot.sendMessage(chat_ID,text =f'{message} it\'s a valid name \nwould you like to confirm?',reply_markup=keyboard)['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
-            self.uservariables[chat_ID]['chatstatus'] = 'start'  
+            self.set_uservariables_chatstatus(chat_ID,'start')
  
 
 
@@ -338,7 +336,7 @@ class GreenHouseBot:
         msg_id = self.bot.sendMessage(chat_ID, text='Choose a password',reply_markup=keyboard)['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
-        self.uservariables[chat_ID]['chatstatus'] = f'listeningforpwd&{username}'
+        self.set_uservariables_chatstatus(chat_ID,f'listeningforpwd&{username}')
         print(f'waiting for password from {chat_ID}')
 
     def eval_pwd(self,chat_ID,userid,message): 
@@ -353,7 +351,7 @@ class GreenHouseBot:
             msg_id = self.bot.sendMessage(chat_ID,text =f'{message} it\'s a valid password \nwould you like to confirm?',reply_markup=keyboard)['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
-            self.uservariables[chat_ID]['chatstatus'] = 'start'  
+            self.set_uservariables_chatstatus(chat_ID,'start')
 
 
     def confirm_pwd(self,chat_ID,userid,pwd):
@@ -414,67 +412,6 @@ class GreenHouseBot:
         return None
 
 
-# ------------------------------------------------- Report -------------------------------------------------------
-
-    def generate_instant_report(self,chat_ID,plantcode):
-        # Get request for a report
-        print(f'{chat_ID} is asking for a report')
-
-        r = self.get_response(self.needed_urls['Report_generator']+f'/getreport/{plantcode}')
-        output = json.loads(r.text)
-            # Extract the base64-encoded image and decode it
-        image_base64 = output['image']
-        image_data = base64.b64decode(image_base64)
-        
-        # Extract the message
-        message = output['message']
-
-        # Load the image into a BytesIO stream
-        image = Image.open(BytesIO(image_data))
-        bio = BytesIO()
-        image.save(bio, format='PNG')
-        bio.seek(0)
-
-            # Send the image using the bot
-        msg_id = self.bot.sendPhoto(chat_ID, bio, caption=message)
-        self.update_message_to_remove(msg_id,chat_ID)
-        self.choose_plant(chat_ID)
-
-    def set_report_frequency(self,chat_ID,plantcode):
-        #Changes the report frequency for a plant
-        userid = self.register_user.get_username_for_chat_ID(chat_ID)
-        r = self.get_response(self.registry_url+f'/plants')
-        output = json.loads(r.text)
-        for plant in output:
-            if plant['userId'] == userid:
-                oldsetting = plant['report_frequency']
-                plantid = plant['plantId']
-        self.remove_previous_messages(chat_ID)
-
-        msg_id = self.bot.sendMessage(chat_ID,text = f'actual report frequency for {plantid} is {oldsetting}')['message_id']
-
-        self.update_message_to_remove(msg_id,chat_ID)
-        buttons = [[InlineKeyboardButton(text=f'daily', callback_data=f'f_settings&daily&{plantcode}'), InlineKeyboardButton(text=f'weekly', callback_data=f'f_settings&weekly&{plantcode}'), InlineKeyboardButton(text='biweekly', callback_data=f'f_settings&biweekly&{plantcode}'),InlineKeyboardButton(text=f'monthly', callback_data=f'f_settings&monthly&{plantcode}')]]
-        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-        msg_id = self.bot.sendMessage(chat_ID, text=f'when do you want to receive a report for {plantcode}', reply_markup=keyboard)['message_id']
-        self.update_message_to_remove(msg_id,chat_ID)
-
-
-    def set_new_report_frequency(self,chat_ID,newfrequency,plantcode):
-        # Updates the catalog with the new frequency
-        body = {'plantCode':plantcode,'report_frequency':newfrequency}
-        r = self.put_response(self.registry_url+'/setreportfrequency',body)
-        flag_keep_mex = self.manage_invalid_request(chat_ID,json.loads(r.text))
-        self.choose_plant(chat_ID,flag_keep_mex)
-
-
-    def set_frequency_or_generate(self,chat_ID,plantcode):
-        # Makes the user choose to generate areport or change settings
-        buttons = [[ InlineKeyboardButton(text=f'generate report', callback_data=f'report&generate&{plantcode}'), InlineKeyboardButton(text=f'settings', callback_data=f'report&settings&{plantcode}'), InlineKeyboardButton(text=f'🔙', callback_data=f'plant&back&{plantcode}')]]
-        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-        msg_id = self.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
-        self.update_message_to_remove(msg_id,chat_ID)      
-
 #------------------------------------------------- Adding a plant ----------------------------------------------#        
 
     def add_plant(self,chat_ID,token):  
@@ -482,7 +419,7 @@ class GreenHouseBot:
         msg_id = self.bot.sendMessage(chat_ID, text='Send new plant name in the chat')['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
-        self.uservariables[chat_ID]['chatstatus'] = f'listeningforplantname&create&{token}'
+        self.set_uservariables_chatstatus(chat_ID,f'listeningforplantname&create&{token}')
 
     def eval_plant_name(self,chat_ID,mex,mode,plant = ''):            
         #Checks if the name is already used or other exceptions and makes you confirm
@@ -506,7 +443,7 @@ class GreenHouseBot:
             msg_id = self.bot.sendMessage(chat_ID,text =f'{mex} it\'s a valid name \nwould you like to confirm?',reply_markup=keyboard)['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
-            self.uservariables[chat_ID]['chatstatus'] = 'start'
+            self.set_uservariables_chatstatus(chat_ID,'start')
     
     def create_plant(self,chat_ID,plantname,plant_type,plantcode):        
          # Writes the name to the catalog
@@ -543,15 +480,14 @@ class GreenHouseBot:
             msg_id = self.bot.sendMessage(chat_ID,text =f'{message} it\'s your token \nwould you like to confirm?',reply_markup=keyboard)['message_id']
             self.remove_previous_messages(chat_ID)
             self.update_message_to_remove(msg_id,chat_ID)
-            self.uservariables[chat_ID]['chatstatus'] = 'start'     
-
+            self.set_uservariables_chatstatus(chat_ID,'start')
 
     def add_planttoken(self,chat_ID):
         # Starts listening for the user to write its plant code
         msg_id = self.bot.sendMessage(chat_ID, text='Insert the token of your pot, it\'s written on the bottom of the pot, it starts with two letters followed by three of numbers')['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
-        self.uservariables[chat_ID]['chatstatus'] = 'listeningfortoken'
+        self.set_uservariables_chatstatus(chat_ID,'listeningfortoken')
         print(f'waiting for  pot token from {chat_ID}')
 
 
@@ -562,7 +498,7 @@ class GreenHouseBot:
         msg_id = self.bot.sendMessage(chat_ID, text='insert you username')['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
-        self.uservariables[chat_ID]['chatstatus'] = 'listeningfortransfername'
+        self.set_uservariables_chatstatus(chat_ID,'listeningfortransfername')
         print(f'waiting for username to transfer account for {chat_ID}')
 
     def transfer_password(self,chat_ID,userid):
@@ -570,16 +506,14 @@ class GreenHouseBot:
         msg_id = self.bot.sendMessage(chat_ID, text='insert your password')['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
-        self.uservariables[chat_ID]['chatstatus'] = f'listeningfortransferpwd&{userid}'
+        self.set_uservariables_chatstatus(chat_ID,f'listeningfortransferpwd&{userid}')
         print(f'waiting for username to transfer account for {chat_ID}')
 
     def confirm_transfer(self,chat_ID,username,pwd):
         # Asks the server to confirm if such username and password have a correspondance
-        r = self.get_response(self.registry_url+'/users')
-        print(f'GET request sent at {self.registry_url}/users')
         f = False
-        output = json.loads(r.text)
-        for user in output:
+        users = self.registry_interface.get_users()
+        for user in users:
             if user['userId'] == username and user['password'] == pwd:
                 f = True
                 body = {"userId":username, 'chatID':chat_ID}
@@ -589,62 +523,6 @@ class GreenHouseBot:
                     self.update_message_to_remove(msg_id,chat_ID)
         return f
 
-
-#--------------------------------------------------------- Plant watering --------------------------------------------------------------
-
-    def water_plant(self, chat_ID,plantcode):                 
-        # Activates the watering of the plant
-        msg_id = self.bot.sendMessage(chat_ID, text="You chose to water the plant\nsend a percentange of the tank between 0 and 10")['message_id']
-        self.uservariables[chat_ID]['chatstatus'] = f'listeningforwaterpercentage&{plantcode}'
-        self.remove_previous_messages(chat_ID)
-        self.update_message_to_remove(msg_id,chat_ID)
-
-    def eval_water_percentage(self,chat_ID,message):
-        # Checks if the amount of water written is between 0 and 10
-        message = message.strip()
-        try:
-            perc_value = float(message)
-            if perc_value <= 10 and perc_value > 0:
-                plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
-                r =self.get_response(self.registry_url+'/models')
-                models = json.loads(r.text)
-                for model in models:
-                    if model["model_code"] == plantcode[0:2]:
-                        tank_max = model["tank_capacity"]
-
-                water_volume = tank_max*perc_value/100
-                self.uservariables[chat_ID]['chatstatus'] = 'start'
-                msg_id = self.bot.sendMessage(chat_ID,f'{perc_value} is a valid value')['message_id']
-                self.remove_previous_messages(chat_ID)
-                self.update_message_to_remove(msg_id,chat_ID)
-                userid = self.registry_interface.get_username_for_chat_ID(chat_ID)
-                payload =  {"bn": f'{'Pump'}',"e":[{ "n": f"{self.ClientID}", "u": "l", "t": time.time(), "v":water_volume }]}
-                self.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/water_to_give/manual',json.dumps(payload),2)
-                self.manage_plant(chat_ID,plantcode)
-            elif perc_value == 100:           #DA TOGLIERE ASSOLUTAMENTE BACKDOOR PER SVUOTARE TANICA
-                plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
-                r =self.get_response(self.registry_url+'/models')
-                models = json.loads(r.text)
-                for model in models:
-                    if model["model_code"] == plantcode[0:2]:
-                        tank_max = model["tank_capacity"]
-
-                water_volume = tank_max*perc_value/100
-                self.uservariables[chat_ID]['chatstatus'] = 'start'
-                msg_id = self.bot.sendMessage(chat_ID,f'{perc_value} is a valid value')['message_id']
-                self.remove_previous_messages(chat_ID)
-                self.update_message_to_remove(msg_id,chat_ID)
-                userid = self.registry_interface.get_username_for_chat_ID(chat_ID)
-                payload =  {"bn": f'{'Pump'}',"e":[{ "n": f"{self.ClientID}", "u": "l", "t": time.time(), "v":water_volume }]}
-                self.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/water_to_give/manual',json.dumps(payload),2)
-                self.manage_plant(chat_ID,plantcode)                
-            else:
-                msg_id = self.bot.sendMessage(chat_ID,f'{perc_value} is a invalid value, senda a value between 0 and 10')['message_id']
-                self.update_message_to_remove(msg_id,chat_ID)
-        except:
-            msg_id = self.bot.sendMessage(chat_ID,f'{message} is an invalid value,try again')['message_id']
-            self.update_message_to_remove(msg_id,chat_ID)
-        
 
 #--------------------------------------- Plant Removal ------------------------------------------------------------------------------------
 
@@ -707,7 +585,7 @@ class GreenHouseBot:
         msg_id = self.bot.sendMessage(chat_ID, text='Send plant name in the chat')['message_id']
         self.remove_previous_messages(chat_ID)
         self.update_message_to_remove(msg_id,chat_ID)
-        self.uservariables[chat_ID]['chatstatus'] =f'listeningforplantname&choose&{plantname}'
+        self.set_uservariables_chatstatus(chat_ID,f'listeningforplantname&choose&{plantname}')
 
     def remove_old_name_add_new(self,chat_ID,newname,oldname):
         # Makes a put request to change the name of the plant in the catalog
@@ -753,234 +631,6 @@ class GreenHouseBot:
             self.uservariables[chat_ID]['messages_to_remove'] = []
 
   
-
-#----------------------------------------------------- Lamp management ---------------------------------------------------------------- 
-
-    def led_management(self, chat_ID,plantcode):              # Gives you the possiblity to change light schedule of auto and manual mode and to switch off
-        msg_id = self.bot.sendMessage(chat_ID, text="You chose to manage the LED")['message_id']
-        self.remove_previous_messages(chat_ID)
-        self.update_message_to_remove(msg_id,chat_ID)
-        buttons = [[ InlineKeyboardButton(text=f'switch off 🔌', callback_data=f'led&off&{plantcode}'), InlineKeyboardButton(text=f'led manual 💡', callback_data=f'led&setpercentage&{plantcode}'),InlineKeyboardButton(text=f'change automatic mode', callback_data=f'led&change&{plantcode}'),InlineKeyboardButton(text=f'🔙', callback_data=f'plant&back&{plantcode}')]]
-        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-        msg_id = self.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
-        self.update_message_to_remove(msg_id,chat_ID)
-
-    def set_led_percentage(self,chat_ID,plantcode):
-        # Asks the user for led percentage
-        self.uservariables[chat_ID]['chatstatus'] = f'listeningforledpercentage&{plantcode}'
-        print(f'started listening for light percentage from {chat_ID}')
-        msg_id = self.bot.sendMessage(chat_ID, text='Insert desired percentage of light as an integer number ')['message_id']
-        self.remove_previous_messages(chat_ID)
-        self.update_message_to_remove(msg_id,chat_ID)
-
-    def check_light_percentage(self, msg, chat_ID):
-        # Checks if the percentage give n by the user respects certain constraints
-        clean_mex = msg.strip()
-        
-        try:
-            # Attempt to convert the cleaned message to a float
-            percentage = float(clean_mex)
-            
-            # Check if the percentage is within the valid range
-            if 0 <= percentage <= 100:
-                plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
-                self.uservariables[chat_ID]['chatstatus'] = 'start'
-                self.set_led_manual_mode_duration(chat_ID,plantcode,percentage)
-            else:
-                msg_id = self.bot.sendMessage(chat_ID, text='Percentage must be between 0 and 100')['message_id']
-                self.remove_previous_messages(chat_ID)
-                self.update_message_to_remove(msg_id,chat_ID)
-        except ValueError:
-            # If conversion to float fails, send an error message
-            msg_id = self.bot.sendMessage(chat_ID, text='Invalid percentage format')['message_id']
-            self.remove_previous_messages(chat_ID)
-            self.update_message_to_remove(msg_id,chat_ID)
-
-
-
-    def set_led_manual_mode_duration(self,chat_ID,plantcode,percentage):
-        #  Asks the user when he'd like to switch off the light once he sets the percentage of the activation
-        self.uservariables[chat_ID]['chatstatus'] = f'listeningfortime&{plantcode}&{percentage}'
-        print(f'started listening for time for {plantcode}')
-        msg_id = self.bot.sendMessage(chat_ID, text='Insert when the light should switch off in format hh:mm')['message_id']
-        self.remove_previous_messages(chat_ID)
-        self.update_message_to_remove(msg_id,chat_ID)
-
-    def get_next_occurrence_unix_timestamp(self,time_str,time_zone_correction):
-        # Computes the unix timestamp of a certain time in format hh:mm, if such time it's before the actual timestamps writes it in the next day
-
-        # Parse the input time string into hours and minutes 
-        hours, minutes = map(int, time_str.split(":"))
-        
-        # Get the current time
-        current_time = time.localtime()
-        
-        # Create a struct_time object for the target time today
-        target_time_today = time.struct_time((
-            current_time.tm_year,  # Year
-            current_time.tm_mon,   # Month
-            current_time.tm_mday,  # Day
-            hours,                 # Hour
-            minutes,               # Minute
-            0,                     # Second
-            current_time.tm_wday,  # Weekday
-            current_time.tm_yday,  # Yearday
-            current_time.tm_isdst  # Daylight saving time flag
-        ))
-        
-        # Convert the struct_time to a Unix timestamp
-        target_timestamp_today = time.mktime(target_time_today)
-        
-        # Get the current Unix timestamp
-        current_timestamp = time.time()
-        
-        # If the target time has already passed today, compute the Unix timestamp for the same time tomorrow
-        if target_timestamp_today <= current_timestamp:
-            # Create a struct_time object for the target time tomorrow
-            target_time_tomorrow = time.struct_time((
-                current_time.tm_year,  # Year
-                current_time.tm_mon,   # Month
-                current_time.tm_mday + 1,  # Next day
-                hours,                 # Hour
-                minutes,               # Minute
-                0,                     # Second
-                (current_time.tm_wday + 1) % 7,  # Weekday (next day)
-                current_time.tm_yday + 1,  # Yearday (next day)
-                current_time.tm_isdst  # Daylight saving time flag
-            ))
-            target_timestamp_tomorrow = time.mktime(target_time_tomorrow)
-            
-            return target_timestamp_tomorrow + time_zone_correction*3600
-        
-        return target_timestamp_today + time_zone_correction*3600
-
-    def confirm_manual_mode_duration(self,mex,chat_ID):
-        # Checks that given thime satisfies certain constraints
-        mex=mex.strip()
-        if len(mex) != 5 :
-            self.bot.send_message(chat_ID,text = 'invalid message')
-        else:
-            if mex[2] == ':' and mex[0].isdigit() and mex[1].isdigit() and mex[3].isdigit() and mex[4].isdigit():
-                hour = int(mex.split(':')[0])
-                minute = int(mex.split(':')[1])
-            else:
-                msg_id = self.bot.sendMessage(chat_ID, text='Invalid message')['message_id']
-                self.remove_previous_messages(chat_ID)
-                self.update_message_to_remove(msg_id,chat_ID)
-            if hour >= 0 and hour <= 24 and minute >= 0 and minute <= 59:
-                m_mode_duration = self.get_next_occurrence_unix_timestamp(mex,self.time_zone_correction)
-                print(f'stopped listening for time {chat_ID}')
-                plantcode = self.uservariables[chat_ID]['chatstatus'].split('&')[1]
-                percentage = self.uservariables[chat_ID]['chatstatus'].split('&')[2]
-                self.uservariables[chat_ID]['chatstatus'] = 'start'
-                msg_id = self.bot.sendMessage(chat_ID, text=f"light will be switched off at {mex}")['message_id']
-                self.remove_previous_messages(chat_ID)
-                self.update_message_to_remove(msg_id,chat_ID)
-                self.led_switch(chat_ID,plantcode,percentage,m_mode_duration)
-            else:
-                msg_id = self.bot.sendMessage(chat_ID, text='Invalid message')['message_id']     
-                self.remove_previous_messages(chat_ID)  
-                self.update_message_to_remove(msg_id,chat_ID)
-
-
-    def led_change(self,chat_ID,plantcode):            
-         # Makes you choose to change the start time or the stop time
-        userid = self.registry_interface.get_username_for_chat_ID(chat_ID)
-        time_start,time_end = self.get_time_start_and_time_end_from_chatId(userid)
-        msg_id = self.bot.sendMessage(chat_ID, text=f"start time {time_start}'\nend time {time_end}")['message_id']
-        self.remove_previous_messages(chat_ID)
-        self.update_message_to_remove(msg_id,chat_ID)
-        buttons = [[InlineKeyboardButton(text=f'change start ⏰', callback_data=f'time&start&{plantcode}'), InlineKeyboardButton(text=f'change stop ⏰', callback_data=f'time&end&{plantcode}'),InlineKeyboardButton(text=f'🔙', callback_data=f'plant&back&{plantcode}')]]
-        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-        msg_id = self.bot.sendMessage(chat_ID, text='What do you want to change?', reply_markup=keyboard)['message_id']
-        self.update_message_to_remove(msg_id,chat_ID)
-
-    def get_time_start_and_time_end_from_chatId(self,userid):
-        # Asks the previous values of the auto mode
-        r = self.get_response(self.registry_url+'/plants')
-        output = json.loads(r.text)
-        for plant in output:
-            if plant['userId'] == userid:
-                time_start = plant['auto_init']
-                time_end = plant['auto_end']
-        return time_start, time_end
-
-
-    def change_time(self,chat_ID,timest,plantcode):         
-        # Listens for the new value of auto mode, bot start of end, on the basi of timest variable
-        self.uservariables[chat_ID]['chatstatus'] = f'listeningforobswindow&{timest}&{plantcode}'
-        print(f'started listening for time for {chat_ID}')
-        msg_id = self.bot.sendMessage(chat_ID, text='Insert time in format hh:mm')['message_id']
-        self.remove_previous_messages(chat_ID)
-        self.update_message_to_remove(msg_id,chat_ID)
-
-    def set_light_time(self,mex,chat_ID,checkp,plantcode):   
-        # Extracts time of the auto mode and assigns it to the plant in the registry
-        mex=mex.strip()
-        if mex[2] == ':' and mex[0].isdigit() and mex[1].isdigit() and mex[3].isdigit() and mex[4].isdigit():
-            hour = int(mex.split(':')[0])
-            minute = int(mex.split(':')[1])
-        else:
-            msg_id = self.bot.sendMessage(chat_ID, text='Invalid message')['message_id']
-            self.remove_previous_messages(chat_ID)
-            self.update_message_to_remove(msg_id,chat_ID)
-        userid = self.registry_interface.get_username_for_chat_ID(chat_ID)
-        old_start,old_end = self.get_time_start_and_time_end_from_chatId(userid)
-        if hour >= 0 and hour < 24 and minute >= 0 and minute <= 59:
-            if checkp == 'start':
-                time_start=mex
-                time_end = old_end
-            if checkp == 'end':
-                time_end=mex
-                time_start = old_start
-        print(f'stopped listening for time for {chat_ID}')
-
-        state = "auto"
-        init = time_start
-        end =  time_end
-        body = {"plantCode":plantcode,'state':state,'init':init,'end':end}
-        out = json.loads(requests.put(self.registry_url+'/updateInterval',headers=self.headers,json = body).text)
-        self.uservariables[chat_ID]['chatstatus'] = 'start'
-        if self.manage_invalid_request(chat_ID,out):
-            pass
-        else:
-            msg_id = self.bot.sendMessage(chat_ID, text=f"start time {time_start}\nend time {time_end}")['message_id']
-            self.remove_previous_messages(chat_ID)
-            self.update_message_to_remove(msg_id,chat_ID)
-        self.manage_plant(chat_ID,plantcode)
-
-
-    def led_switch(self,chat_ID,plantcode,percentage,m_mode_duration):                     # Switch remotely the led on and off
-        # Once all variables perc and end of the duration sends it to the light_shift microservice
-        userid = self.registry_interface.get_username_for_chat_ID(chat_ID)
-        plantcode
-        state = "manual"
-        init = time.time()
-        body = {"plantCode":plantcode,'state':state,'init':init,'end':m_mode_duration}
-        r = self.put_response(self.registry_url+'/updateInterval',body)
-        output = json.loads(r.text)
-        self.manage_invalid_request(chat_ID,output)
-        mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":float(percentage) },{"n": "init_hour", "u": "s", "t": time.time(), "v":init },{"n": "final_hour", "u": "s", "t": time.time(), "v": m_mode_duration } ]}
-        self.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/lux_to_give/manual',json.dumps(mex_mqtt),2)
-        time.sleep(2)
-        self.manage_plant(chat_ID,plantcode)
-
-  
-    def instant_switch_off(self,chat_ID,plantcode):                     # Switch remotely the led on and off
-        # Short path to switch of the light by sending an mqtt message to light shift
-        userid = self.registry_interface.get_username_for_chat_ID(chat_ID)
-        print('Light switched off manually')
-        state = "manual"
-        init = time.time()
-        end = time.time()+10
-        body = {"plantCode":plantcode,'state':state,'init':init,'end':end}
-        r = self.put_response(self.registry_url+'/updateInterval',body)
-        output = json.loads(r.text)
-        self.manage_invalid_request(chat_ID,output)
-        mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":0.0 },{"n": "init_hour", "u": "s", "t": time.time(), "v":time.time()} ,{"n": "final_hour", "u": "s", "t": time.time(), "v":end} ]}
-        self.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/lux_to_give/manual',json.dumps(mex_mqtt),2)
-        print(f'SENT MESSAGE to RootyPy/{userid}/{plantcode}/lux_to_give/manual')
-        self.manage_plant(chat_ID,plantcode)
 
 
 #-------------------------------------------------Handle mqtt messages ---------------------------------------
@@ -1036,20 +686,419 @@ class GreenHouseBot:
         # Send an alert message about the water tank using the bot
         self.bot.sendMessage(chat_ID, text=f'Watchout tank almost empty for {plantname}')
 
+#----------------------------------------------------- Lamp management ---------------------------------------------------------------- 
+
+class Led_manager():
+
+    def __init__(self,main_bot):
+        self.main_bot = main_bot
+        pass
+
+    def led_management(self, chat_ID,plantcode):              # Gives you the possiblity to change light schedule of auto and manual mode and to switch off
+        msg_id = self.main_bot.bot.sendMessage(chat_ID, text="You chose to manage the LED")['message_id']
+        self.main_bot.remove_previous_messages(chat_ID)
+        self.main_bot.update_message_to_remove(msg_id,chat_ID)
+        buttons = [[ InlineKeyboardButton(text=f'switch off 🔌', callback_data=f'led&off&{plantcode}'), InlineKeyboardButton(text=f'led manual 💡', callback_data=f'led&setpercentage&{plantcode}'),InlineKeyboardButton(text=f'change automatic mode', callback_data=f'led&change&{plantcode}'),InlineKeyboardButton(text=f'🔙', callback_data=f'plant&back&{plantcode}')]]
+        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+        msg_id = self.main_bot.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
+        self.main_bot.update_message_to_remove(msg_id,chat_ID)
+
+    def set_led_percentage(self,chat_ID,plantcode):
+        # Asks the user for led percentage
+        self.main_bot.set_uservariables_chatstatus(chat_ID,f'listeningforledpercentage&{plantcode}')
+        print(f'started listening for light percentage from {chat_ID}')
+        msg_id = self.main_bot.bot.sendMessage(chat_ID, text='Insert desired percentage of light as an integer number ')['message_id']
+        self.main_bot.remove_previous_messages(chat_ID)
+        self.main_bot.update_message_to_remove(msg_id,chat_ID)
+
+    def check_light_percentage(self, msg, chat_ID):
+        # Checks if the percentage give n by the user respects certain constraints
+        clean_mex = msg.strip()
+        
+        try:
+            # Attempt to convert the cleaned message to a float
+            percentage = float(clean_mex)
+            
+            # Check if the percentage is within the valid range
+            if 0 <= percentage <= 100:
+                plantcode = self.main_bot.get_uservariables_chatstatus(chat_ID).split('&')[1]
+                self.main_bot.set_uservariables_chatstatus(chat_ID,'start')
+                self.set_led_manual_mode_duration(chat_ID,plantcode,percentage)
+            else:
+                msg_id = self.main_bot.bot.sendMessage(chat_ID, text='Percentage must be between 0 and 100')['message_id']
+                self.main_bot.remove_previous_messages(chat_ID)
+                self.main_bot.update_message_to_remove(msg_id,chat_ID)
+        except ValueError:
+            # If conversion to float fails, send an error message
+            msg_id = self.main_bot.bot.sendMessage(chat_ID, text='Invalid percentage format')['message_id']
+            self.main_bot.remove_previous_messages(chat_ID)
+            self.main_bot.update_message_to_remove(msg_id,chat_ID)
+
+
+
+    def set_led_manual_mode_duration(self,chat_ID,plantcode,percentage):
+        #  Asks the user when he'd like to switch off the light once he sets the percentage of the activation
+        self.main_bot.set_uservariables_chatstatus(chat_ID,f'listeningfortime&{plantcode}&{percentage}')
+        print(f'started listening for time for {plantcode}')
+        msg_id = self.main_bot.bot.sendMessage(chat_ID, text='Insert when the light should switch off in format hh:mm')['message_id']
+        self.main_bot.remove_previous_messages(chat_ID)
+        self.main_bot.update_message_to_remove(msg_id,chat_ID)
+
+    def get_next_occurrence_unix_timestamp(self,time_str,time_zone_correction):
+        # Computes the unix timestamp of a certain time in format hh:mm, if such time it's before the actual timestamps writes it in the next day
+
+        # Parse the input time string into hours and minutes 
+        hours, minutes = map(int, time_str.split(":"))
+        
+        # Get the current time
+        current_time = time.localtime()
+        
+        # Create a struct_time object for the target time today
+        target_time_today = time.struct_time((
+            current_time.tm_year,  # Year
+            current_time.tm_mon,   # Month
+            current_time.tm_mday,  # Day
+            hours,                 # Hour
+            minutes,               # Minute
+            0,                     # Second
+            current_time.tm_wday,  # Weekday
+            current_time.tm_yday,  # Yearday
+            current_time.tm_isdst  # Daylight saving time flag
+        ))
+        
+        # Convert the struct_time to a Unix timestamp
+        target_timestamp_today = time.mktime(target_time_today)
+        
+        # Get the current Unix timestamp
+        current_timestamp = time.time()
+        
+        # If the target time has already passed today, compute the Unix timestamp for the same time tomorrow
+        if target_timestamp_today <= current_timestamp:
+            # Create a struct_time object for the target time tomorrow
+            target_time_tomorrow = time.struct_time((
+                current_time.tm_year,  # Year
+                current_time.tm_mon,   # Month
+                current_time.tm_mday + 1,  # Next day
+                hours,                 # Hour
+                minutes,               # Minute
+                0,                     # Second
+                (current_time.tm_wday + 1) % 7,  # Weekday (next day)
+                current_time.tm_yday + 1,  # Yearday (next day)
+                current_time.tm_isdst  # Daylight saving time flag
+            ))
+            target_timestamp_tomorrow = time.mktime(target_time_tomorrow)
+            
+            return target_timestamp_tomorrow + time_zone_correction*3600
+        
+        return target_timestamp_today + time_zone_correction*3600
+
+    def confirm_manual_mode_duration(self,mex,chat_ID):
+        # Checks that given thime satisfies certain constraints
+        mex=mex.strip()
+        if len(mex) != 5 :
+            self.main_bot.bot.send_message(chat_ID,text = 'invalid message')
+        else:
+            if mex[2] == ':' and mex[0].isdigit() and mex[1].isdigit() and mex[3].isdigit() and mex[4].isdigit():
+                hour = int(mex.split(':')[0])
+                minute = int(mex.split(':')[1])
+            else:
+                msg_id = self.main_bot.bot.sendMessage(chat_ID, text='Invalid message')['message_id']
+                self.main_bot.remove_previous_messages(chat_ID)
+                self.main_bot.update_message_to_remove(msg_id,chat_ID)
+            if hour >= 0 and hour <= 24 and minute >= 0 and minute <= 59:
+                m_mode_duration = self.get_next_occurrence_unix_timestamp(mex,self.main_bot.time_zone_correction)
+                print(f'stopped listening for time {chat_ID}')
+                plantcode = self.main_bot.get_uservariables_chatstatus(chat_ID).split('&')[1]
+                percentage = self.main_bot.get_uservariables_chatstatus(chat_ID).split('&')[2]
+                self.main_bot.set_uservariables_chatstatus(chat_ID,'start')
+                msg_id = self.main_bot.bot.sendMessage(chat_ID, text=f"light will be switched off at {mex}")['message_id']
+                self.main_bot.remove_previous_messages(chat_ID)
+                self.main_bot.update_message_to_remove(msg_id,chat_ID)
+                self.led_switch(chat_ID,plantcode,percentage,m_mode_duration)
+            else:
+                msg_id = self.main_bot.bot.sendMessage(chat_ID, text='Invalid message')['message_id']     
+                self.main_bot.remove_previous_messages(chat_ID)  
+                self.main_bot.update_message_to_remove(msg_id,chat_ID)
+
+
+    def led_change(self,chat_ID,plantcode):            
+         # Makes you choose to change the start time or the stop time
+        userid = self.main_bot.registry_interface.get_username_for_chat_ID(chat_ID)
+        time_start,time_end = self.main_bot.registry_interface.get_time_start_and_time_end_from_chatId(userid)
+        msg_id = self.main_bot.bot.sendMessage(chat_ID, text=f"start time {time_start}\nend time {time_end}")['message_id']
+        self.main_bot.remove_previous_messages(chat_ID)
+        self.main_bot.update_message_to_remove(msg_id,chat_ID)
+        buttons = [[InlineKeyboardButton(text=f'change start ⏰', callback_data=f'time&start&{plantcode}'), InlineKeyboardButton(text=f'change stop ⏰', callback_data=f'time&end&{plantcode}'),InlineKeyboardButton(text=f'🔙', callback_data=f'plant&back&{plantcode}')]]
+        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+        msg_id = self.main_bot.bot.sendMessage(chat_ID, text='What do you want to change?', reply_markup=keyboard)['message_id']
+        self.main_bot.update_message_to_remove(msg_id,chat_ID)
+
+
+    def change_time(self,chat_ID,timest,plantcode):         
+        # Listens for the new value of auto mode, bot start of end, on the basi of timest variable
+        self.main_bot.set_uservariables_chatstatus(chat_ID,f'listeningforobswindow&{timest}&{plantcode}')
+        print(f'started listening for time for {chat_ID}')
+        msg_id = self.main_bot.bot.sendMessage(chat_ID, text='Insert time in format hh:mm')['message_id']
+        self.main_bot.remove_previous_messages(chat_ID)
+        self.main_bot.update_message_to_remove(msg_id,chat_ID)
+
+    def set_light_time(self,mex,chat_ID,checkp,plantcode):   
+        # Extracts time of the auto mode and assigns it to the plant in the registry
+        mex=mex.strip()
+        if mex[2] == ':' and mex[0].isdigit() and mex[1].isdigit() and mex[3].isdigit() and mex[4].isdigit():
+            hour = int(mex.split(':')[0])
+            minute = int(mex.split(':')[1])
+        else:
+            msg_id = self.main_bot.bot.sendMessage(chat_ID, text='Invalid message')['message_id']
+            self.main_bot.remove_previous_messages(chat_ID)
+            self.main_bot.update_message_to_remove(msg_id,chat_ID)
+        userid = self.main_bot.registry_interface.get_username_for_chat_ID(chat_ID)
+        old_start,old_end = self.main_bot.registry_interface.get_time_start_and_time_end_from_chatId(userid)
+        if hour >= 0 and hour < 24 and minute >= 0 and minute <= 59:
+            if checkp == 'start':
+                time_start=mex
+                time_end = old_end
+            if checkp == 'end':
+                time_end=mex
+                time_start = old_start
+        print(f'stopped listening for time for {chat_ID}')
+
+        state = "auto"
+        init = time_start
+        end =  time_end
+        body = {"plantCode":plantcode,'state':state,'init':init,'end':end}
+        out = self.main_bot.registry_interface.update_interval(body)
+        self.main_bot.set_uservariables_chatstatus(chat_ID,'start')
+        if self.main_bot.manage_invalid_request(chat_ID,out):
+            pass
+        else:
+            msg_id = self.main_bot.bot.sendMessage(chat_ID, text=f"start time {time_start}\nend time {time_end}")['message_id']
+            self.main_bot.remove_previous_messages(chat_ID)
+            self.main_bot.update_message_to_remove(msg_id,chat_ID)
+        self.main_bot.manage_plant(chat_ID,plantcode)
+
+
+    def led_switch(self,chat_ID,plantcode,percentage,m_mode_duration):                     # Switch remotely the led on and off
+        # Once all variables perc and end of the duration sends it to the light_shift microservice
+        userid = self.main_bot.registry_interface.get_username_for_chat_ID(chat_ID)
+        plantcode
+        state = "manual"
+        init = time.time()
+        body = {"plantCode":plantcode,'state':state,'init':init,'end':m_mode_duration}
+
+        output = self.main_bot.registry_interface.update_interval(body)
+        self.main_bot.manage_invalid_request(chat_ID,output)
+        mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":float(percentage) },{"n": "init_hour", "u": "s", "t": time.time(), "v":init },{"n": "final_hour", "u": "s", "t": time.time(), "v": m_mode_duration } ]}
+        self.main_bot.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/lux_to_give/manual',json.dumps(mex_mqtt),2)
+        time.sleep(2)
+        self.main_bot.manage_plant(chat_ID,plantcode)
+
+  
+    def instant_switch_off(self,chat_ID,plantcode):                     # Switch remotely the led on and off
+        # Short path to switch of the light by sending an mqtt message to light shift
+        userid = self.main_bot.registry_interface.get_username_for_chat_ID(chat_ID)
+        print('Light switched off manually')
+        state = "manual"
+        init = time.time()
+        end = time.time()+10
+        body = {"plantCode":plantcode,'state':state,'init':init,'end':end}
+        output = self.main_bot.registry_interface.update_interval(body)
+        self.main_bot.manage_invalid_request(chat_ID,output)
+        mex_mqtt =  { 'bn': "manual_light_shift",'e': [{ "n": "percentage_of_light", "u": "percentage", "t": time.time(), "v":0.0 },{"n": "init_hour", "u": "s", "t": time.time(), "v":time.time()} ,{"n": "final_hour", "u": "s", "t": time.time(), "v":end} ]}
+        self.main_bot.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/lux_to_give/manual',json.dumps(mex_mqtt),2)
+        print(f'SENT MESSAGE to RootyPy/{userid}/{plantcode}/lux_to_give/manual')
+        self.main_bot.manage_plant(chat_ID,plantcode)
+
+
+#--------------------------------------------------------- Plant watering --------------------------------------------------------------
+
+class Irrigation_manager():
+
+    def __init__(self,main_bot):
+        self.main_bot = main_bot
+
+    def water_plant(self, chat_ID,plantcode):                 
+        # Activates the watering of the plant
+        msg_id = self.main_bot.bot.sendMessage(chat_ID, text="You chose to water the plant\nsend a percentange of the tank between 0 and 10")['message_id']
+        self.main_bot.set_uservariables_chatstatus(chat_ID,f'listeningforwaterpercentage&{plantcode}')
+        self.main_bot.remove_previous_messages(chat_ID)
+        self.main_bot.update_message_to_remove(msg_id,chat_ID)
+
+    def eval_water_percentage(self,chat_ID,message):
+        # Checks if the amount of water written is between 0 and 10
+        message = message.strip()
+        #try:
+        perc_value = float(message)
+        if perc_value <= 10 and perc_value > 0:
+            plantcode = self.main_bot.get_uservariables_chatstatus(chat_ID).split('&')[1]
+            models = self.main_bot.registry_interface.get_models()
+            for model in models:
+                if model["model_code"] == plantcode[0:2]:
+                    tank_max = model["tank_capacity"]
+
+            water_volume = tank_max*perc_value/100
+            self.main_bot.set_uservariables_chatstatus(chat_ID,'start')
+            msg_id = self.main_bot.bot.sendMessage(chat_ID,f'{perc_value} is a valid value')['message_id']
+            self.main_bot.remove_previous_messages(chat_ID)
+            self.main_bot.update_message_to_remove(msg_id,chat_ID)
+            userid = self.main_bot.registry_interface.get_username_for_chat_ID(chat_ID)
+            payload =  {"bn": f'{'Pump'}',"e":[{ "n": f"{self.main_bot.ClientID}", "u": "l", "t": time.time(), "v":water_volume }]}
+            self.main_bot.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/water_to_give/manual',json.dumps(payload),2)
+            self.main_bot.manage_plant(chat_ID,plantcode)
+        elif perc_value == 100:           #DA TOGLIERE ASSOLUTAMENTE BACKDOOR PER SVUOTARE TANICA
+            plantcode = self.main_bot.get_uservariables_chatstatus(chat_ID).split('&')[1]
+            models = self.main_bot.registry_interface.get_models()
+            for model in models:
+                if model["model_code"] == plantcode[0:2]:
+                    tank_max = model["tank_capacity"]
+
+            water_volume = tank_max*perc_value/100
+            self.main_bot.uservariables[chat_ID]['chatstatus'] = 'start'
+            msg_id = self.main_bot.bot.sendMessage(chat_ID,f'{perc_value} is a valid value')['message_id']
+            self.main_bot.remove_previous_messages(chat_ID)
+            self.main_bot.update_message_to_remove(msg_id,chat_ID)
+            userid = self.main_bot.registry_interface.get_username_for_chat_ID(chat_ID)
+            payload =  {"bn": f'{'Pump'}',"e":[{ "n": f"{self.main_bot.ClientID}", "u": "l", "t": time.time(), "v":water_volume }]}
+            self.main_bot.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/water_to_give/manual',json.dumps(payload),2)
+            self.main_bot.manage_plant(chat_ID,plantcode)                
+        else:
+            msg_id = self.main_bot.bot.sendMessage(chat_ID,f'{perc_value} is a invalid value, senda a value between 0 and 10')['message_id']
+            self.main_bot.update_message_to_remove(msg_id,chat_ID)
+        #except:
+        #    msg_id = self.main_bot.bot.sendMessage(chat_ID,f'{message} is an invalid value,try again')['message_id']
+        #    self.main_bot.update_message_to_remove(msg_id,chat_ID)
+        
+
+# ------------------------------------------------- Report -------------------------------------------------------
+class Report_manager():
+
+    def __init__(self,report_url,main_bot,num_attempts):
+
+        self.report_url = report_url
+        self.main_bot = main_bot
+        self.num_rest_attempts = num_attempts
+
+    def set_report_generator_url(self,url):
+        self.report_url = url
+
+    def generate_instant_report(self,chat_ID,plantcode):
+        # Get request for a report
+        print(f'{chat_ID} is asking for a report')
+
+        r = self.get_response(self.report_url+f'/getreport/{plantcode}')
+        output = json.loads(r.text)
+            # Extract the base64-encoded image and decode it
+        image_base64 = output['image']
+        image_data = base64.b64decode(image_base64)
+        
+        # Extract the message
+        message = output['message']
+
+        # Load the image into a BytesIO stream
+        image = Image.open(BytesIO(image_data))
+        bio = BytesIO()
+        image.save(bio, format='PNG')
+        bio.seek(0)
+
+            # Send the image using the bot
+        msg_id = self.main_bot.bot.sendPhoto(chat_ID, bio, caption=message)
+        self.main_bot.update_message_to_remove(msg_id,chat_ID)
+        self.main_bot.choose_plant(chat_ID)
+
+    def set_report_frequency(self,chat_ID,plantcode):
+        #Changes the report frequency for a plant
+        userid = self.main_bot.registry_interface.get_username_for_chat_ID(chat_ID)
+        output = self.main_bot.registry_interface.get_plants()
+        for plant in output:
+            if plant['userId'] == userid:
+                oldsetting = plant['report_frequency']
+                plantid = plant['plantId']
+        self.main_bot.remove_previous_messages(chat_ID)
+
+        msg_id = self.main_bot.bot.sendMessage(chat_ID,text = f'actual report frequency for {plantid} is {oldsetting}')['message_id']
+
+        self.main_bot.update_message_to_remove(msg_id,chat_ID)
+        buttons = [[InlineKeyboardButton(text=f'daily', callback_data=f'f_settings&daily&{plantcode}'), InlineKeyboardButton(text=f'weekly', callback_data=f'f_settings&weekly&{plantcode}'), InlineKeyboardButton(text='biweekly', callback_data=f'f_settings&biweekly&{plantcode}'),InlineKeyboardButton(text=f'monthly', callback_data=f'f_settings&monthly&{plantcode}')]]
+        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+        msg_id = self.main_bot.bot.sendMessage(chat_ID, text=f'when do you want to receive a report for {plantcode}', reply_markup=keyboard)['message_id']
+        self.main_bot.update_message_to_remove(msg_id,chat_ID)
+
+
+    def set_frequency_or_generate(self,chat_ID,plantcode):
+        # Makes the user choose to generate areport or change settings
+        buttons = [[ InlineKeyboardButton(text=f'generate report', callback_data=f'report&generate&{plantcode}'), InlineKeyboardButton(text=f'settings', callback_data=f'report&settings&{plantcode}'), InlineKeyboardButton(text=f'🔙', callback_data=f'plant&back&{plantcode}')]]
+        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+        msg_id = self.main_bot.bot.sendMessage(chat_ID, text='What do you want to do?', reply_markup=keyboard)['message_id']
+        self.main_bot.update_message_to_remove(msg_id,chat_ID) 
+
+    def get_response(self,url):
+        # Tries a number of times a get request untill an accetable result is returned
+        for i in range(self.num_rest_attempts):
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                return response
+            except HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
+            except Exception as err:
+                print(f"Other error occurred: {err}")
+        return None     
+    
+    def put_response(self,url,body):
+        # Tries a number of times a put request untill an accetable result is returned
+        for i in range(self.num_rest_attempts):
+            try:
+                response = requests.put(url,json = body)
+                response.raise_for_status()
+                return response
+            except HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
+            except Exception as err:
+                print(f"Other error occurred: {err}")
+        return None
+
 class Registry_interface():
 
-    def __init__(self,registry_url,num_rest_attempts):
+    def __init__(self,registry_url,num_rest_attempts,main_bot):
         self.registry_url = registry_url
         self.num_rest_attempts = num_rest_attempts
+        self.main_bot = main_bot
+
+    def get_users(self):
+        r = self.get_response(self.registry_url+'/users')
+        print(f'GET request sent at {self.registry_url}/users')
+        output = json.loads(r.text)
+        return output
+    
+    def update_interval(self,body):
+        r = self.put_response(self.registry_url+'/updateInterval',body)
+        out = json.loads(r.text)
+        return out 
+    
+    def update_report_frequency(self,body):
+        r = self.put_response(self.registry_url+'/setreportfrequency',body)
+        return r
+    
+    def get_plants(self):
+        r = self.get_response(self.registry_url+'/plants')
+        print(f'GET request sent at {self.registry_url}/plants')
+        output = json.loads(r.text)
+        return output
+
+    
+    def set_new_report_frequency(self,chat_ID,newfrequency,plantcode):
+        # Updates the catalog with the new frequency
+        body = {'plantCode':plantcode,'report_frequency':newfrequency}
+        r = self.main_bot.registry_interface.update_report_frequency(body)
+        flag_keep_mex = self.main_bot.manage_invalid_request(chat_ID,json.loads(r.text))
+        self.main_bot.choose_plant(chat_ID,flag_keep_mex)
+
 
     def get_plant_for_chatID(self, chatID):
         # gets the plant names for the user
         plant_list = []     
         userid = self.get_username_for_chat_ID(chatID)
-        f = True
-        r = self.get_response(self.registry_url+'/plants')
-
-        output =json.loads(r.text)
+        output =self.get_plants()
         for diz in output:
             if diz['userId'] == userid:
                 plant_list.append(diz['plantId'])
@@ -1058,8 +1107,7 @@ class Registry_interface():
         
     def get_username_for_chat_ID(self,chat_ID):
         # Given the chat_ID returns the associated userId
-        r = self.get_response(self.registry_url+'/users')
-        output = json.loads(r.text)
+        output = self.get_users()
         for diz in output:
 
             if diz['chatID'] == chat_ID:
@@ -1080,17 +1128,14 @@ class Registry_interface():
 
     def get_plant_code_from_plant_name(self,userid,plantname):
         # Gets the plant code from the plant name written by the user 
-        r = self.get_response(self.registry_url+'/plants')
-
-        output = json.loads(r.text)
+        output = self.get_plants()
         for diz in output:
             if diz['userId'] == userid and diz['plantId'] == plantname:
                 return diz['plantCode']
             
     def get_plantname_for_plantcode(self,plantcode):
         # Gets the plantname chosen by the user from the plantcode
-        r = self.get_response(self.registry_url+'/plants')
-        output = json.loads(r.text)
+        output = self.get_plants()
         for diz in output:
 
             if diz['plantCode'] == plantcode:
@@ -1104,10 +1149,22 @@ class Registry_interface():
         output = json.loads(r.text)
         return output
 
+    def is_new_user(self,chat_ID):                   # Checks if the messaging chatID is between the registered chatID
+        flag_user_present = 0       
+        output = self.get_users()        
+        for diz in output:
+            if diz['chatID'] == None:
+                pass
+            elif int(diz['chatID']) == chat_ID:
+                flag_user_present=1
+        if flag_user_present == 1:
+            return False
+        else:
+            return True  
+        
     def get_chatID_for_username(self,userid):
         # Gets the chad_ID associated to a username
-        r = self.get_response(self.registry_url+'/users')
-        output = json.loads(r.text)
+        output = self.get_users()
         for diz in output:
 
             if diz['userId'] == userid:
@@ -1155,6 +1212,20 @@ class Registry_interface():
                 print(f"Other error occurred: {err}")
         return None
 
+    def get_time_start_and_time_end_from_chatId(self,userid):
+        # Asks the previous values of the auto mode
+        output = self.get_plants()
+        for plant in output:
+            if plant['userId'] == userid:
+                time_start = plant['auto_init']
+                time_end = plant['auto_end']
+        return time_start, time_end
+    
+    def get_models(self):
+        r =self.get_response(self.registry_url+'/models')
+        models = json.loads(r.text)
+        return models
+    
 class Adaptor_interface():
     def __init__(self,adaptor_url,num_rest_attempts):
         self.adaptor_url = adaptor_url
@@ -1197,16 +1268,17 @@ class Iamalive():
         print('i am alive initialized')
         self.start_mqtt()
 
-    def ask_for_urls(self,telegram_bot):
+    def ask_for_urls(self,needed_urls):
 
-        while '' in telegram_bot.needed_urls.values():
+        while '' in needed_urls.values():
 
             services = self.registry_interface.get_services()
-            print(telegram_bot.needed_urls)
+            print(needed_urls)
             for service in services:
-                if service['serviceID'] in telegram_bot.needed_urls.keys():
-                    telegram_bot.needed_urls[service['serviceID']] = service['route']
+                if service['serviceID'] in needed_urls.keys():
+                    needed_urls[service['serviceID']] = service['route']
 
+        return needed_urls
 
     def start_mqtt(self):
         # Connects to broker and starts the mqtt
