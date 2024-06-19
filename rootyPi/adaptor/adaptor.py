@@ -7,7 +7,6 @@ import paho.mqtt.client as PahoMQTT
 import time
 import threading
 from pathlib import Path
-import os
 import requests
 from requests.exceptions import HTTPError
 
@@ -40,7 +39,9 @@ def senmlToInflux(senml, plantId):
         point["fields"] = {e["n"]:e["v"]}
         output.append(point)
     return output  
+
 class Adaptor(object):
+    """WebServer for the adaptor"""
     exposed=True
     def __init__(self):
         with open(SETTINGS, 'r') as file:
@@ -51,13 +52,16 @@ class Adaptor(object):
         self.influxUrl = settings["url_db"]
         self.registryBaseUrl = settings["registry_url"]
         self.possServices = settings["services4db"]
+        self.port = settings["adaptor_port"]
         self.client = InfluxDBClient(url=self.influxUrl, token=self.token)
         self.bucket_api = self.client.buckets_api()
+        self.test = settings["test"]
         self.loadUsers()
         
     def loadUsers(self):
         url = self.registryBaseUrl + "/users"
         self.users = get_request(url)
+        
     def checkUserPresent(self, userId):
         self.loadUsers()
         for user in self.users:
@@ -81,7 +85,7 @@ class Adaptor(object):
             }
         }
         cherrypy.tree.mount(self,'/',conf)
-        cherrypy.config.update({'server.socket_port': 8080})
+        cherrypy.config.update({'server.socket_port': self.port})
         cherrypy.config.update({'server.socket_host':'0.0.0.0'})
         cherrypy.engine.start()
         #cherrypy.engine.block()
@@ -90,10 +94,10 @@ class Adaptor(object):
         pass
         
     def GET(self,*uri,**params):
-        #http://localhost:8080/getData/user1/plant1?measurament=humidity&duration=1 
+        """Get data from InfluxDB"""
+        #http://localhost:8080/getData/userId/plantCode?measurament=humidity&duration=1 
         if len(uri)!=0:
             if uri[0] == "getData":
-                # print(1)
                 if self.checkUserPresent(uri[1]):
                     if self.checkPlantPresent(uri[1],uri[2]): 
                         if params["measurament"] in self.possServices:
@@ -101,10 +105,13 @@ class Adaptor(object):
                                 duration = int(params["duration"])
                             except:
                                 raise cherrypy.HTTPError("400", "invalid duration")
+                            if self.test == 1:
+                                timeInterval = "m"
+                            else:
+                                timeInterval = "h"
                             bucket = uri[1]
-                            #query = f'from(bucket:"{bucket}") |> range(start: -1h) |> filter(fn:(r) => r["_measurement"] == "plant1"))'#test query    
                             query = f'from(bucket: "{bucket}") \
-                                |> range(start: -{duration}m) \
+                                |> range(start: -{duration}{timeInterval}) \
                                     |> filter(fn: (r) => r["_measurement"] == "{uri[2]}") \
                                         |> filter(fn: (r) => r["_field"] == "{params["measurament"]}")'
                             tables = self.client.query_api().query(org=self.org, query=query)
@@ -112,10 +119,7 @@ class Adaptor(object):
                             for table in tables:
                                 for row in table.records:
                                     line = {"t": row.get_time().strftime("%m/%d/%Y, %H:%M:%S"), "v": row.get_value()}
-                                    #print(line)
-                                    # print(type(row.get_time()))
                                     out.append(line)
-                                    #out = out + (f"Time: {row.get_time().strftime("%m/%d/%Y, %H:%M:%S")}, Value: {row.get_value()}\n")
                             return json.dumps(out)
                     else:
                         raise cherrypy.HTTPError("400", "Invalid plantCode")                    
@@ -130,25 +134,33 @@ class Adaptor(object):
         return  
     
     def POST(self,*uri,**params):
+        """Add user bucket"""
         if uri[0] == "addUser":
             body = json.loads(cherrypy.request.body.read())  # Read body data
             self.addUserBuckets(body["userId"])
             response = {"status": "OK", "code": 200}
             return response 
     def DELETE(self,*uri,**params):
+        """Delete user bucket"""
         if uri[0] == "deleteUser":
             self.deleteUserBuckets(uri[1])
             print(f"Deleted {uri[1]}'s buckets")
             response = {"status": "OK", "code": 200}
-            return response             
+            return response   
+
     def addUserBuckets(self, userID):  
+        "Function that adds bucket to Influx"
         retention_rules = BucketRetentionRules(type="expire", every_seconds=2592000)
         created_bucket = self.bucket_api.create_bucket(bucket_name=f"{userID}", retention_rules = retention_rules,org = self.org)
         print(created_bucket)
+        
     def listBuckets(self):
+        """Get list of buckets from Influx"""
         buckets = self.bucket_api.find_buckets().buckets
         return buckets
+    
     def deleteUserBuckets(self, userID):
+        """Delete buket from Influx"""
         buckets = self.listBuckets()
         for bucket in buckets:
             if bucket.name.startswith(userID):
@@ -158,10 +170,7 @@ class Adaptor(object):
 class MySubscriber:
         def __init__(self, clientID, topic, broker, port, write_api):
             self.clientID = clientID
-			# create an instance of paho.mqtt.client
             self._paho_mqtt = PahoMQTT.Client(clientID, False) 
-            
-			# register the callback
             self._paho_mqtt.on_connect = self.myOnConnect
             self._paho_mqtt.on_message = self.myOnMessageReceived 
             self.write_api = write_api
@@ -195,7 +204,9 @@ class MySubscriber:
 
         def myOnConnect (self, paho_mqtt, userdata, flags, rc):
             print ("Connected to %s with result code: %d" % (self.messageBroker, rc))
+            
         def checkUserPlantPresence(self, userId, plantCode):
+            """Update users only after 10 seconds"""
             if time.time() > self.time + 10:
                 self.update_users()
                 self.time = time.time()
@@ -205,6 +216,7 @@ class MySubscriber:
                         if plant == plantCode:
                             return True
             return False
+        
         def checkBnNotAlive(self, bn):
             aliveMessages = ["updateCatalogDevice", "updateCatalogService"]
             if bn in aliveMessages:
@@ -214,6 +226,7 @@ class MySubscriber:
             
             
         def myOnMessageReceived (self, paho_mqtt , userdata, msg):
+            """Check it the message recived can be registered into DB adn write it"""
             if len(msg.topic.split("/")) > 3:
                 userId = msg.topic.split("/")[1]
                 plantCode = msg.topic.split("/")[2]
@@ -225,10 +238,9 @@ class MySubscriber:
                         print(c)                
                         self.write_api.write(bucket=userId, org=self.org, record= c)
 
-
 # Threads
 class MQTTreciver(threading.Thread):
-
+    """Subscriber that uploads messages into DB and sends alive messages"""
     def __init__(self, ThreadID, name):
         """Initialise thread widh ID and name."""
         threading.Thread.__init__(self)
@@ -295,39 +307,9 @@ class MyPublisher:
     def myOnConnect (self, paho_mqtt, userdata, flags, rc):
         print ("Connected to %s with result code: %d" % (self.messageBroker, rc))
 
-class AliveThread(threading.Thread):
-
-    def __init__(self, ThreadID, name):
-        """Initialise thread widh ID and name."""
-        threading.Thread.__init__(self)
-        self.ThreadID = ThreadID
-        self.name = name        
-        try:
-            with open(SETTINGS, "r") as fs:                
-                self.settings = json.loads(fs.read())            
-        except Exception:
-            print("Problem in loading settings")
-        self.topic = self.settings["alive_topic"]
-        self.url = self.settings["adaptor_url"]
-        
-
-
-    def run(self):
-        """Run thread."""    
-        self.pub = MyPublisher("322228", self.topic)
-        self.pub.start()    
-        while True:
-            print("sending alive message...")
-            msg = {"bn": "updateCatalogService", "e":[{"n": "adaptor", "t": time.time(), "u": "URL", "v": self.url}]}
-            self.pub.myPublish(json.dumps(msg), self.topic)
-            time.sleep(10)
-
 if __name__ == '__main__':
     adaptor = Adaptor()
     adaptor.start()
     
     reciver = MQTTreciver(2, "mqttReciver")
     reciver.run()
-    
-    #alive = AliveThread(1, "aliveThread")
-    #alive.run()
