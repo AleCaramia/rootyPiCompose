@@ -169,14 +169,6 @@ class Report_generator(object):
         else:
             print(f"Failed to connect, return code {rc}\n")
 
-    def calculate_dli(self,light_data):
-        """
-        Calculate the Daily Light Integral (DLI) from the light data vector.
-        DLI is the total amount of light (in mol/m²/day) received over a 24-hour period.
-        """
-        total_light = sum(light_data)  # Sum of light intensity over 24 hours
-        dli = total_light / len(light_data)  # Average light intensity per hour
-        return dli
 
     def calculate_light_fluctuation(self,light_data):
         """
@@ -195,7 +187,7 @@ class Report_generator(object):
         """
         if len(soil_moisture_data) >=2:
             derivative = []
-            for i in range(len(soil_moisture_data[-2])):
+            for i in range(len(soil_moisture_data)-2):
 
                 initial_moisture = soil_moisture_data[i]
                 final_moisture = soil_moisture_data[i+2]
@@ -481,7 +473,7 @@ class Report_generator(object):
         combined_image = self.create_image(lux_sunlight_timestamps, lux_sunlight_values, lux_emitted_timestamps, lux_emitted_values, moisture_timestamps, moisture_values)
         
         # Calculate Daily Light Integral (DLI)
-        dli = self.calculate_dli(lux_sunlight_values)
+        dli = lux_sensor[-1]
         
         # Calculate light fluctuation
         light_fluctuation = self.calculate_light_fluctuation(lux_sunlight_values)
