@@ -388,41 +388,34 @@ class Report_generator(object):
         daily, weekly, bi-weekly, or monthly reports at specified times.
         """
         while True:
-            # Get the current time
-            self.actual_time = time.time()
+            # Get the current date and time
+            now = datetime.datetime.now()
+            # Adjust the current hour based on the time zone correction
+            time_zone_corrected_now = now.hour + self.time_zone_correction
             
-            # Check if 60 seconds have passed since the last check
-            if self.actual_time > self.start_time + 60:
-                # Update the start time to the current time
-                self.start_time = time.time()
+            # Correct the hour if it exceeds 24 or is below 0
+            if time_zone_corrected_now > 24:
+                time_zone_corrected_now -= 24
+            elif time_zone_corrected_now < 0:
+                time_zone_corrected_now = 24 + time_zone_corrected_now
+            
+            # Check if the current time matches the scheduled report time
+            if now.hour + self.time_zone_correction == self.target_hour and now.minute == self.target_minute:
+                # Send daily reports
+                self.send_daily_reports()
                 
-                # Get the current date and time
-                now = datetime.datetime.now()
-                # Adjust the current hour based on the time zone correction
-                time_zone_corrected_now = now.hour + self.time_zone_correction
+                # If today is Sunday, send weekly reports
+                if now.weekday() == 6:  # Sunday
+                    self.send_weekly_reports()
                 
-                # Correct the hour if it exceeds 24 or is below 0
-                if time_zone_corrected_now > 24:
-                    time_zone_corrected_now -= 24
-                elif time_zone_corrected_now < 0:
-                    time_zone_corrected_now = 24 + time_zone_corrected_now
+                # Send bi-weekly reports on the 14th and 28th of each month
+                if now.day == 14 or now.day == 28:
+                    self.send_biweekly_reports()
                 
-                # Check if the current time matches the scheduled report time
-                if now.hour + self.time_zone_correction == self.target_hour and now.minute == self.target_minute:
-                    # Send daily reports
-                    self.send_daily_reports()
-                    
-                    # If today is Sunday, send weekly reports
-                    if now.weekday() == 6:  # Sunday
-                        self.send_weekly_reports()
-                    
-                    # Send bi-weekly reports on the 14th and 28th of each month
-                    if now.day == 14 or now.day == 28:
-                        self.send_biweekly_reports()
-                    
-                    # Send monthly reports on the 15th of each month
-                    if now.day == 15:
-                        self.send_monthly_reports()
+                # Send monthly reports on the 15th of each month
+                if now.day == 15:
+                    self.send_monthly_reports()
+            time.sleep(60)
 
     def generate_report(self, user, plant, duration=24, instant=False):
         """
@@ -598,10 +591,8 @@ class Iamalive(object):
     def check_and_publish(self):
         # Updates the time value of the message
         while  not self.stop_event.is_set():
-            actual_time = time.time()
-            if actual_time > self.starting_time + self.interval:
-                self.publish()
-                self.starting_time = actual_time
+            self.publish()
+            time.sleep(self.interval)
 
     def publish(self):
         # Publishes the mqtt message in the right fromat
