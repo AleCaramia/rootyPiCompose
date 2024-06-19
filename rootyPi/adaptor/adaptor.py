@@ -55,6 +55,7 @@ class Adaptor(object):
         self.port = settings["adaptor_port"]
         self.client = InfluxDBClient(url=self.influxUrl, token=self.token)
         self.bucket_api = self.client.buckets_api()
+        self.test = settings["test"]
         self.loadUsers()
         
     def loadUsers(self):
@@ -104,9 +105,13 @@ class Adaptor(object):
                                 duration = int(params["duration"])
                             except:
                                 raise cherrypy.HTTPError("400", "invalid duration")
+                            if self.test == 1:
+                                timeInterval = "m"
+                            else:
+                                timeInterval = "h"
                             bucket = uri[1]
                             query = f'from(bucket: "{bucket}") \
-                                |> range(start: -{duration}h) \
+                                |> range(start: -{duration}{timeInterval}) \
                                     |> filter(fn: (r) => r["_measurement"] == "{uri[2]}") \
                                         |> filter(fn: (r) => r["_field"] == "{params["measurament"]}")'
                             tables = self.client.query_api().query(org=self.org, query=query)
