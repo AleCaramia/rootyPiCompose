@@ -33,39 +33,37 @@ class WaterTankAlert(object):
     def check_water_level(self):
         try:
             while True:
-                actual_time = time.time()
-                if actual_time > self.starting_time_tank + self.interval_tank:
-                    r = self.get_response(self.registry_url+'/models')
-                    models = json.loads(r.text)
-                    r = self.get_response(self.registry_url+'/users')
-                    users = json.loads(r.text)
-                    userwithchatid = []
-                    for user in users:
-                        if user['chatID'] != None:
-                            userwithchatid.append(user['userId'])
-                    r = self.get_response(self.registry_url+'/plants')
-                    plants = json.loads(r.text)
-                    plantwithchatid = []
-                    for plant_diz in plants:
-                        if plant_diz['userId'] in userwithchatid:    
-                            plantwithchatid.append((plant_diz['plantCode'],plant_diz['userId']))
-                    for plant_u_tuple in plantwithchatid:
-                        tank_level_series=  json.loads(requests.get(f'{self.needed_urls['adaptor']}/getData/{plant_u_tuple[1]}/{plant_u_tuple[0]}',params={"measurament":'tankLevel',"duration":1}).text)
-                        if len(tank_level_series) > 0:
-                            actual_tank_level = tank_level_series[-1]["v"]
-                            curr_model = plant_u_tuple[0][:2]
-                            for model in models:
-                                if model['model_code'] == curr_model:
-                                    tank_capacity = model['tank_capacity']
-                            tank_level_th = 0.1 * tank_capacity
-                            if actual_tank_level < tank_level_th:
-                                topic = self.pub_topic+f'/{plant_u_tuple[1]}/{plant_u_tuple[0]}'
-                                message = {"bn": self.ID,"e":[{ "n": plant_diz['plantCode'], "u": "", "t": time.time(), "v":"alert" }]}
-                                self.publish(topic,message)
-                                print(f'sent {json.dumps(message)} at {topic}')
-                        else:
-                            pass
-                    self.starting_time_tank = actual_time
+                r = self.get_response(self.registry_url+'/models')
+                models = json.loads(r.text)
+                r = self.get_response(self.registry_url+'/users')
+                users = json.loads(r.text)
+                userwithchatid = []
+                for user in users:
+                    if user['chatID'] != None:
+                        userwithchatid.append(user['userId'])
+                r = self.get_response(self.registry_url+'/plants')
+                plants = json.loads(r.text)
+                plantwithchatid = []
+                for plant_diz in plants:
+                    if plant_diz['userId'] in userwithchatid:    
+                        plantwithchatid.append((plant_diz['plantCode'],plant_diz['userId']))
+                for plant_u_tuple in plantwithchatid:
+                    tank_level_series=  json.loads(requests.get(f'{self.needed_urls['adaptor']}/getData/{plant_u_tuple[1]}/{plant_u_tuple[0]}',params={"measurament":'tankLevel',"duration":1}).text)
+                    if len(tank_level_series) > 0:
+                        actual_tank_level = tank_level_series[-1]["v"]
+                        curr_model = plant_u_tuple[0][:2]
+                        for model in models:
+                            if model['model_code'] == curr_model:
+                                tank_capacity = model['tank_capacity']
+                        tank_level_th = 0.1 * tank_capacity
+                        if actual_tank_level < tank_level_th:
+                            topic = self.pub_topic+f'/{plant_u_tuple[1]}/{plant_u_tuple[0]}'
+                            message = {"bn": self.ID,"e":[{ "n": plant_diz['plantCode'], "u": "", "t": time.time(), "v":"alert" }]}
+                            self.publish(topic,message)
+                            print(f'sent {json.dumps(message)} at {topic}')
+                    else:
+                        pass
+                time.sleep(self.interval_tank)
         except Exception as e:
             print('Water tank level stopped working')
             self.stop_event.set()

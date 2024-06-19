@@ -1,11 +1,8 @@
-import cherrypy
 import paho.mqtt.client as PahoMQTT
-import cherrypy
 import time
 import json
 import numpy as np
 import requests as req
-import threading
 from datetime import datetime,timedelta
 from requests.exceptions import HTTPError
 
