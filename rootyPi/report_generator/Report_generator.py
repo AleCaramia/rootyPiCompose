@@ -193,10 +193,18 @@ class Report_generator(object):
         Calculate the water absorption rate from the soil moisture data.
         Water absorption rate indicates how quickly the plant uses the water administered.
         """
-        initial_moisture = soil_moisture_data[0]
-        final_moisture = soil_moisture_data[-1]
-        water_absorption = initial_moisture - final_moisture
-        return water_absorption
+        if len(soil_moisture_data) >=2:
+            derivative = []
+            for i in range(len(soil_moisture_data[-2])):
+
+                initial_moisture = soil_moisture_data[i]
+                final_moisture = soil_moisture_data[i+2]
+                water_absorption = (initial_moisture - final_moisture)/3
+                derivative.append(water_absorption)
+            np.median(water_absorption)
+            return water_absorption
+        else:
+            return 0
 
     def analyze_plant_conditions(self, DLI, light_fluctuation, soil_moisture_data, water_absorption):
         try:
@@ -214,11 +222,11 @@ class Report_generator(object):
 
             flag_humidity = False
             # Check for narrow peaks in soil moisture
-            peak_width_threshold = 50  # Threshold for narrow peaks
+            peak_width_threshold = 20  # Threshold for narrow peaks
             for i in range(1, len(soil_moisture_data) - 1):
                 if soil_moisture_data[i] > soil_moisture_data[i - 1] and soil_moisture_data[i] > soil_moisture_data[i + 1]:
-                    peak_width = soil_moisture_data[i] - min(soil_moisture_data[i - 1], soil_moisture_data[i + 1])
-                    if peak_width < peak_width_threshold:
+                    peak_width = soil_moisture_data[i] - max(soil_moisture_data[i - 1], soil_moisture_data[i + 1])
+                    if peak_width > peak_width_threshold:
                         flag_humidity = True
                         
             if flag_humidity:
@@ -228,26 +236,26 @@ class Report_generator(object):
                 tips.append("Check for root health or consider changing watering methods.")
 
             # Additional checks and tips
-            if light_fluctuation < 20:
+            if light_fluctuation < 200:
                 tips.append("Check for potential shading or obstruction affecting light levels.")
-            if max(soil_moisture_data) > 95:
+            if max(soil_moisture_data) > 120:
                 tips.append("Ensure proper drainage to prevent waterlogging and root rot.")
             if min(soil_moisture_data) < 10:
                 tips.append("Water your plant more frequently to prevent dehydration.")
-            if water_absorption > 90:
+            if water_absorption > 9:
                 tips.append("Monitor for signs of overwatering such as yellowing leaves or wilting.")
             if min(soil_moisture_data) > 80 and DLI < 20000:
                 tips.append("During periods of low light and high soil moisture, reduce watering to avoid root suffocation.")
             if max(soil_moisture_data) < 20 and DLI > 40000:
                 tips.append("In periods of high light and low soil moisture, increase watering to prevent wilting.")
-            if DLI < 10000 and max(soil_moisture_data) < 40:
+            if DLI < 10000 and min(soil_moisture_data) > 40:
                 tips.append("During periods of very low light and moderate soil moisture, increase the received light to prevent fungal diseases.")
-            if light_fluctuation > 40000 and min(soil_moisture_data) > 10:
+            if light_fluctuation > 40000 and min(soil_moisture_data) > 50:
                 tips.append("In cases of high light fluctuation and consistently high soil moisture, ensure proper ventilation to prevent mold growth.")
 
-            if DLI > 40000 and water_absorption < 20:
+            if DLI > 40000 and water_absorption < 0.5:
                 tips.append("In periods of high light and low water absorption, consider fertilizing to support plant growth.")
-            if DLI < 10000 and water_absorption > 60:
+            if DLI < 10000 and water_absorption > 5:
                 tips.append("During periods of low light and high water absorption, reduce fertilization to prevent nutrient buildup.")
 
             string_of_tips = ''                         #concatenates all the tips into a string
