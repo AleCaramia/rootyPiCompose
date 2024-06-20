@@ -390,8 +390,9 @@ class Report_generator(object):
         while True:
             # Get the current date and time
             now = datetime.datetime.now()
+            print(now)
             # Adjust the current hour based on the time zone correction
-            time_zone_corrected_now = now.hour + self.time_zone_correction
+            time_zone_corrected_now = now.hour - self.time_zone_correction
             
             # Correct the hour if it exceeds 24 or is below 0
             if time_zone_corrected_now > 24:
@@ -473,7 +474,7 @@ class Report_generator(object):
         combined_image = self.create_image(lux_sunlight_timestamps, lux_sunlight_values, lux_emitted_timestamps, lux_emitted_values, moisture_timestamps, moisture_values)
         
         # Calculate Daily Light Integral (DLI)
-        dli = lux_sensor[-1]
+        dli = lux_sunlight_values[-1]
         
         # Calculate light fluctuation
         light_fluctuation = self.calculate_light_fluctuation(lux_sunlight_values)
@@ -493,9 +494,7 @@ class Report_generator(object):
             image_base64 = base64.b64encode(combined_image.read()).decode('utf-8')
             
             # Create payload dictionary
-            body = {
-                'image': image_base64,
-                'message': tips
+            body = {'bn': self.ID,'e':[{'n': 'image','u':'bytes','t':time.time(),'v': image_base64},{'n':'message','u':'text','t':time.time(),'v':tips}]
             }
             
             # Print message for debugging
