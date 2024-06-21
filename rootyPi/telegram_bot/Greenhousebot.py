@@ -13,9 +13,9 @@ from requests.exceptions import HTTPError
 
 
 class GreenHouseBot:
-    def __init__(self, token,config_bot):
+    def __init__(self,config_bot):
 
-        self.tokenBot = token                                                     #Unique Token of the bot
+        self.tokenBot = json_config_bot['telegram_token']                                                  #Unique Token of the bot
         json_config_bot =  json.load(open(config_bot,'r'))
         self.bot = telepot.Bot(self.tokenBot)                                     
         self.interval = 1
