@@ -1,4 +1,5 @@
 {
+    "telegram_token":"6395900412:AAHo8suUwcEqRP1-onAvlhkoK-OaB1X7Tew"
     "ID": "telegram_bot",
     "broker": "mqtt.eclipseprojects.io",
     "port": 1883,
