@@ -1,10 +1,7 @@
 from pathlib import Path
-import threading
 import paho.mqtt.client as PahoMQTT
 import time
 from queue import Queue
-import datetime
-from datetime import datetime
 import json
 import requests
 from requests.exceptions import HTTPError
@@ -13,6 +10,7 @@ P = Path(__file__).parent.absolute()
 SETTINGS = P / 'settings.json'
 
 def get_request(url):
+    """FUnction to preform multiple requests if errors are encountered"""
     for i in range(15):
             try:
                 response = requests.get(url)
@@ -26,6 +24,8 @@ def get_request(url):
     return []
 
 class LampSimulator:
+    """Simulator of a lamp that subscribes to a monitoring service that tells
+        at which intensity should be the lamp and publish its intensity periodically"""
     def __init__(self, simId,  baseTopic, plantCode,models):
         self.simId = simId
         self.active = True
@@ -44,6 +44,7 @@ class LampSimulator:
         self.mySub.start()
 
     def getMaxLux(self,models,plantCode):
+        """get maxLux by the model settings"""
         code=plantCode[0:2]
         found=0
         for model in models:
@@ -80,6 +81,7 @@ class MyPublisher:
             print("Problem in loading settings")
         self.messageBroker = self.settings["messageBroker"]
         self.port = self.settings["brokerPort"]
+        self.qos = self.settings["qos"]
 
     def start (self):
 		#manage connection to broker
@@ -92,7 +94,7 @@ class MyPublisher:
 
     def myPublish(self, message, topic):
 		# publish a message with a certain topic
-        self._paho_mqtt.publish(topic, message, 2)
+        self._paho_mqtt.publish(topic, message, self.qos)
 
     def myOnConnect (self, paho_mqtt, userdata, flags, rc):
         print ("Connected to %s with result code: %d" % (self.messageBroker, rc))
@@ -113,6 +115,7 @@ class MySubscriber:
             print("Problem in loading settings")
         self.messageBroker = self.settings["messageBroker"]
         self.port = self.settings["brokerPort"]
+        self.qos = self.settings["qos"]
         self.topic = topic
 
     def start (self):
@@ -120,7 +123,7 @@ class MySubscriber:
         self._paho_mqtt.connect(self.messageBroker, self.port)
         self._paho_mqtt.loop_start()
 		# subscribe for a topic
-        self._paho_mqtt.subscribe(self.topic, 2)
+        self._paho_mqtt.subscribe(self.topic, self.qos)
 
     def stop (self):
         self._paho_mqtt.unsubscribe(self.topic)
@@ -137,6 +140,8 @@ class MySubscriber:
 
 
 def update_simulators(simulators):
+    """Updates the list of simulators periodically to check if any other plant
+        is created or if anyone is deleted"""
     try:
         with open(SETTINGS, "r") as fs:                
             settings = json.loads(fs.read())            
@@ -144,12 +149,10 @@ def update_simulators(simulators):
         print("Problem in loading settings")
     url = settings["registry_url"] + "/plants"
     plants = get_request(url)
-
     models = get_request(settings["registry_url"] + "/models")
 
     for plant in plants:
         simId = plant["plantCode"]
-        simId
         found = 0
         for sim in simulators:
             if sim.simId == simId:
@@ -167,44 +170,30 @@ def update_simulators(simulators):
         if found == 0:
             simulators.remove(sim)
 
-class AllPubs(threading.Thread):
+def main():
+    """Simulation main that runs forever sending periodically data"""
+    simulators = []
 
-    def __init__(self, ThreadID, name):
-        """Initialise thread widh ID and name."""
-        threading.Thread.__init__(self)
-        self.ThreadID = ThreadID
-        self.name = name
-        #load all sensors
-        self.simulators = []
-
-    def run(self):
-        """Run thread."""
-        while True:
-            update_simulators(self.simulators)
-            print(len(self.simulators))
-            for sim in self.simulators:
-                if not sim.mySub.q.empty():
-                    msg = sim.mySub.q.get()
-                    if msg is None:
-                        continue
-                    else:
-                        mess = json.loads(msg.payload)
-                        sim.percentIntensity = mess["e"][0]["v"]
-                event = {"n": "lampLight", "u": "lux", "t": str(time.time()), 
-                        "v": float(sim.maxIntensity*sim.percentIntensity/100)}
-                out = {"bn": sim.pubTopic,"e":[event]}
-                print(out)
-                sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
-                eventAlive = {"n": sim.plantCode + "/lampLight", "u": "IP", "t": str(time.time()), "v": ""}
-                outAlive = {"bn": sim.aliveBn,"e":[eventAlive]}
-                print(outAlive)
-                print(sim.aliveTopic)
-                sim.myPub.myPublish(json.dumps(outAlive), sim.aliveTopic)
-                time.sleep(2)
-            time.sleep(10)
+    while True:
+        update_simulators(simulators)
+        for sim in simulators:
+            if not sim.mySub.q.empty():
+                msg = sim.mySub.q.get()
+                if msg is None:
+                    continue
+                else:
+                    mess = json.loads(msg.payload)
+                    sim.percentIntensity = mess["e"][0]["v"]
+            event = {"n": "lampLight", "u": "lux", "t": str(time.time()), 
+                    "v": float(sim.maxIntensity*sim.percentIntensity/100)}
+            out = {"bn": sim.pubTopic,"e":[event]}
+            print(out)
+            sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
+            eventAlive = {"n": sim.plantCode + "/lampLight", "u": "IP", "t": str(time.time()), "v": ""}
+            outAlive = {"bn": sim.aliveBn,"e":[eventAlive]}
+            sim.myPub.myPublish(json.dumps(outAlive), sim.aliveTopic)
+        time.sleep(10)
 
 if __name__ == '__main__':
 
-    thredPub = AllPubs(1, "AllPubs")
-    print("Starting all publishers")
-    thredPub.start()
+    main()
