@@ -1,5 +1,4 @@
 from pathlib import Path
-import threading
 import numpy as np
 import paho.mqtt.client as PahoMQTT
 import time
@@ -11,6 +10,7 @@ import requests
 
 P = Path(__file__).parent.absolute()
 SETTINGS = P / 'settings.json'
+
 def gaussian(x, mu, sig):
     return (
         1.0 / (np.sqrt(2.0 * np.pi) * sig) * np.exp(-np.power((x - mu) / sig, 2.0) / 2)
@@ -20,6 +20,7 @@ def sunnyDaySim():#total lux daily 47000 with peak at 13
     return out.tolist()
 
 class SunlightSimulator:
+    """Sunlight simulation to generate lux data for the light simulators"""
     def __init__(self, simId, baseTopic, plantCode):
         self.simId = simId
         self.active = True
@@ -55,7 +56,7 @@ class MyPublisher:
             print("Problem in loading settings")
         self.messageBroker = self.settings["messageBroker"]
         self.port = self.settings["brokerPort"]
-		#self.messageBroker = '192.168.1.5'
+        self.qos = self.settings["qos"]
 
     def start (self):
 		#manage connection to broker
@@ -68,13 +69,14 @@ class MyPublisher:
 
     def myPublish(self, message, topic):
 		# publish a message with a certain topic
-        self._paho_mqtt.publish(topic, message, 2)
+        self._paho_mqtt.publish(topic, message, self.qos)
 
     def myOnConnect (self, paho_mqtt, userdata, flags, rc):
         print ("Connected to %s with result code: %d" % (self.messageBroker, rc))
 
 
 def update_simulators(simulators):
+    """Update function to check if any changes happend into plant catalog"""
     try:
         with open(SETTINGS, "r") as fs:                
             settings = json.loads(fs.read())            
@@ -103,55 +105,43 @@ def update_simulators(simulators):
         if found == 0:
             simulators.remove(sim)
         
-class AllPubs(threading.Thread):
-
-    def __init__(self, ThreadID, name):
-        """Initialise thread widh ID and name."""
-        threading.Thread.__init__(self)
-        self.ThreadID = ThreadID
-        self.name = name
-        #load all sensors
-        self.simulators = []
-        self.simMode=1
-        self.startedSim=0
-        
-
-    def run(self):
-        """Run thread."""
-        if self.simMode==1:
-            index=0
-            reference_time=time.time()
-        while True:
-            update_simulators(self.simulators)
-            # index = datetime.now().hour
-            if self.simMode==1:
-                print(round(time.time()-reference_time))
-                if round(time.time()-reference_time)>=60:
-                    reference_time=time.time()
-                    if self.startedSim==0 or index==23:
-                        index=0
-                        self.startedSim=1
-                    else:
-                        index+=1
-            else:
-                index = datetime.now().hour
-            print(len(self.simulators))
-            for sim in self.simulators:
-                event = {"n": "sunlight", "u": "lux", "t": str(time.time()), "v": float(sim.luxList[index])}
-                out = {"bn": sim.pubTopic,"e":[event]}
-                print(out)
-                sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
-                eventAlive = {"n": sim.plantCode + "/sunlight", "u": "IP", "t": str(time.time()), "v": ""}
-                outAlive = {"bn": sim.aliveBn,"e":[eventAlive]}
-                print(outAlive)
-                sim.myPub.myPublish(json.dumps(outAlive), sim.aliveTopic)
-            time.sleep(10)
+def main():
+    """Main function that runs forever to simulate sun"""
+    simulators = []
+    try:
+        with open(SETTINGS, "r") as fs:                
+            settings = json.loads(fs.read())            
+    except Exception:
+        print("Problem in loading settings")
+    simMode=settings["test"]
+    startedSim = 0
+    """if simMode == 1 time elapses 60 times faster and starts from 00:00 else take real time"""
+    if simMode == 1:
+        index = 0
+        reference_time = time.time()
+    while True:
+        update_simulators(simulators)
+        if simMode==1:
+            print(round(time.time()-reference_time))
+            if round(time.time()-reference_time)>=60:
+                reference_time=time.time()
+                if startedSim==0 or index==23:
+                    index=0
+                    startedSim=1
+                else:
+                    index+=1
+        else:
+            index = datetime.now().hour
+        for sim in simulators:
+            event = {"n": "sunlight", "u": "lux", "t": str(time.time()), "v": float(sim.luxList[index])}
+            out = {"bn": sim.pubTopic,"e":[event]}
+            print(out)
+            sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
+            eventAlive = {"n": sim.plantCode + "/sunlight", "u": "IP", "t": str(time.time()), "v": ""}
+            outAlive = {"bn": sim.aliveBn,"e":[eventAlive]}
+            sim.myPub.myPublish(json.dumps(outAlive), sim.aliveTopic)
+        time.sleep(10)
 
 if __name__ == '__main__':
 
-    #thredSub = AllSubs(1, "AllSubs")
-    thredPub = AllPubs(1, "AllPubs")
-    #print("Starting all subscribers")
-    #thredSub.start()
-    print("Starting all publishers")
-    thredPub.start()
+    main()
