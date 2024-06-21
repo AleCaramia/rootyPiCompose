@@ -5,9 +5,6 @@ services:
     image: influxdb:latest
     volumes:
       - influxdb-storage:/var/lib/influxdb2:rw
-    # environment:
-    #  - DOCKER_INFLUXDB_INIT_USERNAME=AleCaramia
-    #  - DOCKER_INFLUXDB_INIT_PASSWORD=programmingforIOT
     env_file:
       - .env
     entrypoint: ["./entrypoint.sh"]
@@ -17,7 +14,6 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.21
-
   registry:
     build: registry
     volumes:
@@ -112,9 +108,7 @@ services:
       net:
         ipv4_address: 192.68.0.28
     volumes:
-      - node-red-data:/var/lib/node-red
-  
-    
+      - node-red-data:/var/lib/node-red 
   env_monitoring:
     build: env_monitoring
     volumes:
@@ -143,7 +137,6 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.32
-
   telegram_bot:
     build: telegram_bot
     volumes:
@@ -159,7 +152,6 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.11
-
   report_generator:
     build: report_generator
     volumes:
@@ -174,7 +166,6 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.33
-
   moisture_monitoring:
     build: moisture_monitoring
     volumes:
@@ -189,7 +180,6 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.82
-
   water_irrigator:
     build: water_irrigator
     volumes:
@@ -204,7 +194,6 @@ services:
     networks:
       net:
         ipv4_address: 192.68.0.20
-
   watertankalert:
     build: watertankalert
     volumes:
