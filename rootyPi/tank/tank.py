@@ -3,8 +3,6 @@ import threading
 import paho.mqtt.client as PahoMQTT
 import time
 from queue import Queue
-import datetime
-from datetime import datetime
 import json
 import requests
 
@@ -12,6 +10,8 @@ P = Path(__file__).parent.absolute()
 SETTINGS = P / 'settings.json'
 
 class TankSimulator:
+    """Tank simulator that listens to water monitoring that gives command to water the plant
+        In simulation watering is done by incrementing moisture in a mathematical way"""
     def __init__(self, simId,  baseTopic, plantCode, jarVolume, tankCapacity):
         self.simId = simId
         self.active = True
@@ -86,6 +86,7 @@ class MySubscriber:
             print("Problem in loading settings")
         self.messageBroker = self.settings["messageBroker"]
         self.port = self.settings["brokerPort"]
+        self.qos = self.settings["qos"]
         self.topic = topic
 
     def start (self):
@@ -93,7 +94,7 @@ class MySubscriber:
         self._paho_mqtt.connect(self.messageBroker, self.port)
         self._paho_mqtt.loop_start()
 		# subscribe for a topic
-        self._paho_mqtt.subscribe(self.topic, 2)
+        self._paho_mqtt.subscribe(self.topic, self.qos)
 
     def stop (self):
         self._paho_mqtt.unsubscribe(self.topic)
@@ -110,6 +111,7 @@ class MySubscriber:
 
 
 def update_simulators(simulators):
+    """Function that update simulators based on plant catalog changes"""
     try:
         with open(SETTINGS, "r") as fs:                
             settings = json.loads(fs.read())            
@@ -145,77 +147,61 @@ def update_simulators(simulators):
         if found == 0:
             simulators.remove(sim)
 
-class AllPubs(threading.Thread):
+def main():
+    simulators = []
 
-    def __init__(self, ThreadID, name):
-        """Initialise thread widh ID and name."""
-        threading.Thread.__init__(self)
-        self.ThreadID = ThreadID
-        self.name = name
-        #load all sensors
-        self.simulators = []
-
-    def run(self):
-        """Run thread."""
-        while True:
-            update_simulators(self.simulators)
-            print(len(self.simulators))
-            litersToGive = 0
-            for sim in self.simulators:
-                if not sim.mySub.q.empty():
-                    msg = sim.mySub.q.get()
-                    if msg is None:
-                        continue
+    while True:
+        update_simulators(simulators)
+        litersToGive = 0
+        for sim in simulators:
+            if not sim.mySub.q.empty():
+                msg = sim.mySub.q.get()
+                if msg is None:
+                    continue
+                else:
+                    mess = json.loads(msg.payload)
+                    print("\n\n\nMessage from water irrigator:\n",mess)
+                    print(msg.topic,"\n")
+                    if mess['bn'] == "refillTank":
+                        sim.tankLevel = sim.tankCapacity
                     else:
-                        mess = json.loads(msg.payload)
-                        print("\n\n\nmessaggio da water irrigator:\n",mess)
-                        print(msg.topic,"\n")
-                        if mess['bn'] == "refillTank":
-                            sim.tankLevel = sim.tankCapacity
-                        else:
-                            litersToGive = mess["e"][0]["v"]
-                    if litersToGive < sim.tankLevel:
-                        event = {"n": "irrigation", "u": "VWC", "t": str(time.time()), 
-                            "v": litersToGive/sim.jarVolume*100}
-                        sim.tankLevel -= litersToGive
-                        event1 = {"n": "tankLevel", "u": "l", "t": str(time.time()), 
-                            "v": sim.tankLevel}
-                        out = {"bn": sim.pubTopic,"e":[event, event1]}
-                        print(out)
-                        sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
-                    elif sim.tankLevel > 0 and litersToGive > sim.tankLevel:
-                        event = {"n": "irrigation", "u": "VWC", "t": str(time.time()), 
-                            "v": sim.tankLevel/sim.jarVolume*100}
-                        sim.tankLevel = float(0)
-                        event1 = {"n": "tankLevel", "u": "l", "t": str(time.time()), 
-                            "v": sim.tankLevel}
-                        out = {"bn": sim.pubTopic,"e":[event, event1]}
-                        print(out)
-                        sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
-                    else:
-                        event = {"n": "irrigation", "u": "VWC", "t": str(time.time()), 
-                            "v": float(0)}
-                        sim.tankLevel = float(0)
-                        event1 = {"n": "tankLevel", "u": "l", "t": str(time.time()), 
-                            "v": sim.tankLevel}
-                        out = {"bn": sim.pubTopic,"e":[event, event1]}
-                        print(out)
-                        sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
-                        #send message to user to fill the tank
-                        print(f"Insufficient water in tank {sim.simId}, requested water {litersToGive}")
-                eventAlive = {"n": sim.plantCode + "/tank", "u": "IP", "t": str(time.time()), "v": ""}
-                outAlive = {"bn": sim.aliveBn,"e":[eventAlive]}
-                print(outAlive)
-                print(sim.aliveTopic)
-                sim.myPub.myPublish(json.dumps(outAlive), sim.aliveTopic)
-                time.sleep(2)
-            time.sleep(10)
+                        litersToGive = mess["e"][0]["v"]
+                if litersToGive < sim.tankLevel:
+                    event = {"n": "irrigation", "u": "VWC", "t": str(time.time()), 
+                        "v": litersToGive/sim.jarVolume*100}
+                    sim.tankLevel -= litersToGive
+                    event1 = {"n": "tankLevel", "u": "l", "t": str(time.time()), 
+                        "v": sim.tankLevel}
+                    out = {"bn": sim.pubTopic,"e":[event, event1]}
+                    print(out)
+                    sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
+                elif sim.tankLevel > 0 and litersToGive > sim.tankLevel:
+                    event = {"n": "irrigation", "u": "VWC", "t": str(time.time()), 
+                        "v": sim.tankLevel/sim.jarVolume*100}
+                    sim.tankLevel = float(0)
+                    event1 = {"n": "tankLevel", "u": "l", "t": str(time.time()), 
+                        "v": sim.tankLevel}
+                    out = {"bn": sim.pubTopic,"e":[event, event1]}
+                    print(out)
+                    sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
+                else:
+                    event = {"n": "irrigation", "u": "VWC", "t": str(time.time()), 
+                        "v": float(0)}
+                    sim.tankLevel = float(0)
+                    event1 = {"n": "tankLevel", "u": "l", "t": str(time.time()), 
+                        "v": sim.tankLevel}
+                    out = {"bn": sim.pubTopic,"e":[event, event1]}
+                    print(out)
+                    sim.myPub.myPublish(json.dumps(out), sim.pubTopic)
+                    #send message to user to fill the tank
+                    print(f"Insufficient water in tank {sim.simId}, requested water {litersToGive}")
+            eventAlive = {"n": sim.plantCode + "/tank", "u": "IP", "t": str(time.time()), "v": ""}
+            outAlive = {"bn": sim.aliveBn,"e":[eventAlive]}
+            sim.myPub.myPublish(json.dumps(outAlive), sim.aliveTopic)
+        time.sleep(10)
 
     
 
 if __name__ == '__main__':
 
-    thredPub = AllPubs(1, "AllPubs")
-    print("Starting all publishers")
-    thredPub.start()
-    thredPub.join()
+    main()
