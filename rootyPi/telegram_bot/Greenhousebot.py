@@ -1380,8 +1380,8 @@ class Active_user_checker():
 
 if __name__ == "__main__":
 
-    token = '6395900412:AAHo8suUwcEqRP1-onAvlhkoK-OaB1X7Tew'
+    
 
     #config_bot = "C:\\Users\\Lenovo\\rootyPiCompose\\rootyPi\\telegram_bot\\telegram_bot_config.json"
     config_bot = "telegram_bot_config.json"
-    sb=GreenHouseBot(token,config_bot)
+    sb=GreenHouseBot(config_bot)
