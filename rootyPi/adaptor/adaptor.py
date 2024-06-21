@@ -14,6 +14,7 @@ P = Path(__file__).parent.absolute()
 SETTINGS = P / "settings.json"
 
 def get_request(url):
+    """Function to try multiple requests if errors are encountered"""
     for i in range(15):
             try:
                 response = requests.get(url)
@@ -27,6 +28,7 @@ def get_request(url):
     return []
 
 def senmlToInflux(senml, plantId):
+    """Change data format from senML to influxDB standard"""
     output = []   
     for e in senml["e"]:
         point = {
@@ -63,12 +65,14 @@ class Adaptor(object):
         self.users = get_request(url)
         
     def checkUserPresent(self, userId):
+        """Check if user is present"""
         self.loadUsers()
         for user in self.users:
             if user["userId"] == userId:
                 return True
         return False
     def checkPlantPresent(self,userId, plantCode):
+        """CHeck if plant is present"""
         self.loadUsers()
         for user in self.users:
             if user["userId"] == userId:
