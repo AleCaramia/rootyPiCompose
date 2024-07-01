@@ -993,7 +993,7 @@ class Report_manager():
 
         
         # Extract the message
-        message = output['message']
+        message = output["e"][1]["v"]
 
         # Load the image into a BytesIO stream
         image = Image.open(BytesIO(image_data))
