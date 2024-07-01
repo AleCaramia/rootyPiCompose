@@ -988,8 +988,9 @@ class Report_manager():
         r = self.get_response(self.report_url+f'/getreport/{plantcode}')
         output = json.loads(r.text)
             # Extract the base64-encoded image and decode it
-        image_base64 = output['image']
+        image_base64 = output["e"][0]["v"]
         image_data = base64.b64decode(image_base64)
+
         
         # Extract the message
         message = output['message']
