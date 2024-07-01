@@ -90,11 +90,6 @@ class GreenHouseBot:
                 self.new_user_management(chat_ID)                                # Menu for new users
             else:
                 self.choose_plant(chat_ID)                                      # If not new show the plants to the user
-        elif '/fill_tank' in message: #for simulation purposes
-            userid = self.registry_interface.get_username_for_chat_ID(chat_ID)
-            plantcode = self.registry_interface.get_plant_code_from_plant_name(message.split('_')[2])
-            self.paho_mqtt.publish("RootyPy/" + userid + "/" + plantcode +"/waterPump/refill",json.dumps({"bn": "refillTank", "e": []}))
-
 
         elif  'listeningfortime' in self.get_uservariables_chatstatus(chat_ID):                     #Messages from users used in the functions
             self.led_manager.confirm_manual_mode_duration(message,chat_ID)
