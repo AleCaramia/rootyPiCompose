@@ -4,8 +4,6 @@
     "port": 1883,
     "url_registry" : "http://192.68.0.24:8081",
     "myurl":"http://192.68.0.33:8081",
-    "sub_topic":"RootyPy/iamalive/ReportGenerator",
-    "pub_topic":"RootyPy/iamalive/ReportGenerator",
     "alive_topic":"RootyPy/microservices/Report_generator",
     "update_time":15,
     "headers":{
