@@ -939,23 +939,7 @@ class Irrigation_manager():
             userid = self.main_bot.registry_interface.get_username_for_chat_ID(chat_ID)
             payload =  {"bn": f'{'Pump'}',"e":[{ "n": f"{self.main_bot.ClientID}", "u": "l", "t": time.time(), "v":water_volume }]}
             self.main_bot.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/water_to_give/manual',json.dumps(payload),2)
-            self.main_bot.manage_plant(chat_ID,plantcode)
-        elif perc_value == 100:           #DA TOGLIERE ASSOLUTAMENTE BACKDOOR PER SVUOTARE TANICA
-            plantcode = self.main_bot.get_uservariables_chatstatus(chat_ID).split('&')[1]
-            models = self.main_bot.registry_interface.get_models()
-            for model in models:
-                if model["model_code"] == plantcode[0:2]:
-                    tank_max = model["tank_capacity"]
-
-            water_volume = tank_max*perc_value/100
-            self.main_bot.uservariables[chat_ID]['chatstatus'] = 'start'
-            msg_id = self.main_bot.bot.sendMessage(chat_ID,f'{perc_value} is a valid value')['message_id']
-            self.main_bot.remove_previous_messages(chat_ID)
-            self.main_bot.update_message_to_remove(msg_id,chat_ID)
-            userid = self.main_bot.registry_interface.get_username_for_chat_ID(chat_ID)
-            payload =  {"bn": f'{'Pump'}',"e":[{ "n": f"{self.main_bot.ClientID}", "u": "l", "t": time.time(), "v":water_volume }]}
-            self.main_bot.paho_mqtt.publish(f'RootyPy/{userid}/{plantcode}/water_to_give/manual',json.dumps(payload),2)
-            self.main_bot.manage_plant(chat_ID,plantcode)                
+            self.main_bot.manage_plant(chat_ID,plantcode)           
         else:
             msg_id = self.main_bot.bot.sendMessage(chat_ID,f'{perc_value} is a invalid value, senda a value between 0 and 10')['message_id']
             self.main_bot.update_message_to_remove(msg_id,chat_ID)
